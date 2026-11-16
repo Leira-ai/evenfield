@@ -587,6 +587,19 @@ function presetRowHtml(f: FilterState): string {
   return `<div class="preset-row" role="group" aria-label="${esc(t('filter.title'))}">${chips}${views}</div>`;
 }
 
+/** Quick verdict row in the sticky bar: the Creator-record facet one
+ *  tap from the board, so the core shortlist path (preset + verdict)
+ *  costs 2 taps on a phone, inside the T2 budget. The same values live
+ *  in the sheet and the rail with identical counts. */
+function quickRowHtml(f: FilterState): string {
+  const vals = FACET_VALUES.verdict.map((v) => {
+    const n = facetCount(f, 'verdict', v);
+    const on = f.verdict.includes(v);
+    return `<button type="button" class="facet-val" data-act="facet" data-group="verdict" data-value="${v}" aria-pressed="${on}" ${n === 0 && !on ? 'disabled' : ''}>${esc(t(FACET_VALUE_LABEL.verdict[v]))} <span class="cnt">${fmtNum(n)}</span></button>`;
+  }).join('');
+  return `<div class="quick-row" role="group" aria-label="${esc(t('filter.facet.verdict'))}"><span class="quick-label">${esc(t('filter.facet.verdict'))}</span>${vals}</div>`;
+}
+
 function facetGroupsHtml(f: FilterState): string {
   const groups = FACET_GROUPS.map((g) => {
     const vals = FACET_VALUES[g].map((v) => {
@@ -727,6 +740,7 @@ function pageBoard(basePath: string): string {
     </section>
     <div class="filterbar">
       <div id="presetRow">${presetRowHtml(f)}</div>
+      <div id="quickRow">${quickRowHtml(f)}</div>
       <div class="filter-controls">
         <button type="button" class="btn btn-ghost" id="filterBtn" data-act="open-filters">${esc(t('filter.btn'))}${activeFilterCount(f) ? ` <span class="badge">${fmtNum(activeFilterCount(f))}</span>` : ''}</button>
         <label class="sort-label">${esc(t('filter.sort'))}
@@ -756,6 +770,7 @@ function refreshBoard() {
   const f = boardCtx.f;
   const y = window.scrollY;
   const pr = $('#presetRow'); if (pr) pr.innerHTML = presetRowHtml(f);
+  const qr = $('#quickRow'); if (qr) qr.innerHTML = quickRowHtml(f);
   const rail = $('#filterRail'); if (rail) rail.innerHTML = railHtml(f);
   const main = $('#boardMain'); if (main) main.innerHTML = boardMainHtml(f);
   const btn = $('#filterBtn');

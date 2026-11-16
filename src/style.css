@@ -513,6 +513,9 @@
   .preset-chip[aria-pressed="true"] { background: var(--action); color: var(--action-text); border-color: transparent; }
   .preset-chip.saved { border-style: dashed; }
   .filter-controls { display: flex; gap: var(--space-3); align-items: center; flex-wrap: wrap; margin-top: var(--space-2); }
+  .quick-row { display: flex; gap: var(--space-2); overflow-x: auto; align-items: center; margin-top: var(--space-2); scrollbar-width: none; }
+  .quick-row::-webkit-scrollbar { display: none; }
+  .quick-label { font-size: var(--fs-small); font-weight: 800; color: var(--text-2); flex: none; }
   .badge {
     background: var(--action); color: var(--action-text); border-radius: var(--radius-pill);
     padding: 0 var(--space-2); font-size: var(--fs-caption); line-height: var(--lh-caption); font-weight: 800;
