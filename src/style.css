@@ -406,7 +406,17 @@
   /* ---------- responsive structure ---------- */
   @media (min-width: 768px) {
     .layout { padding-left: var(--space-5); padding-right: var(--space-5); }
+  }
+  @media (min-width: 1280px) {
     .chain-badge { display: inline-flex; }
+  }
+  @media (max-width: 560px) {
+    .topbar { padding: 0 var(--space-2); gap: var(--space-2); }
+    .brand { font-size: var(--fs-body); line-height: var(--lh-body); }
+    .top-right { gap: var(--space-1); min-width: 0; }
+    .wallet-btn { padding: var(--space-2); font-size: var(--fs-small); white-space: nowrap; }
+    .lang-toggle button { padding: var(--space-2); font-size: var(--fs-caption); }
+    .icon-btn { padding: 0 var(--space-1); }
   }
   @media (min-width: 1024px) {
     .topnav { display: flex; }
