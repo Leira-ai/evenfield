@@ -185,8 +185,9 @@
   }
   .tabbar a {
     flex: 1; min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: var(--space-1); color: var(--text-2); text-decoration: none;
-    font-size: var(--fs-caption); line-height: var(--lh-caption); font-weight: 700;
+    gap: var(--space-1); color: var(--text-2); text-decoration: none; text-align: center;
+    padding: var(--space-1) 2px;
+    font-size: var(--fs-caption); line-height: 1.2; font-weight: 700;
   }
   .tabbar a.active { color: var(--action); }
   .tabbar .tab-icon { font-size: var(--fs-lead); line-height: 1; }
@@ -424,6 +425,7 @@
     .wallet-btn { padding: var(--space-1) var(--space-2); font-size: var(--fs-caption); }
     .lang-toggle button { padding: var(--space-1) var(--space-2); }
     .icon-btn { min-width: 40px; }
+    .tabbar a { font-size: 11px; }
   }
   @media (min-width: 1024px) {
     .topnav { display: flex; }

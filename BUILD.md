@@ -281,6 +281,72 @@ Defects found by verification and fixed before this report:
    that had moved, settled by the direct engine probe), and the
    console-error rule (network 429s, reclassified as described above).
 
+## Rebuild 2.0.0: "field at dusk" (17 Nov 2026)
+
+Full frontend rebuild under the permanent skill
+`~/workspace/custom-skills/web-product-engineering/SKILL.md` (gates
+G0-G12) and `redesign/audit-and-redesign-spec.md`. The data engine was
+not touched behaviourally: same 7-factory index, verdict engine and
+evidence content, Glean claim reads, transport discipline, three-state
+honesty, snapshot CI. What changed is presentation, structure, the
+wallet layer, and the defects the audit measured.
+
+### Per-gate results
+
+| Gate | Result | Evidence |
+| --- | --- | --- |
+| G0 design plan first | PASS | audit-and-redesign-spec.md (R1-R6) preceded all code; no catalogued AI-generic look (dark green field tokens, one theatrical element: the verdict stage) |
+| G1 tokens + computed contrast | PASS | one semantic token set; `npm run contrast` computes all 64 pairs, both themes, ALL PASS (redesign/contrast-table.md). Two tokens adjusted to pass: dark border.interactive #54755F → #597D65 (2.98 → 3.32 on surface.2), light danger #C93A1E → #C23418 (4.46 → 4.83 on its tint) |
+| G2 live screenshot matrix | PASS | probe/qa-matrix.mjs against the LIVE URL: widths 320/360/390/430/768/1024/1280/1440/1920 dark, 390/768/1280 light, foldable 344 + 717, ID at 320; every screenshot viewed by the builder; 69/69 checks |
+| G3 responsive + targets | PASS | container-query grids (minmax(0,1fr), blowout found in QA and fixed), bottom tab bar with safe-area, targets ≥44px (compacted header controls keep 44px height) |
+| G4 WCAG 2.2 AA + axe | PASS | axe-core zero critical/serious on home dark, home light, coin dark (one real find fixed: stage-count text.3 at 16px → text.2); keyboard pass: evidence drawer opens via Enter, focus visible |
+| G5 performance budget | PASS | initial JS 24.0 KB gzip (entry), CSS 4.2 KB gzip; snapshot ships ONCE (in-bundle fallback copy deleted; SW cache is the offline copy); throttled run (4x CPU + Fast 3G): cards usable in 2.8s |
+| G6 security | PASS with platform note | CSP meta with hashed inline bootstrap + `_headers` for hosts that honour it; deps pinned exactly (viem 2.57.20, @wagmi/core 3.6.9, @wagmi/connectors 8.2.4, @ammora-protocol/sdk 0.3.9); sink audit below; GitHub Pages cannot send frame-ancestors / HSTS / X-Content-Type-Options headers, the meta CSP omits only those |
+| G7 five states + formatting | PASS | loading skeletons, empty, error + retry, stale banner (simulated 3-day-old snapshot), partial (per-stream unavailable lines); amounts by magnitude; spot price never renders 0 (significant digits, per-million quoting below 1e-6); dust grouped, labelled, claim disabled |
+| G8 wallet | PARTIAL (one criterion) | wagmi v3 + per-provider EIP-6963 connectors + custom sheet; four states exercised against a mock EIP-6963 wallet in Chromium (discover → connect → wrong-network on chain change → switch back); 9134 guard kept. WalletConnect is wired but INACTIVE: it needs a Reown project id registered for this origin, which does not exist yet; the sheet says so honestly instead of offering a dead button |
+| G9 simulate before signing | PASS | money.executeClaim simulates the exact transaction via publicClient.call before sendTransaction (code + code path unchanged from Slice A claim flow) |
+| G10 snapshot pipeline | PASS | unchanged CI (atomic publish + head block watermark); fallback-copy removal applied to build-snapshot.mjs and the workflow's git add list |
+| G11 prerender + OG + i18n | PASS | static home injected into dist/index.html; 133 coin + 42 creator share pages, each with own title/description/canonical and a subject OG image (175 images in public/og/); EN/ID toggle verified incl. ID at 320px |
+| G12 release discipline | PASS | version 2.0.0, CHANGELOG.md entry, SW cache name versioned (evenfield-v2.0.0) with kill switch, rollback = redeploy previous gh-pages commit (Slice A deploy, source bf2c7c1) |
+
+### Defects found during the rebuild and fixed
+
+1. Header overflow at 320/360/390 and 1024 (QA matrix): chain badge
+   moved to ≥1280px, compact header rules ≤560px and ≤400px, connected
+   wallet button drops its chain label on small screens.
+2. Grid blowout at 320 (a card's min-content forced a 270px column in a
+   238px container): all grids now minmax(0, 1fr), cards min-width 0.
+3. axe light-theme contrast: stage counts in text.3 (4.20:1 at 16px
+   bold) → text.2.
+4. Spot price rendered as "0 WETH" (and, at the extreme, 18 zeros):
+   significant-digit formatting, and per-million-coins quoting when the
+   per-coin price is below 1e-6.
+5. Topnav labels wrapped to two lines at desktop widths: nowrap.
+6. QA harness finds (not product defects): the mock wallet's chain hex
+   (91342 = 0x164CE), eth_accounts must stay empty until authorised,
+   axe must be served as a same-origin file because our own CSP blocks
+   inline injection, service workers must be blocked in the stale and
+   snapshot-only simulations for deterministic interception.
+
+### Money parity (live, this rebuild)
+
+A1 sweep in the rebuilt UI matches the direct engine probe at the same
+sitting: AUICON and ANRCON 0.246887728 exact; the WETH row is a moving
+balance (the beneficiary claims from it), see the run note in
+probe/qa/summary-part2.json. The 1-wei class rows render inside the
+dust box with exact amounts under a <details> toggle and a disabled
+claim button; no 18-decimal string appears anywhere in the results.
+
+### Sink audit (Gate 6)
+
+Every `innerHTML` interpolation in src/main.ts passes esc() except two
+numeric-only SVG builders whose inputs are computed numbers, never
+chain strings: identiconSvg (hue + rect coordinates from address hex
+digits via parseInt) and curveChart (path coordinates from measured
+numbers; its text nodes pass esc()). Address/hash display goes through
+addrChip/shortAddr + esc(). The share pages from scripts/prerender.mjs
+escape all snapshot fields with the same esc().
+
 ## Submission package (prepared, NOT sent)
 
 - X post draft: `builder-post.txt` (max 280 chars, mentions @AmmoraHQ,
