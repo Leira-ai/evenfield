@@ -1,19 +1,51 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <script>(function(){try{var t=localStorage.getItem('evenfield.v2.theme');if(t!=='light'&&t!=='dark'){t='dark'}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Z0sE+Ii+ymqVKjfCPvFxItTHHmHFrexD4fjJwuaeZUY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://sepolia-rpc.giwa.io https://sepolia-explorer.giwa.io https://*.walletconnect.com wss://*.walletconnect.com https://*.walletconnect.org wss://*.walletconnect.org https://*.reown.com wss://*.reown.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>Evenfield: every Ammora coin, with the receipts</title>
-    <meta name="description" content="Evenfield is the whole Ammora launch day in one place: spot the coins worth your money, read the receipts on the human behind them, buy in two taps, and launch your own when you are ready." />
+    <meta name="description" content="Evenfield is the whole Ammora launch day in one place: spot the coins worth your money, read the receipts on the human behind them, and collect the fees waiting on your wallet." />
+    <link rel="canonical" href="https://leira-ai.github.io/evenfield/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Evenfield" />
+    <meta property="og:title" content="Evenfield: every Ammora coin, with the receipts" />
+    <meta property="og:description" content="Spot the coins worth your money, read the on-chain record of the human behind each one, and collect what is yours. GIWA Sepolia, built with the Ammora SDK." />
+    <meta property="og:url" content="https://leira-ai.github.io/evenfield/" />
+    <meta property="og:image" content="https://leira-ai.github.io/evenfield/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Evenfield: every Ammora coin, with the receipts" />
+    <meta name="twitter:description" content="Spot the coins worth your money, read the receipts on the human behind them, and collect what is yours." />
+    <meta name="twitter:image" content="https://leira-ai.github.io/evenfield/og.png" />
     <link rel="manifest" href="manifest.webmanifest" />
-    <meta name="theme-color" content="#FFF7EA" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <meta name="theme-color" content="#0D130F" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230D130F'/%3E%3Cpath d='M28 72V28h44v9H38v8h30v9H38v9h34v9z' fill='%232FD68A'/%3E%3C/svg%3E" />
+    <link rel="preload" href="fonts/pjs-var.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
-    <main id="app"><p style="padding:24px">Loading Evenfield…</p></main>
+    <div id="shell"></div>
+    <main id="app" class="layout" tabindex="-1">
+      <section class="hero">
+        <h1>Every coin on Ammora. The good ones, the sketchy ones, and the receipts to tell them apart.</h1>
+        <p class="sub">See what is launching, read the record of the human behind it before you buy, and launch your own when you are ready. Plain words, real receipts, no terminal speak.</p>
+      </section>
+      <div class="skeleton skeleton-line" aria-hidden="true"></div>
+      <div class="skeleton skeleton-line" aria-hidden="true"></div>
+      <p class="snapshot-line">Loading the newest index…</p>
+    </main>
+    <footer class="site-footer">
+      <p id="footer-note">Evenfield reads GIWA Sepolia testnet only. Nothing here is financial advice; the receipts are the point.</p>
+      <p class="dim" id="footer-tag">The whole Ammora launch day, in one place.</p>
+      <p class="dim">Evenfield counts page views locally on this device only. Wallet addresses, searched or connected, are never recorded or sent anywhere.</p>
+    </footer>
+    <div id="tabbar"></div>
+    <div id="sheet-root"></div>
+    <div id="toast-root" class="toast-region" aria-live="polite"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

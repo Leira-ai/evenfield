@@ -2,7 +2,9 @@
 // Scans every launch factory in the attested SDK catalog, reads each curve's
 // state field by field, gathers swap evidence in bounded windows, classifies
 // protocol test launches, aggregates creator records, and writes
-// public/snapshot.json (+ src/fallback-snapshot.json, the in-bundle copy).
+// public/snapshot.json only. The redesign removed the in-bundle fallback
+// copy (Gate 5: the same data shipped three times). The service worker's
+// cached snapshot is the offline copy now.
 // Transport discipline (proven in Slipway and Glean): no batching, retry with
 // backoff, concurrency 3, only successes are kept, no raw RPC errors surface.
 import { createPublicClient, http, decodeEventLog, parseAbiItem, keccak256, toHex } from 'viem';
@@ -361,5 +363,4 @@ mkdirSync(new URL('../public', import.meta.url), { recursive: true });
 mkdirSync(new URL('../src', import.meta.url), { recursive: true });
 const json = JSON.stringify(snapshot);
 writeFileSync(new URL('../public/snapshot.json', import.meta.url), json);
-writeFileSync(new URL('../src/fallback-snapshot.json', import.meta.url), json);
 console.log(`snapshot written: ${enriched.length} launches, ${creatorRecords.length} creators, ${(json.length / 1024).toFixed(0)} KiB, ${((Date.now() - t0) / 1000).toFixed(0)}s`);

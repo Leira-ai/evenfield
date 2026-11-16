@@ -4,8 +4,6 @@
 // come from live contract reads or eth_call simulations in this file.
 import {
   createPublicClient,
-  createWalletClient,
-  custom,
   decodeEventLog,
   defineChain,
   encodeFunctionData,
@@ -783,40 +781,22 @@ export async function lookup(
 }
 
 // ---------- wallet (visitor's own, testnet only) ----------
-declare global {
-  interface Window {
-    ethereum?: unknown;
-  }
-}
-
+// Connection itself lives in wallet.ts (wagmi v3 + EIP-6963, Gate 8).
+// The engine only ever receives an already-connected wallet and sends
+// claims from it, after simulation (Gate 9).
 export interface Wallet {
   address: Address;
   client: WalletClient;
 }
 
-export async function connectWallet(): Promise<Wallet> {
-  if (!window.ethereum) throw new Error('NO_WALLET');
-  const client = createWalletClient({ chain: giwaChain, transport: custom(window.ethereum as never) });
-  const [address] = await client.requestAddresses();
-  try {
-    await client.switchChain({ id: giwaChain.id });
-  } catch {
-    await (window.ethereum as { request: (a: unknown) => Promise<unknown> }).request({
-      method: 'wallet_addEthereumChain',
-      params: [
-        {
-          chainId: `0x${giwaChain.id.toString(16)}`,
-          chainName: giwaChain.name,
-          nativeCurrency: giwaChain.nativeCurrency,
-          rpcUrls: [RPC_URL],
-          blockExplorerUrls: [EXPLORER],
-        },
-      ],
-    });
-    await client.switchChain({ id: giwaChain.id });
-  }
-  return { address, client };
+/** Current gas price (wei) through the same retry discipline as all reads. */
+export function getGasPriceWei(): Promise<bigint> {
+  return withRetry(() => publicClient.getGasPrice(), 3, 500);
 }
+
+/** Conservative per-claim gas estimate used for the dust threshold: a
+ *  claim that returns less than this costs more than it returns. */
+export const CLAIM_GAS_UNITS = 180_000n;
 
 interface TxLike {
   to: Address;
@@ -907,6 +887,21 @@ async function planClaim(spec: ClaimSpec, owner: Address): Promise<TxLike> {
 
 export async function executeClaim(wallet: Wallet, row: ClaimRow): Promise<Hex> {
   const tx = await planClaim(row.claim, wallet.address);
+  // Gate 9: simulate the exact transaction first. A failed simulation
+  // means the claim is not offered to the wallet at all.
+  await queued(() =>
+    withRetry(
+      () =>
+        publicClient.call({
+          to: tx.to,
+          data: tx.data,
+          value: tx.value ?? 0n,
+          account: wallet.address,
+        }),
+      2,
+      500,
+    ),
+  );
   const hash = await wallet.client.sendTransaction({
     to: tx.to,
     data: tx.data,

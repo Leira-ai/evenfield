@@ -105,14 +105,18 @@ export async function deltaScan(factories: { factory: string; slots: string[] }[
 // ---------- chain checker ----------
 export type ChainVerdict =
   | { kind: 'real'; attested: boolean }
-  | { kind: 'fake' }
+  | { kind: 'reserved' }
   | { kind: 'unknown' };
 
 /** The attested catalog knows exactly one chain: GIWA Sepolia 91342.
- *  9134 is the documented fake. Everything else is unknown. For 91342 we
- *  additionally run the SDK runtime attestation against the live RPC. */
+ *  9134 is GIWA's RESERVED mainnet chain id: real in the public registry,
+ *  but the mainnet has NOT launched, and a copycat chain using that id
+ *  drained wallets in September 2026 precisely because the reservation
+ *  made it look official. A matching chain id is not proof of the real
+ *  chain; only the attested catalog is. Everything else is unknown. For
+ *  91342 we additionally run the SDK runtime attestation. */
 export async function checkChainId(id: number): Promise<ChainVerdict> {
-  if (id === 9134) return { kind: 'fake' };
+  if (id === 9134) return { kind: 'reserved' };
   if (id !== CHAIN_ID) return { kind: 'unknown' };
   try {
     const source = createAmmoraDeploymentSource([AUTO]);
