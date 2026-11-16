@@ -279,7 +279,7 @@ function curveChart(l: Launch, quoteSym: string, quoteDec: number): string {
   let d = `M ${x(0).toFixed(1)} ${y(0).toFixed(1)}`;
   for (let p = 5; p <= 100; p += 5) d += ` L ${x(p).toFixed(1)} ${y(p).toFixed(1)}`;
   const priceTxt = Number.isFinite(price) && price > 0
-    ? `<p class="card-line">${esc(t('chart.price', { price: fmtNum(price, { maximumFractionDigits: 6 }), sym: quoteSym }))}</p>` : '';
+    ? `<p class="card-line">${esc(t('chart.price', { price: fmtPrice(price), sym: quoteSym }))}</p>` : '';
   return `<section class="panel"><h2>${esc(t('chart.title'))}</h2>
     <div class="chart-wrap"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t('chart.note', { pct: fmtNum(pct, { maximumFractionDigits: 1 }) + '%' }))}">
       <path d="${d} L ${x(100).toFixed(1)} ${y(0).toFixed(1)} Z" fill="var(--action)" opacity="0.14"></path>
@@ -291,6 +291,15 @@ function curveChart(l: Launch, quoteSym: string, quoteDec: number): string {
     <p class="dim small">${esc(t('chart.note', { pct: fmtNum(pct, { maximumFractionDigits: 1 }) + '%' }))}</p>
     ${priceTxt}
   </section>`;
+}
+
+/** Spot prices on fresh curves are tiny; format them with significant
+ *  digits so a real price never renders as "0" (Gate 7 formatting). */
+function fmtPrice(v: number): string {
+  if (!Number.isFinite(v) || v <= 0) return '0';
+  if (v >= 0.001) return fmtNum(v, { maximumFractionDigits: 6 });
+  const decimals = Math.min(18, -Math.floor(Math.log10(v)) + 3);
+  return fmtNum(v, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 }
 
 function statBlock(label: string, value: string, meaning: string): string {
