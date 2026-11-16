@@ -358,6 +358,117 @@ numbers; its text nodes pass esc()). Address/hash display goes through
 addrChip/shortAddr + esc(). The share pages from scripts/prerender.mjs
 escape all snapshot fields with the same esc().
 
+## UX rebuild 3.0.0 (17 Nov 2026)
+
+Built under the skill's Gates 13-16 and `redesign/ux-spec-v2.md`,
+decisions D11-D16 in `redesign/study-notes-2.md`. Leira rejected
+2.0.0 because users were confused and mobile was still bad; this
+rebuild is organised around measured task success, not page
+appearance. The data engine's verified numbers and honesty rules
+were not touched; `executeClaim` behaviour is unchanged.
+
+### Per-gate results (G0-G16)
+
+| Gate | Result | Evidence |
+| --- | --- | --- |
+| G0 design plan first | PASS | ux-spec-v2.md + study-notes-2.md (D11-D16) preceded all code |
+| G1 tokens + computed contrast | PASS | tokens unchanged from 2.0.0; `scripts/contrast-check.mjs` re-run on 3.0.0: ALL PAIRS PASS |
+| G2 live matrix + performed tasks | PASS | probe/qa-matrix.mjs 69/69 and probe/qa-tasks.mjs (see T1-T8 below) against the LIVE URL; every reported screenshot viewed by the builder |
+| G3 performance budgets | PASS | initial JS 34.8 KB gzip (entry chunk), CSS 5.8 KB gzip, both far under the 200 KB gate; the WalletConnect chunk is fully lazy; throttled run (400 kbps, 4x CPU) shows usable cards in 4,380 ms |
+| G4 responsive matrix | PASS | widths 320-1920 plus foldable 344/717, both themes: no horizontal overflow anywhere; first-card visibility per width recorded under T1 |
+| G5 accessibility | PASS | axe-core zero critical/serious on home dark, home light, coin dark (1280); focus and target tokens unchanged from 2.0.0 |
+| G6 sink audit | PASS | new render surfaces (strip, chips, sheet, suggestions, summary) interpolate snapshot/user strings only through esc(); counts and amounts are computed numbers |
+| G7 formatting | PASS | relative times for every user-facing time (blockDate at 1.0 s/block, measured live); raw block heights removed from coin stats; amounts display at 6dp (0.246887728 shows as 0.246888) |
+| G8 wallet states | PASS | wagmi v3 + EIP-6963 kept; WalletConnect leg per D11 (below); mock-wallet connect, wrong-state and reconnect flows exercised by the probes |
+| G9 money-action safety | PASS | every claim still simulates via publicClient.call before any signature (executeClaim untouched); the confirm sheet precedes all signing (T6) |
+| G10 i18n parity | PASS | EN and ID dictionaries at exact parity, 323 = 323 keys, no orphans; all v3 keys present in both |
+| G11 honesty of states | PASS | three-state data honesty kept; stale-banner and snapshot-only flows pass in the matrix; one dust rule in every panel (0 enabled dust claims measured, T5/T6) |
+| G12 build/deploy hygiene | PASS | tsc --noEmit clean; SW cache bumped to evenfield-v3.0.0; each deploy verified by entry-chunk hash equality between dist and the live URL |
+| G13 task success | PASS on measured tasks, PARTIAL on hallway | T1-T8 all pass inside their tap budgets (table below). A 5-user hallway test cannot be run in this environment; the 5-second and face-value comprehension checks were performed as a documented builder self-review on the fresh screenshots instead |
+| G14 filters and discovery | PASS | presets with per-preset live counts; facets cross-counted with zero-count values disabled; safe defaults announced; applied chips removable plus Clear all; state in URL + localStorage, restored on back navigation (T8); mobile sheet with live "Show N coins"; desktop rail with instant apply; grouped suggestions with verdict chips and recents; the search placeholder renders in full at 320px |
+| G15 mobile and PC craft | PASS | job-based tab bar (Board / Watching / Money / Chain check / More); sticky quote dock on the coin page; sheet capped at 92svh with overscroll containment; coarse-pointer inputs at 16px; desktop rail, density toggle, keyboard shortcuts |
+| G16 safe defaults + money ease | PASS | test launches and stopped coins hidden by default and announced; connected wallet auto-checked on arrival; plain-words summary first; claim-all behind the "Before you sign" sheet; paste-address fallback validated and auto-run |
+
+### Acceptance tasks T1-T8 (live URL, real browser, taps counted)
+
+| Task | Budget | Measured | Result |
+| --- | --- | --- | --- |
+| T1 first card in first viewport, 390 dark | 0 taps | first card top 563px, 281px visible at 390x844 | PASS |
+| T1 variants | 0 taps | 360x740: 157px visible; 344x740: 128px; 390 light: 195px; 768: 484px; 320x700: 68px | PASS |
+| T2 shortlist via Worth a look + one facet | <= 3 taps | preset 1 tap -> 2 coins (AMMORA, Verify Drill); facet composes at tap 2; desktop preset + rail facet = 2 clicks | PASS |
+| T3 verdict chip + fact + meaning on the card | 0 taps (passport <= 1) | chip "Caution: sold early", fact and meaning on the first card at 0 taps; creator record at 1 tap | PASS |
+| T4 caution meaning from coin page top | 0 taps | meaning at top 559px in an 844px viewport; stats relative-time only; quote dock pinned mid-scroll | PASS |
+| T5 money summary after connect | 0 taps after connect | summary names AUICON and ANRCON at 0.246888 each (the verified 0.246887728 record at 6dp), plus GLPD, BLDRC and sub-0.001 WETH; 0 enabled dust claims anywhere | PASS |
+| T6 claim-all confirm sheet | <= 3 taps | sheet open at 1 tap, listing all 5 amounts and "sign 5 time(s)"; probe stopped at the sheet, Claim now never clicked | PASS |
+| T7 zero-result state + recovery | recovery <= 1 tap | state names the cause; recovery tap returns 1 coin (QLT) | PASS |
+| T8 filter state survives back navigation | n/a | "Showing 2 of 133 coins" identical before and after the round trip | PASS |
+
+Full suite: probe/qa-tasks.mjs 44/44, probe/qa-matrix.mjs 69/69,
+probe/qa-wallet-money.mjs 18/18, contrast ALL PAIRS PASS.
+
+### Defects found and fixed during this rebuild
+
+1. T1 failed on the real app render. The first QA run measured
+   212px of card visible, but that was the prerendered static card;
+   the app render put its first card at top 917px in an 844px
+   viewport (hero 209 + filterbar 296 + why-line 112). The static
+   prerender had been masking the failure. Fixed by compressing the
+   hero, moving search into the sticky bar, collapsing presets,
+   quick verdict chips, sort and the Filters button into one
+   horizontally scrolling strip, slimming the why-line, and moving
+   the hidden-by-default counts into strip chips; small-viewport
+   rules tighten lane headers at <= 768px and the hero fact at
+   <= 480px. The probe now waits for the app render (#boardSearch)
+   before measuring anything.
+2. Every preset chip showed the same count, 47. presetCount passed
+   skip:'preset' to the filter pipeline, which made the pipeline
+   ignore the preset being counted. Fixed to evaluate the preset;
+   verified live counts are Worth a look 2, Graduating soon 0, New
+   today 35, Clean creators 0, Graduated 13. A probe assertion now
+   pins these numbers.
+3. Probe defects (not app defects): the T5 connect check compared
+   the checksummed button label case-sensitively and reported a
+   working connect as failed; the T5 summary poll crashed on a
+   30s auto-wait instead of polling; the T5 amount regex expected
+   0.2469 where Gate 7 display rounding produces 0.246888. All
+   fixed in the probes.
+4. Stale harness expectations after the copy changes: qa-matrix
+   (verdict chip label, ID headline, snapshot-only promise line)
+   and qa-wallet-money ("Read at block" -> relative "Read {time}.",
+   the old dust label -> "{n} dust amounts, worth less than their
+   claim fees", the WalletConnect note's new wording, parity
+   expressed at Gate 7 display rounding with the full-precision
+   record asserted in data-exact, and one pinned dust digit string
+   from an old sweep replaced by the reachability invariant: the
+   dust details toggle opens and shows a full-precision figure).
+   Updated and re-run.
+
+### Recorded interpretations and corrections
+
+- D11 licence correction: study-notes-2 described
+  @walletconnect/ethereum-provider as MIT. Its LICENSE.md is the
+  WalletConnect Community License Agreement (Reown, Inc., released
+  20 August 2025), royalty-free for application development under
+  Section 1(b). The package is pinned exactly (2.26.0) as a direct
+  dependency and imported lazily, only when VITE_WC_PROJECT_ID is
+  configured; it is not configured, no external account was
+  created, and the honest in-product note remains.
+- "Worth a look" preset: the spec's "Clean record or Caution-free"
+  is implemented as verdict kind clean OR too-new-to-judge, plus
+  progress >= 25% OR buyers >= 3. On the current snapshot that is
+  exactly 2 coins (AMMORA, Verify Drill). Clean creators is 0:
+  no creator currently has a fully clean record.
+- The hidden-by-default counts moved out of the "Showing N of 133
+  coins" sentence into sticky strip chips ("39 test launches hidden
+  by your defaults · Show them"). The inline sentence wrapped to
+  four-plus lines at 344-360px and was itself a cause of the T1
+  failure; the counts and the one-tap lift remain on the same
+  screen, in the sticky bar.
+- Data facts behind the counts: 133 launches, 42 creators, 39 test
+  launches, 57 stopped; default-visible 47 (stage new 33, graduated
+  13, other 1, near 0; the only >= 75% coin, QLT at 99%, is a test
+  launch, so Graduating soon reads 0 under the safe defaults).
+
 ## Submission package (prepared, NOT sent)
 
 - X post draft: `builder-post.txt` (max 280 chars, mentions @AmmoraHQ,

@@ -1,5 +1,50 @@
 # Evenfield changelog
 
+## 3.0.0, 17 Nov 2026: the usability rebuild
+
+Rebuilt around how people actually find and judge a coin, under the
+skill's Gates 13-16 and `redesign/ux-spec-v2.md`. The data engine, its
+verified numbers, and the 2.0.0 theme tokens are unchanged.
+
+- Finding a coin: six one-tap presets with their own live counts
+  (Worth a look, Graduating soon, New today, Clean creators,
+  Graduated, Watching), facet filters (Stage, Verdict, Creator
+  record, Activity) with cross-computed counts and zero-count values
+  disabled, grouped search suggestions with verdict chips and
+  recents. Sort defaults to Closest to graduation. Filter state
+  lives in the URL and survives back navigation.
+- Safe defaults, said out loud: protocol test launches and stopped
+  coins start hidden; the board always says "Showing N of 133
+  coins", and chips in the filter strip say how many the defaults
+  are hiding, with the way to lift them built into the same chip.
+- Mobile: compressed two-line hero, one sticky strip holding search,
+  Filters, Sort, and the preset and verdict chips, so the first coin
+  card is inside the first viewport at 390, 360, and 344 widths.
+  Filters open as a bottom sheet whose button reads "Show N coins"
+  and updates as you tap. Bottom tab bar: Board, Watching, Money,
+  Chain check, More.
+- Desktop: a left filter rail with instant apply and a list density
+  toggle; keyboard shortcuts ( / search, f filters, 1-6 presets,
+  w watch, ? help).
+- Verdicts at face value: the caution chip reads "Caution: sold
+  early" or "Caution: their coins stopped", never praise-shaped.
+  Every card carries the creator and their labelled chip, the key
+  fact, and a "What this means for you" line.
+- Coin page: the verdict stage comes first (label, fact, meaning,
+  receipts), then a sticky quote bar with 0.01 / 0.05 / 0.1 presets,
+  then curve and stats. Times are relative everywhere; raw block
+  heights are no longer shown as user-facing values.
+- Money center: a connected wallet is checked on arrival; a
+  plain-words summary card leads ("About X are waiting and worth
+  claiming"), claim-all sits behind a "Before you sign" sheet that
+  lists every amount and how many signatures it takes, and one dust
+  rule applies in every panel, so no enabled Claim anywhere costs
+  more than it returns. Paste any address as a checked fallback.
+- WalletConnect: the leg now runs on the standalone
+  @walletconnect/ethereum-provider package, pinned, loaded lazily,
+  active only when a Reown project id is configured for this origin;
+  the honest in-product note stays until then.
+
 ## 2.0.0, 17 Nov 2026: the "field at dusk" rebuild
 
 Full frontend rebuild under the web-product-engineering skill gates
