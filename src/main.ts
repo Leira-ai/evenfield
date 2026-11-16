@@ -464,7 +464,11 @@ function facetCount(f: FilterState, group: FacetGroup, value: string): number {
   return applyFilters(f, { skip: group, force: [group, value] }).length;
 }
 function presetCount(f: FilterState, preset: string): number {
-  return applyFilters({ ...f, preset }, { skip: 'preset' }).length;
+  // How many coins tapping this preset would show, given every other
+  // active filter. The preset itself must be evaluated, not skipped:
+  // an earlier version passed skip:'preset', which made every chip
+  // show the unfiltered count (47) regardless of the preset.
+  return applyFilters({ ...f, preset }).length;
 }
 function sortLaunches(list: Launch[], sort: SortId): Launch[] {
   const raised = (l: Launch) => (l.state?.quoteReserve ? BigInt(l.state.quoteReserve) : 0n);
