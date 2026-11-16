@@ -1,0 +1,22 @@
+{
+  "name": "evenfield",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Evenfield: the whole Ammora launch day in one place. Spot the coins worth your money, read the receipts on the human behind them, buy in two taps, and launch your own when you are ready. GIWA Sepolia testnet, built with the official @ammora-protocol/sdk.",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "snapshot": "node scripts/build-snapshot.mjs",
+    "census": "node scripts/census.mjs"
+  },
+  "dependencies": {
+    "@ammora-protocol/sdk": "0.3.9",
+    "viem": "^2.33.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "vite": "^5.4.0"
+  }
+}
