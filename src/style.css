@@ -248,7 +248,7 @@
   .stage-head { display: flex; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-2); }
   .stage-head h2 { font-size: var(--fs-h2); line-height: var(--lh-h2); font-weight: 800; letter-spacing: -0.01em; }
   .stage-head .stage-meaning { color: var(--text-2); }
-  .stage-head .stage-count { color: var(--text-3); font-weight: 700; }
+  .stage-head .stage-count { color: var(--text-2); font-weight: 700; }
   .cq { container-type: inline-size; }
   .grid { display: grid; grid-template-columns: 1fr; gap: var(--space-4); margin-top: var(--space-4); }
   @container (min-width: 560px) { .grid { grid-template-columns: repeat(2, 1fr); } }
@@ -415,8 +415,14 @@
     .brand { font-size: var(--fs-body); line-height: var(--lh-body); }
     .top-right { gap: var(--space-1); min-width: 0; }
     .wallet-btn { padding: var(--space-2); font-size: var(--fs-small); white-space: nowrap; }
+    .wallet-btn .dim { display: none; }
     .lang-toggle button { padding: var(--space-2); font-size: var(--fs-caption); }
     .icon-btn { padding: 0 var(--space-1); }
+  }
+  @media (max-width: 400px) {
+    .wallet-btn { padding: var(--space-1) var(--space-2); font-size: var(--fs-caption); }
+    .lang-toggle button { padding: var(--space-1) var(--space-2); }
+    .icon-btn { min-width: 40px; }
   }
   @media (min-width: 1024px) {
     .topnav { display: flex; }
