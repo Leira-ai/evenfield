@@ -279,7 +279,9 @@ function curveChart(l: Launch, quoteSym: string, quoteDec: number): string {
   let d = `M ${x(0).toFixed(1)} ${y(0).toFixed(1)}`;
   for (let p = 5; p <= 100; p += 5) d += ` L ${x(p).toFixed(1)} ${y(p).toFixed(1)}`;
   const priceTxt = Number.isFinite(price) && price > 0
-    ? `<p class="card-line">${esc(t('chart.price', { price: fmtPrice(price), sym: quoteSym }))}</p>` : '';
+    ? (price >= 1e-6
+      ? `<p class="card-line">${esc(t('chart.price', { price: fmtPrice(price), sym: quoteSym }))}</p>`
+      : `<p class="card-line">${esc(t('chart.price.million', { price: fmtNum(price * 1e6, { maximumFractionDigits: 6 }), sym: quoteSym }))}</p>`) : '';
   return `<section class="panel"><h2>${esc(t('chart.title'))}</h2>
     <div class="chart-wrap"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t('chart.note', { pct: fmtNum(pct, { maximumFractionDigits: 1 }) + '%' }))}">
       <path d="${d} L ${x(100).toFixed(1)} ${y(0).toFixed(1)} Z" fill="var(--action)" opacity="0.14"></path>
