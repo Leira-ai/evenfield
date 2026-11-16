@@ -266,19 +266,25 @@ const enriched = await pool(launches, 3, async (rec) => {
     await gatherEvidence(rec, head),
   ];
   const testReason = classifyTest(meta.name ?? '', meta.symbol ?? '', rec.uri);
-  const statusName = state === null ? 'unreadable' : state.status === 2 ? 'graduated' : state.status === 1 ? 'trading' : state.status === 0 ? 'pending' : 'unknown';
+  // Curve lifecycle (SDK docs/v4-graduation-lifecycle.md): 0 pending,
+  // 1 Trading, 2 ReadyToMigrate (fill complete), 3 Migrated (pool live).
+  // Graduated = the curve filled: status 2 or 3. readyToMigrate marks 2.
+  const statusName = state === null ? 'unreadable' : state.status === 2 || state.status === 3 ? 'graduated' : state.status === 1 ? 'trading' : state.status === 0 ? 'pending' : 'unknown';
+  const readyToMigrate = state !== null && state.status === 2;
   const stopped = statusName === 'trading' || statusName === 'pending'
     ? evidence.lastSwapBlock === null
       ? head - rec.block > STOP_BLOCKS
       : head - evidence.lastSwapBlock > STOP_BLOCKS
     : false;
-  const progressPct = state && state.migrationQuoteThreshold && state.quoteReserve && BigInt(state.migrationQuoteThreshold) > 0n
-    ? Math.min(100, Number((BigInt(state.quoteReserve) * 10000n) / BigInt(state.migrationQuoteThreshold)) / 100)
-    : null;
+  const progressPct = readyToMigrate || (state && state.status === 3)
+    ? 100
+    : state && state.migrationQuoteThreshold && state.quoteReserve && BigInt(state.migrationQuoteThreshold) > 0n
+      ? Math.min(100, Number((BigInt(state.quoteReserve) * 10000n) / BigInt(state.migrationQuoteThreshold)) / 100)
+      : null;
   return {
     ...rec,
     name: meta.name, symbol: meta.symbol, decimals: meta.decimals, totalSupply: meta.totalSupply,
-    state, statusName, stopped, progressPct,
+    state, statusName, readyToMigrate, stopped, progressPct,
     evidence,
     testLaunch: testReason !== null, testReason,
   };

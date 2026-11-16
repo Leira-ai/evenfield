@@ -2,3 +2,4 @@ node_modules/
 dist/
 scripts/census-progress.json
 probe/
+feed-prev.json

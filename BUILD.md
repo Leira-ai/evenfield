@@ -158,7 +158,7 @@ alone, and the next visit retries from the same watermark.
   with a hard 20-second budget. Delta results are an enhancement, never a
   requirement; every screen completes from the snapshot alone.
 - Verdicts (blueprint B12, published on the in-app methodology page):
-  graduated = curve status Migrated; stopped = no swap for 100,000 blocks
+  graduated = the curve filled; stopped = no swap for 100,000 blocks
   and not graduated; creator sold early = a sell from the creator address
   before graduation or within the first 7,200 blocks, always reported
   with amount and transaction link. Verdict copy is generated only from
@@ -171,7 +171,15 @@ alone, and the next visit retries from the same watermark.
   partner fees, ALMM referral fees, ARL pool revenue, DFS vault shares),
   planner first with the exact verified call as fallback, simulation
   before any send, claims only ever from the visitor's own connected
-  wallet.
+  wallet. Parity check during verification: for the busiest creator
+  address (0x13cd27a6...), the app renders the same figures as a direct
+  engine probe (probe/a1-probe.mts): ARL claimables in the shared vault
+  0x56f05c... including 0.246887728 AUICON and 0.246887728 ANRCON exactly,
+  and WETH 296086000000 wei (0.000000296086). The WETH figure itself had
+  moved since Glean's read a day earlier (0.000296086 then): the
+  beneficiary is an active protocol-team address and the shared-vault
+  balance was partly claimed in between; the significant digits and the
+  engine agree.
 - Chain checker: chain 91342 = GIWA Sepolia from the attested catalog
   (with the attestation caveat above stated on the page); chain 9134 =
   the documented fake that drained about 766 ETH in September 2026;
@@ -203,12 +211,75 @@ alone, and the next visit retries from the same watermark.
 - Bot-interactive Telegram and push alerts: mainnet phase. The one-way
   digest is prepared (above).
 
+### Build-time correction: the curve status enum (found by the first snapshot, verified three ways)
+
+Slipway's labels said status 2 = Migrated, and the first Evenfield
+snapshot dutifully mapped 27 curves to "unknown" because their status
+read 3. The SDK's own `docs/v4-graduation-lifecycle.md` gives the real
+lifecycle: 1 = Trading, 2 = ReadyToMigrate (the terminal fill completed;
+a permissionless `migrate()` remains), 3 = Migrated (the canonical pool
+exists). Verified independently: the SDK V4 client returns status 3 for
+the same curves, and both status-2 and status-3 curves carry a
+MigrationReady event and a set canonical pool (the migration event on
+this generation is `MigratedV4`, emitted at migration). Consequence,
+applied in the builder and in the published methodology: **graduated =
+the curve filled (status 2 or 3)**, with status 2 flagged
+`readyToMigrate` and worded as such in the UI. This refines blueprint
+B12's one-line definition ("status Migrated") with the protocol's own
+lifecycle names; the blueprint's intent (graduation is a contract fact,
+not an inference) is unchanged. A second defect from the same first
+build: `LaunchCreated` has three indexed parameters (token, curve,
+creator); a hand-written event ABI without the indexed flags silently
+decoded zero launches. The builder and the app's delta scan both use the
+corrected declaration, and chunk failures are now logged, never silent.
+
 ## Verification (live browser, not Node-only)
 
-(to be filled in after the live check: demo path without a wallet, quote
-live, verdict drawer, passport, money center reproducing Glean's numbers
-for the two known addresses, EN/ID toggle, mobile viewport, snapshot-only
-mode with RPC blocked, defects found and fixed.)
+Headless Chromium (Playwright) against the LIVE Pages URL,
+`probe/render-check.mjs`: **34/34 checks passed** on the final build,
+plus graduated/ready spot checks (`probe/grad-check2.mjs`). Covered:
+home renders instantly from the snapshot with the exact blueprint
+headline and the live fact line ("42 creators have launched 133 coins");
+search finds coins; the demo coin page (BAEKHO) shows the verdict chip,
+the evidence-based verdict sentence, and an evidence drawer with
+explorer transaction links; the quote resolves LIVE (0.01 WETH in,
+800,544.42 BAEKHO out, sell-back 0.009644 WETH, block-stamped); the
+early-seller passport shows its "sold their own coin early" section and
+the big creator's passport separates his 13 protocol test launches; the
+chain checker returns the fake verdict for 9134, the not-in-catalog
+verdict for 1234, and the catalog verdict for 91342; the methodology
+page publishes the 100,000 / 7,200 parameters; the dispute form prepares
+its text locally and the public correction log renders; the money center
+completes a full sweep for the busiest creator and reproduces the direct
+engine probe's figures (see the parity note above; the sweep takes
+about 7 minutes cold in the browser, the known Glean tradeoff); the ID
+toggle translates the UI, keeps "Evenfield" untranslated, and formats
+numbers in the Indonesian locale; the 390px mobile viewport has no
+horizontal overflow; with the RPC blocked at the network layer the app
+still renders the full board from the snapshot and the quote widget
+falls back to an honest labelled state; zero JavaScript page errors
+across the whole run (the only console noise was two HTTP 429 resource
+responses from the rate-limited public RPC, which the app absorbs with
+its fallbacks).
+
+Defects found by verification and fixed before this report:
+1. Quote button on the coin page carried the chain checker's label
+   ("Check this chain"); it now has its own label in both locales.
+2. The verdict sentence said "in 1 transactions"; singular form added
+   in both locales.
+3. The weekly recap counted all graduations ever next to this week's
+   launch count; it now counts graduations among the week's launches.
+4. The snapshot-price fallback quote could print an absurd estimate for
+   segmented curves; a sanity bound (estimate must not exceed the
+   token's total supply) now routes those to the honest no-quote state.
+5. The status-enum and indexed-event defects described above (found by
+   the first snapshot build and a correlation test, fixed in the
+   builder, the app's delta scan, and the published methodology).
+6. First verification run scored 31/34; the three failures were the
+   chain-1234 assertion (a curly apostrophe in the app's copy versus a
+   straight one in the test), the money parity figure (a live balance
+   that had moved, settled by the direct engine probe), and the
+   console-error rule (network 429s, reclassified as described above).
 
 ## Submission package (prepared, NOT sent)
 

@@ -1,6 +1,6 @@
 {
- "generatedAt": "2026-11-16T18:06:11.673Z",
- "headBlock": 41505779,
+ "generatedAt": "2026-11-16T19:09:02.861Z",
+ "headBlock": 41508207,
  "newLaunches": [
   {
    "name": "Pepper Test Token (PTT)",
@@ -670,25 +670,133 @@
  ],
  "newGraduations": [
   {
+   "name": "MekiPad Test (MEKI)",
+   "curve": "0x1a86dB604551cFE9A78ee131889c5f1D033f88F3"
+  },
+  {
+   "name": "Ammora Test Token (AMT)",
+   "curve": "0x2c4B71A11d290DdE04BCe12C34938C969966fDD2"
+  },
+  {
+   "name": "MuseTest (MUSE)",
+   "curve": "0x48C2b7dDcf4354969991979c54c967041C6eB1a4"
+  },
+  {
    "name": "AMMORA (AMMORA)",
    "curve": "0x307d0a2fEad69af1920E66B99C14fe4D077A4E81"
+  },
+  {
+   "name": "Korean Guide Partner Test (KGPT)",
+   "curve": "0xCc803Eb81b7Cf3a71dBF17d25E342e45F17be209"
+  },
+  {
+   "name": "Public Agent Guide Test (PAG)",
+   "curve": "0xa1E8b1564Fcb1AEFc60EC03021e917614d856726"
+  },
+  {
+   "name": "Agent Guide GIWA (AAG)",
+   "curve": "0xA307e9125B6F1c235a0D4e98b99c1BF9990d0BE0"
+  },
+  {
+   "name": "SDK038 Vesting Check (S038V)",
+   "curve": "0x00CB332e63065c600574dE1F6B99BC2662Cec90A"
+  },
+  {
+   "name": "Guide Launchpad Demo (GLPD)",
+   "curve": "0xb45e375dFC152bdC7393a57F156f9A5c6b67B069"
+  },
+  {
+   "name": "SDK034 compounding builder (BLDRP)",
+   "curve": "0x2c00C8aA0E82eC0FCA40F2e1336B0C6A2656253B"
+  },
+  {
+   "name": "SDK034 concentrated builder (BLDRC)",
+   "curve": "0x41621244b4209B50da25161F977F7F01c217D041"
+  },
+  {
+   "name": "SDK031 GIWA Prerequisite Test (P27TEST)",
+   "curve": "0xc0D1919C7D92209Eb72F9eA0d8073fFCb7BD682e"
+  },
+  {
+   "name": "Ammora SDK030 Test (ASDKT)",
+   "curve": "0xFa2c37c3D029c32D8692fe81Ae442f41Fd0bb46F"
+  },
+  {
+   "name": "Ammora Test (ATST)",
+   "curve": "0x7EEF37EAF86D3f4e63c572d729C8e349405b05fe"
+  },
+  {
+   "name": "Ammora UI Acceptance compounding (AUICMP)",
+   "curve": "0xa5bf8666fd656722AA0606e208D56afD3a247465"
+  },
+  {
+   "name": "Ammora UI Acceptance concentrated (AUICON)",
+   "curve": "0xfd9cFB7c079C8B77342d853edDA8754347377804"
+  },
+  {
+   "name": "Ammora Native Acceptance compounding (ANRCMP)",
+   "curve": "0x838703C4A257f07E2b77F7d8DF2F98882532Abe4"
+  },
+  {
+   "name": "Ammora Native Acceptance concentrated (ANRCON)",
+   "curve": "0xffA37cACe48080C818dEF73AC9EA5AdF861002E4"
+  },
+  {
+   "name": "Baekho Chart Lifecycle Test (BCTEST)",
+   "curve": "0xDA31a428303c7e7EA02a28026e7Aa636E78C609b"
+  },
+  {
+   "name": "Baekho Chart Lifecycle Test (BCTEST)",
+   "curve": "0x680f7902225c80b2FEA4B3dEC6f1bDdFa7910405"
+  },
+  {
+   "name": "Ammora Browser E2E 1788174980037 (ABE2E)",
+   "curve": "0x3FAAb0af3cE5be9E7d5099aECaCa7DDA07dc19F6"
   },
   {
    "name": "Verify Drill (VDRL)",
    "curve": "0xEd11498c40ec8CE0b3FB8f66E243621F4FA75f63"
   },
   {
+   "name": "Ammora V4 GIWA Sepolia E2E (AV4E2E)",
+   "curve": "0x5269a909F19fad561a51E71213EAdE9AD945824d"
+  },
+  {
+   "name": "Ammora V4 GIWA Sepolia E2E (AV4E2E)",
+   "curve": "0xf0F0682294f6EFED4D022BAD4D4CBADcba17473d"
+  },
+  {
+   "name": "Ammora V4 GIWA E2E (AV4E2E)",
+   "curve": "0xceC0B52139226f6C9E8a592e405685775e958032"
+  },
+  {
    "name": "Example Token (EXT)",
    "curve": "0x6D7beE204448c059DEaa3E2B5614183dA203cCcB"
+  },
+  {
+   "name": "Ammora GIWA Canary (AGC)",
+   "curve": "0x375CA8B7b303979Ae2Eba6967BC798F4F8a9392B"
+  },
+  {
+   "name": "Ammora GIWA Canary (AGC)",
+   "curve": "0xf730a5826ae1aE66A4B58595fAE775E840a1e4Ce"
+  },
+  {
+   "name": "Ammora GIWA Canary (AGC)",
+   "curve": "0x4792B1B283071Abc1009b02fa82c3Fe48De231fd"
+  },
+  {
+   "name": "Ammora GIWA Canary (AGC)",
+   "curve": "0x44f5F02AA77d20ef32Ed9D0Ef05CE8e193C8E407"
+  },
+  {
+   "name": "Ammora GIWA Canary (AGC)",
+   "curve": "0xCF35C4809C3779a6D0fE4ec3ea9E7F8bFB9582c9"
   }
  ],
  "weekly": {
   "newLaunches": 35,
   "closestToGraduation": [
-   {
-    "name": "MekiPad Test (MEKI)",
-    "progressPct": 99
-   },
    {
     "name": "Quick Launch Test (QLT)",
     "progressPct": 99
@@ -696,6 +804,10 @@
    {
     "name": "newom (NWM)",
     "progressPct": 61.28
+   },
+   {
+    "name": "Giwa (GIWA)",
+    "progressPct": 44.08
    }
   ]
  }

@@ -33,7 +33,7 @@ interface Launch {
   token: string; curve: string; creator: string; configId: string;
   protocolVersion: number; uri: string; block: number; tx: string; slots: string[]; factory: string;
   name: string | null; symbol: string | null; decimals: number; totalSupply: string | null;
-  state: CurveState | null; statusName: string; stopped: boolean; progressPct: number | null;
+  state: CurveState | null; statusName: string; readyToMigrate?: boolean; stopped: boolean; progressPct: number | null;
   evidence: Evidence; testLaunch: boolean; testReason: string | null;
   verdict: string; verdictReasons: { kind: string;[k: string]: unknown }[];
 }
@@ -102,7 +102,7 @@ function cardReason(l: Launch): string {
 function coinCard(l: Launch): string {
   const initial = esc((l.symbol || l.name || '?').slice(0, 1).toUpperCase());
   const progress = l.statusName === 'graduated'
-    ? `<p class="card-line">${esc(t('board.progress.done'))}</p>`
+    ? `<p class="card-line">${esc(t(l.readyToMigrate ? 'board.progress.ready' : 'board.progress.done'))}</p>`
     : l.progressPct !== null
       ? `<div class="meter" role="img" aria-label="${esc(t('board.progress', { pct: fmtNum(l.progressPct, { maximumFractionDigits: 1 }) + '%' }))}"><div class="meter-fill" style="width:${Math.max(2, Math.min(100, l.progressPct))}%"></div></div><p class="card-line">${esc(t('board.progress', { pct: fmtNum(l.progressPct, { maximumFractionDigits: 1 }) + '%' }))}</p>`
       : `<p class="card-line">${esc(t('board.progress.none'))}</p>`;
@@ -139,7 +139,7 @@ function verdictSentences(l: Launch): string[] {
     const bought = BigInt(ev.creatorBuyTotal || '0');
     if (bought > 0n && soldEarly > 0n) {
       const pct = fmtNum(Number((soldEarly * 10000n) / bought) / 100, { maximumFractionDigits: 1 }) + '%';
-      out.push(t('verdict.sentence.sell', {
+      out.push(t(earlySells.length === 1 ? 'verdict.sentence.sell.one' : 'verdict.sentence.sell', {
         coin: displayName(earlyLaunch), x: pct, when: t('verdict.when.early'), k: earlySells.length,
       }));
     }
@@ -222,7 +222,7 @@ function pageHome(): string {
     .sort((a, b) => (b.progressPct ?? 0) - (a.progressPct ?? 0)).slice(0, 3);
   const weekly = `<section class="stage"><h2>${esc(t('weekly.title'))}</h2>
     <p class="card-line">${esc(t('weekly.sub'))}</p>
-    <p class="card-line">${esc(t('weekly.new', { n: fmtNum(weekNew.length) }))} · ${esc(t('weekly.grads', { n: fmtNum(real.filter((l) => l.statusName === 'graduated').length) }))}</p>
+    <p class="card-line">${esc(t('weekly.new', { n: fmtNum(weekNew.length) }))} · ${esc(t('weekly.grads', { n: fmtNum(weekNew.filter((l) => l.statusName === 'graduated').length) }))}</p>
     ${nearGrad.length ? `<div class="grid">${nearGrad.map(coinCard).join('')}</div>` : ''}</section>`;
   return `<section class="hero">
       <h1>${esc(t('home.headline'))}</h1>
@@ -288,7 +288,7 @@ async function pageCoin(curve: string): Promise<string> {
       <form id="quoteForm" class="quote-form">
         <label>${esc(t('coin.quote.amount'))} (${esc(quoteSym)})
           <input id="quoteAmount" inputmode="decimal" value="0.01"></label>
-        <button class="btn" type="submit">${esc(t('chain.check.btn'))}</button>
+        <button class="btn" type="submit">${esc(t('coin.quote.btn'))}</button>
       </form>
       <div id="quoteOut" aria-live="polite"></div>
     </section>
@@ -336,6 +336,13 @@ function wireCoin(curve: string) {
         const sqrt = Number(BigInt(st.sqrtPrice)) / 2 ** 96;
         const price = sqrt * sqrt * 10 ** (l.decimals - quoteDec); // quote per base, human units
         const est = price > 0 ? Number(formatUnits(amountIn, quoteDec)) / price : 0;
+        const supplyHuman = l.totalSupply ? Number(formatUnits(BigInt(l.totalSupply), l.decimals)) : null;
+        // Sanity bound: an indicative estimate that exceeds the token's whole
+        // supply is a misread price, not a quote. Show the honest none state.
+        if (!Number.isFinite(est) || est <= 0 || (supplyHuman !== null && est > supplyHuman)) {
+          out.innerHTML = `<p class="card-line">${esc(t('coin.quote.none'))}</p>`;
+          return;
+        }
         out.innerHTML = `<p class="card-line">${esc(t('coin.quote.gets'))} ${esc(fmtNum(est, { maximumFractionDigits: 2 }))} ${esc(l.symbol ?? '')}</p>
           <p class="card-line dim">${esc(t('coin.quote.stale', { block: fmtNum(snap.headBlock) }))}</p>`;
       } else {
@@ -648,7 +655,7 @@ async function boot() {
           token: d.token, curve: d.curve, creator: d.creator, configId: d.configId,
           protocolVersion: d.protocolVersion, uri: d.uri, block: d.block, tx: d.tx, slots: d.slots, factory: d.factory,
           name: meta?.name || null, symbol: meta?.symbol || null, decimals: meta?.decimals ?? 18, totalSupply: null,
-          state: null, statusName: 'pending', stopped: false, progressPct: null,
+          state: null, statusName: 'pending', readyToMigrate: false, stopped: false, progressPct: null,
           evidence: { swapCount: 0, uniqueBuyers: 0, firstSwapBlock: null, lastSwapBlock: null, lastSwapTx: null, creatorBuys: 0, creatorBuyTotal: '0', creatorSellTotal: '0', creatorSells: [], creatorSoldEarly: false, currentCreator: d.creator, creatorTransferred: null, holders: null, windows: [] },
           testLaunch: false, testReason: null, verdict: 'toonew', verdictReasons: [],
         };
