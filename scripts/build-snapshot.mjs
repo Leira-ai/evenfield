@@ -61,25 +61,29 @@ function catalogSlots() {
 }
 
 const LAUNCH_TOPIC = keccak256(toHex('LaunchCreated(address,address,address,uint256,bytes32,uint16,string)'));
-const launchAbi = [parseAbiItem('event LaunchCreated(address token, address curve, address creator, uint256 configId, bytes32 configHash, uint16 protocolVersion, string metadataURI)')];
+const launchAbi = [parseAbiItem('event LaunchCreated(address indexed token, address indexed curve, address indexed creator, uint256 configId, bytes32 configHash, uint16 protocolVersion, string metadataURI)')];
 const curveAbi = sdk.segmentedBondingCurveV3Abi;
 const SWAP_TOPIC = keccak256(toHex('Swap(address,bool,bool,uint256,uint256,uint256,uint256,uint128,address)'));
 const TRANSFER_TOPIC = keccak256(toHex('Transfer(address,address,uint256)'));
 const CREATOR_TRANSFERRED_TOPIC = keccak256(toHex('CreatorTransferred(address,address)'));
 
+let failedChunks = 0;
 async function getLogsRange(address, topic, from, to) {
-  const logs = [];
-  for (let s = from; s <= to; s += Number(CHUNK)) {
-    const e = Math.min(s + Number(CHUNK) - 1, to);
+  const ranges = [];
+  for (let s = from; s <= to; s += Number(CHUNK)) ranges.push([s, Math.min(s + Number(CHUNK) - 1, to)]);
+  const parts = await pool(ranges, 3, async ([s, e]) => {
     const part = await withRetry(() =>
       client.request({
         method: 'eth_getLogs',
         params: [{ address, topics: [topic], fromBlock: `0x${s.toString(16)}`, toBlock: `0x${e.toString(16)}` }],
       }),
     ).catch(() => null);
-    if (part) logs.push(...part);
-  }
-  return logs;
+    if (part) return part;
+    failedChunks++;
+    console.warn(`WARN chunk failed: ${address} ${s}-${e} (total failed: ${failedChunks})`);
+    return [];
+  });
+  return parts.flat();
 }
 
 // ---------- test-launch classification (named rules, auditable) ----------

@@ -1,0 +1,702 @@
+{
+ "generatedAt": "2026-11-16T18:06:11.673Z",
+ "headBlock": 41505779,
+ "newLaunches": [
+  {
+   "name": "Pepper Test Token (PTT)",
+   "curve": "0xa6Cb1B6220D51Cf20704714152C87f1882BAAEB6",
+   "block": 41504951
+  },
+  {
+   "name": "Bebop Test Token (BBPT)",
+   "curve": "0xDb5637b42b8e27c34823437D5D658D5e749AccE7",
+   "block": 41501170
+  },
+  {
+   "name": "BaekhoGiwa (BAEKHO)",
+   "curve": "0x3c973d2f881b34B62b20C154a824341C8e34cA60",
+   "block": 41498424
+  },
+  {
+   "name": "Guts (GUTS)",
+   "curve": "0xa925a76D62615911c94CF94336AdEF5EcE62997E",
+   "block": 41497487
+  },
+  {
+   "name": "TESTING (TST)",
+   "curve": "0x228367c16D37903d973ADF2E61669A425A0E8500",
+   "block": 41492749
+  },
+  {
+   "name": "MekiPad Test (MEKI)",
+   "curve": "0x1a86dB604551cFE9A78ee131889c5f1D033f88F3",
+   "block": 41489562
+  },
+  {
+   "name": "Ammora Builder Token (BUILD)",
+   "curve": "0xD4e56764674dFf344eFA13C68f9a2e21f39bf3bf",
+   "block": 41486709
+  },
+  {
+   "name": "Alun Alun Kidul (MUYA)",
+   "curve": "0xc088F521d72641EED98FE8EfbE2e352E49F49f0d",
+   "block": 41485441
+  },
+  {
+   "name": "OWI (OWII)",
+   "curve": "0x676F93Ab5aA35Db875fFc626a4E5A3FF9E22255f",
+   "block": 41485369
+  },
+  {
+   "name": "Ammora Builder Token (BUILD)",
+   "curve": "0x23f89ae7f6F4D8197dA232a4Dc244F5Dd631E758",
+   "block": 41483510
+  },
+  {
+   "name": "Ciburial Eco Token (CBRL)",
+   "curve": "0x3150eF2f5A654Dc723d585c99dE54235b2106131",
+   "block": 41483350
+  },
+  {
+   "name": "AmmoraPad Demo (APAD)",
+   "curve": "0x53c5aAEedbD4A29885e097a097292D0281a82F80",
+   "block": 41481287
+  },
+  {
+   "name": "TEST (TEST)",
+   "curve": "0xd622414fc53680b85335915Fee24D1702b64Cfe7",
+   "block": 41480264
+  },
+  {
+   "name": "Neon Forge (BLAPE6)",
+   "curve": "0x095855f5D9067245ADEE007c7299a48e0d38880B",
+   "block": 41478968
+  },
+  {
+   "name": "Ammora Test Token (AMT)",
+   "curve": "0x2c4B71A11d290DdE04BCe12C34938C969966fDD2",
+   "block": 41478047
+  },
+  {
+   "name": "DANISUKALANANG (DSL)",
+   "curve": "0x7380955331b452Be3db761DB882fcB1466301a45",
+   "block": 41477862
+  },
+  {
+   "name": "MIMO (MIMO)",
+   "curve": "0xa7973A92a96fDA5e3b8e429dF220fcEcB67c9c81",
+   "block": 41476320
+  },
+  {
+   "name": "DANI SUKA LANANG (DSL)",
+   "curve": "0xd07F0e96c6dd7279AcEC18A31f9b7D0B7d445aA0",
+   "block": 41472089
+  },
+  {
+   "name": "Farris Builder Demo (FBD)",
+   "curve": "0x2f0ce075668F7F59619aE9d6ed54BDb604637f60",
+   "block": 41470373
+  },
+  {
+   "name": "YuzuPad (YUZU)",
+   "curve": "0x7B51e128c1d06831184bCFa475472CcEEAcEad65",
+   "block": 41470129
+  },
+  {
+   "name": "Launchpad Test Token (LPT)",
+   "curve": "0x718490cf3d7334845A7a0634764af2F13eaDC43f",
+   "block": 41469251
+  },
+  {
+   "name": "STYN (STY)",
+   "curve": "0xfBCA300d906581C2c7c780C9Fb9f0718B55cA352",
+   "block": 41468905
+  },
+  {
+   "name": "MuseTest (MUSE)",
+   "curve": "0x48C2b7dDcf4354969991979c54c967041C6eB1a4",
+   "block": 41468328
+  },
+  {
+   "name": "CONKABIS (MBS)",
+   "curve": "0x971561afF63C7e45baBe0f63be46b46EA9c35f95",
+   "block": 41465790
+  },
+  {
+   "name": "KRINJAT (KJT)",
+   "curve": "0x8eeBd5263671806Edcd3713c900B3a7088E5f377",
+   "block": 41464855
+  },
+  {
+   "name": "CONK (CNK)",
+   "curve": "0xA89DF844032B69De4E0aefA797C2E207BbbE6183",
+   "block": 41463589
+  },
+  {
+   "name": "CONK (CNK)",
+   "curve": "0x779d4ee046CC76281314FBa4a9cc9C88bCD37ad2",
+   "block": 41463341
+  },
+  {
+   "name": "GIWACAT (GCAT)",
+   "curve": "0x41D287a1bcE05944841D425f7c736C1c96849F43",
+   "block": 41462326
+  },
+  {
+   "name": "TRAI (TRAI)",
+   "curve": "0xaAAD1f2c8521E29fa99DBE1bfF9827Ed00a2FF11",
+   "block": 41461808
+  },
+  {
+   "name": "Starry (STARRY)",
+   "curve": "0x6f8cC62a1e8E59f5a8Ef2b65A08E3E966D6eBB34",
+   "block": 41460887
+  },
+  {
+   "name": "Stingy (STINGY)",
+   "curve": "0x37bA86792E9F753b00459338B727cDBbB74A901B",
+   "block": 41460869
+  },
+  {
+   "name": "Squiddy (SQUIDDY)",
+   "curve": "0x5512daE596Acb70f49F457994711496e51dc30Ed",
+   "block": 41460844
+  },
+  {
+   "name": "Narwhal (NARWHAL)",
+   "curve": "0xcA3bFc8646c87D90E58A49df8ac844a599c06D95",
+   "block": 41460819
+  },
+  {
+   "name": "Clowny (CLOWNY)",
+   "curve": "0x3223d9B2e7be4e424Fb1d52D903B77b1C9327674",
+   "block": 41460777
+  },
+  {
+   "name": "Octo (OCTO)",
+   "curve": "0x35aDBd9bdDc6b446Db1822B9742Ae072Db905181",
+   "block": 41460732
+  },
+  {
+   "name": "Jellie (JELLIE)",
+   "curve": "0xAEa7E5B71EdBBeACB23eb99761F8DcC01343684A",
+   "block": 41460711
+  },
+  {
+   "name": "Sharky (SHARKY)",
+   "curve": "0x2073E08Dcb7B4a1E1E2bfE8a983F753608A2B986",
+   "block": 41460690
+  },
+  {
+   "name": "AMMORA (AMMORA)",
+   "curve": "0xC35cf6b0A6FEd958CC8E6ddF475321Ec63d6F654",
+   "block": 41459933
+  },
+  {
+   "name": "AMMORA (AMMORA)",
+   "curve": "0x2866EaC4764cC07e0eEf01D3738336fd3eC665F8",
+   "block": 41459643
+  },
+  {
+   "name": "KJ Test (KJT)",
+   "curve": "0xb897e26801A2717f8f463e4E543A30E4966891eF",
+   "block": 41452919
+  },
+  {
+   "name": "Quick Launch Test (QLT)",
+   "curve": "0x4041Ae90a5DEC88395301C8DBe4aCaaC55F3A65B",
+   "block": 41450455
+  },
+  {
+   "name": "Metaxx Test (MTXT)",
+   "curve": "0xF9b22979194c0CA54e3fD877D26bae3bA01675d5",
+   "block": 41449401
+  },
+  {
+   "name": "Giwamora (GMORA)",
+   "curve": "0x1038B6c1A34669677A0cB92a3eC8a03d658924f0",
+   "block": 41447457
+  },
+  {
+   "name": "AMMORA (AMMORA)",
+   "curve": "0x307d0a2fEad69af1920E66B99C14fe4D077A4E81",
+   "block": 41436804
+  },
+  {
+   "name": "Ammora (AMM)",
+   "curve": "0x9a11EAaCeFA2DA3D93Daa1Bf63707c1eF085a55a",
+   "block": 41436454
+  },
+  {
+   "name": "AmmoPad Genesis (APGEN)",
+   "curve": "0xD8D2a0E003e02a52222dd16916Be339E0316c006",
+   "block": 41436323
+  },
+  {
+   "name": "AROMMA (AROMMA)",
+   "curve": "0xc46787f478Cb6ceA5871A7E4A2220D9FC8400ec5",
+   "block": 41435563
+  },
+  {
+   "name": "Korean Guide Partner Test (KGPT)",
+   "curve": "0xCc803Eb81b7Cf3a71dBF17d25E342e45F17be209",
+   "block": 40471062
+  },
+  {
+   "name": "Public Agent Guide Test (PAG)",
+   "curve": "0xa1E8b1564Fcb1AEFc60EC03021e917614d856726",
+   "block": 40381272
+  },
+  {
+   "name": "Claude Session (CLAUDE)",
+   "curve": "0x49Dd192c04280ac5E650b1d3F2dCfAf085236134",
+   "block": 40349926
+  },
+  {
+   "name": "Agent Atomic Config (AAC)",
+   "curve": "0xc79d93E82f8567e4D328cF64f295F1A19e95909d",
+   "block": 40349686
+  },
+  {
+   "name": "Agent Atomic Existing (AAE)",
+   "curve": "0x2a433014f871cb4Dc118d1Ecc92E44fd4799c208",
+   "block": 40349548
+  },
+  {
+   "name": "Agent Guide GIWA (AAG)",
+   "curve": "0xA307e9125B6F1c235a0D4e98b99c1BF9990d0BE0",
+   "block": 40346810
+  },
+  {
+   "name": "Q402 Agent Launch (QAGENT)",
+   "curve": "0x95ED91863E60ffDe7f347f2dC36092B5BE43b5B7",
+   "block": 40345141
+  },
+  {
+   "name": "Q402 MCP Test (QMCPT)",
+   "curve": "0x3FD4957bbDB51d552F037bbD8f96dD8E882a9504",
+   "block": 40344993
+  },
+  {
+   "name": "SDK038 Vesting Check (S038V)",
+   "curve": "0x00CB332e63065c600574dE1F6B99BC2662Cec90A",
+   "block": 39837336
+  },
+  {
+   "name": "Fee Sharing Live 037 (FSL37)",
+   "curve": "0xf36E8718ea0E24a11215c1a9Ad740381ce227b2F",
+   "block": 39749308
+  },
+  {
+   "name": "GIWA SDK Catalog Test (GSCAT)",
+   "curve": "0x15cF805080668794c076A9b5ac477eDd71Da1FEf",
+   "block": 39738648
+  },
+  {
+   "name": "Optional Existing (OEXI)",
+   "curve": "0xBB34D9425CAB120a5a666019cAdbf241E24526d6",
+   "block": 39692625
+  },
+  {
+   "name": "Optional Atomic (OATM)",
+   "curve": "0xdd43fA8Be3554A079494E9a3187299a35319cd4c",
+   "block": 39691306
+  },
+  {
+   "name": "Guide Launchpad Demo (GLPD)",
+   "curve": "0xb45e375dFC152bdC7393a57F156f9A5c6b67B069",
+   "block": 39683325
+  },
+  {
+   "name": "SDK034 atomic config launch (BLDRQ)",
+   "curve": "0x96D7F374c0b9AAcAf40C9E09D99F9ff3FefEc85c",
+   "block": 39677004
+  },
+  {
+   "name": "SDK034 compounding builder (BLDRP)",
+   "curve": "0x2c00C8aA0E82eC0FCA40F2e1336B0C6A2656253B",
+   "block": 39675771
+  },
+  {
+   "name": "SDK034 concentrated builder (BLDRC)",
+   "curve": "0x41621244b4209B50da25161F977F7F01c217D041",
+   "block": 39673855
+  },
+  {
+   "name": "SDK031 GIWA Prerequisite Test (P27TEST)",
+   "curve": "0xc0D1919C7D92209Eb72F9eA0d8073fFCb7BD682e",
+   "block": 39522406
+  },
+  {
+   "name": "Distinct Fee Test (DFEE)",
+   "curve": "0xb85F84D8C3E6a8477bb0396Af9B89a55375430DD",
+   "block": 39479477
+  },
+  {
+   "name": "Ammora SDK030 Test (ASDKT)",
+   "curve": "0xFa2c37c3D029c32D8692fe81Ae442f41Fd0bb46F",
+   "block": 39434076
+  },
+  {
+   "name": "uguv (HUG)",
+   "curve": "0x84056F9D95353d1c719871B071c036002E3FdA09",
+   "block": 39110523
+  },
+  {
+   "name": "?$)7 (VHVH)",
+   "curve": "0x68532FCa0B416E7c0DBD2bd019bd3CC6D834754C",
+   "block": 38668839
+  },
+  {
+   "name": "uoiuj (HYYUH)",
+   "curve": "0x586072826D4dC78e333454a119370E01571d1F17",
+   "block": 37192987
+  },
+  {
+   "name": "Loop814088 (LP7)",
+   "curve": "0x4299D0a873857cD82B0B5d6724214dEC5F5d48F5",
+   "block": 37074700
+  },
+  {
+   "name": "Loop762914 (LP11)",
+   "curve": "0x1E7692BaDe612607191622bc034A8991219C6820",
+   "block": 37074649
+  },
+  {
+   "name": "Loop742936 (LP9)",
+   "curve": "0x5d66a0672F3E9D24Acd84AB840F19e6a644c4AE7",
+   "block": 37074629
+  },
+  {
+   "name": "Loop657035 (LP7)",
+   "curve": "0xdD5a97811a463d55a4DA500500A721B10f3f6F95",
+   "block": 37074543
+  },
+  {
+   "name": "Loop607194 (LP7)",
+   "curve": "0xb2EFd977F378790BF2eb3A7da87e360530d3fDFd",
+   "block": 37074494
+  },
+  {
+   "name": "Ammora C9 (AMC9)",
+   "curve": "0xb4ec5331368A3EC24DB43D5b1bF57bB2189Cf8Af",
+   "block": 37074108
+  },
+  {
+   "name": "Ammora C11 (AMC11)",
+   "curve": "0x409291Eb28bFb34F2df517fc12Dd90DEd858C109",
+   "block": 37074103
+  },
+  {
+   "name": "Ammora C7 (AMC7)",
+   "curve": "0x94B7Fa7240A4A7Cf8F8790FfF6C2c01807D58E0C",
+   "block": 37074100
+  },
+  {
+   "name": "Ammora Test (ATST)",
+   "curve": "0x7EEF37EAF86D3f4e63c572d729C8e349405b05fe",
+   "block": 37073033
+  },
+  {
+   "name": "Pars (PARS)",
+   "curve": "0x257F2B6D7369ca824460c13Aea485Fd5FA4e2a50",
+   "block": 37046458
+  },
+  {
+   "name": "TOKEN (TOKEN)",
+   "curve": "0x3af3226B4bF48798018353427BffE92C0D5a3C3c",
+   "block": 36930145
+  },
+  {
+   "name": "newom (NWM)",
+   "curve": "0x1BCE94A245e0556B81Ea9e72A489D799741897A9",
+   "block": 36883933
+  },
+  {
+   "name": "Giwa Doge (GDOGE)",
+   "curve": "0xdd98BE1B24B64612C968BF7bc8aB26261DB4A4dc",
+   "block": 36815673
+  },
+  {
+   "name": "Nova Intelligence (NOVA)",
+   "curve": "0x30bc5681949d1E65D415169f5884e7d5104Bb539",
+   "block": 36815627
+  },
+  {
+   "name": "GIWA TEST (GWT)",
+   "curve": "0x68441CF71b231B53C28F524D86d144E29BD2A5Ea",
+   "block": 36815354
+  },
+  {
+   "name": "Alxo (ALX)",
+   "curve": "0x16CC1A550638A2bB45BB45Df7D02ac6B0bF5F591",
+   "block": 36782659
+  },
+  {
+   "name": "GIW66 (GGW)",
+   "curve": "0xceFB28dbc0e88a55CCA0B2FFF4b914b7Df90eC8A",
+   "block": 36727505
+  },
+  {
+   "name": "GGG (GG)",
+   "curve": "0xcc8484F1a198c2e23F9438246bc624701F1a29e1",
+   "block": 36718317
+  },
+  {
+   "name": "fam (FAM)",
+   "curve": "0x9F560AB67c9B2f9e48f674565745F2fC25c27dc8",
+   "block": 36664130
+  },
+  {
+   "name": "NEGIN (NGN)",
+   "curve": "0xE8031dbFd28EB2E32160c652832ba3C3f7aD9c88",
+   "block": 36651285
+  },
+  {
+   "name": "GIWALAYER2 (GWTLR)",
+   "curve": "0xe38Dea951f0092451Af1aC59EB9a18eb73f86D03",
+   "block": 36645614
+  },
+  {
+   "name": "test (TST)",
+   "curve": "0x64Fd2a512e7E5200C64e43DaD048CB910a8428a9",
+   "block": 36572306
+  },
+  {
+   "name": "popol (POL)",
+   "curve": "0x33113D95dE0A22709274EEcb06dcbb8980d197a1",
+   "block": 36467789
+  },
+  {
+   "name": "Nexus AI Protocol (NEXUS)",
+   "curve": "0xf2d85ADbeC662197d5c491A4204aAB4789d9662D",
+   "block": 36455407
+  },
+  {
+   "name": "Cooler Cat (COOLCAT)",
+   "curve": "0x41801416BbF4f72D8b90925f228bba61259fe821",
+   "block": 36405227
+  },
+  {
+   "name": "GIWAMORA (GWA)",
+   "curve": "0xF06AA57dd78B9D31699e4DD9E740191438ff22A1",
+   "block": 36386899
+  },
+  {
+   "name": "snot (SNOT)",
+   "curve": "0x8CFeF5CB52E54EE6C83852e5a830da10Cd2d46B6",
+   "block": 36308312
+  },
+  {
+   "name": "Giwa (GIWA)",
+   "curve": "0xCD3CDb830Fe30293684831a7fEda00915D607Ec7",
+   "block": 36306399
+  },
+  {
+   "name": "GiwaTest (GWT)",
+   "curve": "0x380Fd4Bf55d0b775161C919ff069cBF90A097592",
+   "block": 36295115
+  },
+  {
+   "name": "Ammora UI Acceptance compounding (AUICMP)",
+   "curve": "0xa5bf8666fd656722AA0606e208D56afD3a247465",
+   "block": 36286583
+  },
+  {
+   "name": "Ammora UI Acceptance concentrated (AUICON)",
+   "curve": "0xfd9cFB7c079C8B77342d853edDA8754347377804",
+   "block": 36286309
+  },
+  {
+   "name": "Ammora Native Acceptance compounding (ANRCMP)",
+   "curve": "0x838703C4A257f07E2b77F7d8DF2F98882532Abe4",
+   "block": 36265760
+  },
+  {
+   "name": "Ammora Native Acceptance concentrated (ANRCON)",
+   "curve": "0xffA37cACe48080C818dEF73AC9EA5AdF861002E4",
+   "block": 36265051
+  },
+  {
+   "name": "Ammora Unattended Registration Canary (AUAUTO)",
+   "curve": "0xF3746A666E464a65996e4C037bAb95Ca36E94D4A",
+   "block": 36237788
+  },
+  {
+   "name": "GIWA Test Ecosystem Token (GTET)",
+   "curve": "0x22324b816b50079494430b2c43d15Df44f39B778",
+   "block": 36231288
+  },
+  {
+   "name": "Ammora SDK Isolated Canary (AISDK)",
+   "curve": "0x6D2cE5c47443330ECD3eB7c9d0f6c18FbC39C7D7",
+   "block": 36229935
+  },
+  {
+   "name": "Ammora Isolated V4 Canary (AIV4C)",
+   "curve": "0x2C4e147617Ca14502c438a35a370680494E8BD7B",
+   "block": 36228578
+  },
+  {
+   "name": "Baekho Chart Lifecycle Test (BCTEST)",
+   "curve": "0xDA31a428303c7e7EA02a28026e7Aa636E78C609b",
+   "block": 35760328
+  },
+  {
+   "name": "Baekho Chart Lifecycle Test (BCTEST)",
+   "curve": "0x680f7902225c80b2FEA4B3dEC6f1bDdFa7910405",
+   "block": 35699808
+  },
+  {
+   "name": "Jack Coin (JACK)",
+   "curve": "0xC7dFAB1006a3a81dFa68b016db93995e0406B9f2",
+   "block": 35578099
+  },
+  {
+   "name": "Ammora Browser E2E 1788174980037 (ABE2E)",
+   "curve": "0x3FAAb0af3cE5be9E7d5099aECaCa7DDA07dc19F6",
+   "block": 34829872
+  },
+  {
+   "name": "Giwa House (GH)",
+   "curve": "0xa77DFaFe2B4247126142A09175067A6675e6BAA6",
+   "block": 33949711
+  },
+  {
+   "name": "달빛 호랑이 (DALBIT)",
+   "curve": "0xA33F6f324087C79522F2a9930Fe4EC9022b3c03E",
+   "block": 33844206
+  },
+  {
+   "name": "Verify Drill (VDRL)",
+   "curve": "0xEd11498c40ec8CE0b3FB8f66E243621F4FA75f63",
+   "block": 33713903
+  },
+  {
+   "name": "test (TEST)",
+   "curve": "0xa5d77411FA0AA7e6cAD859f116F633BD15E4C8a4",
+   "block": 33638945
+  },
+  {
+   "name": "Ammora V4 Quick E2E (AV4Q)",
+   "curve": "0x2f2fc6A247d5827a1C453d4EA7D8BDadE6f83363",
+   "block": 33290816
+  },
+  {
+   "name": "Ammora V4 GIWA Sepolia E2E (AV4E2E)",
+   "curve": "0x5269a909F19fad561a51E71213EAdE9AD945824d",
+   "block": 33290810
+  },
+  {
+   "name": "Ammora Examples Beta13 (AXB13)",
+   "curve": "0x9168aDD39D4C1C97A395b78C4d97b27b81b79AEF",
+   "block": 33258098
+  },
+  {
+   "name": "Ammora V4 Quick E2E (AV4Q)",
+   "curve": "0xC7979686fB7f0443DFe806fE6427492Ee006A886",
+   "block": 33200951
+  },
+  {
+   "name": "Ammora V4 GIWA Sepolia E2E (AV4E2E)",
+   "curve": "0xf0F0682294f6EFED4D022BAD4D4CBADcba17473d",
+   "block": 33200947
+  },
+  {
+   "name": "Ammora V4 Quick E2E (AV4Q)",
+   "curve": "0x08B582E2a4D669EF95e9518f2C4Dd0c512A1eD6C",
+   "block": 33190049
+  },
+  {
+   "name": "Ammora V4 GIWA E2E (AV4E2E)",
+   "curve": "0xceC0B52139226f6C9E8a592e405685775e958032",
+   "block": 33190044
+  },
+  {
+   "name": "Example Token (EXT)",
+   "curve": "0x6D7beE204448c059DEaa3E2B5614183dA203cCcB",
+   "block": 32588318
+  },
+  {
+   "name": "Vaults Coin (VCOIN)",
+   "curve": "0xa06FcE0eD1ae2c031B86c5213a0F7a32DA758cd5",
+   "block": 32504491
+  },
+  {
+   "name": "Ammora GIWA Canary (AGC)",
+   "curve": "0x375CA8B7b303979Ae2Eba6967BC798F4F8a9392B",
+   "block": 32502251
+  },
+  {
+   "name": "Verify Five (VRF5)",
+   "curve": "0x01C72002Eb087aC88B19828e5FEDb1032CC945d5",
+   "block": 32495149
+  },
+  {
+   "name": "Verify Four (VRF4)",
+   "curve": "0x01b063F6232878136d7Aba9F1911501d46Ac4022",
+   "block": 32495115
+  },
+  {
+   "name": "Verify Three (VRF3)",
+   "curve": "0x1B0FDb6B9F32Cf2185870DaB53a53AC183C5483f",
+   "block": 32495028
+  },
+  {
+   "name": "Verify Coin (VRFY)",
+   "curve": "0xb713bCDe92D52B750739b7feA6Cd00Bf20f98b7A",
+   "block": 32494849
+  },
+  {
+   "name": "Ammora GIWA Canary (AGC)",
+   "curve": "0xf730a5826ae1aE66A4B58595fAE775E840a1e4Ce",
+   "block": 32473164
+  },
+  {
+   "name": "Ammora GIWA Canary (AGC)",
+   "curve": "0x4792B1B283071Abc1009b02fa82c3Fe48De231fd",
+   "block": 32398858
+  },
+  {
+   "name": "Ammora GIWA Canary (AGC)",
+   "curve": "0x44f5F02AA77d20ef32Ed9D0Ef05CE8e193C8E407",
+   "block": 32389022
+  },
+  {
+   "name": "Ammora GIWA Canary (AGC)",
+   "curve": "0xCF35C4809C3779a6D0fE4ec3ea9E7F8bFB9582c9",
+   "block": 31904774
+  }
+ ],
+ "newGraduations": [
+  {
+   "name": "AMMORA (AMMORA)",
+   "curve": "0x307d0a2fEad69af1920E66B99C14fe4D077A4E81"
+  },
+  {
+   "name": "Verify Drill (VDRL)",
+   "curve": "0xEd11498c40ec8CE0b3FB8f66E243621F4FA75f63"
+  },
+  {
+   "name": "Example Token (EXT)",
+   "curve": "0x6D7beE204448c059DEaa3E2B5614183dA203cCcB"
+  }
+ ],
+ "weekly": {
+  "newLaunches": 35,
+  "closestToGraduation": [
+   {
+    "name": "MekiPad Test (MEKI)",
+    "progressPct": 99
+   },
+   {
+    "name": "Quick Launch Test (QLT)",
+    "progressPct": 99
+   },
+   {
+    "name": "newom (NWM)",
+    "progressPct": 61.28
+   }
+  ]
+ }
+}

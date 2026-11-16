@@ -258,7 +258,13 @@ async function pageCoin(curve: string): Promise<string> {
   const l = byCurve.get(curve.toLowerCase());
   if (!l) return `<p class="empty">${esc(t('search.none'))}</p><p><a href="#/">${esc(t('common.back'))}</a></p>`;
   const st = l.state;
-  const raised = st?.quoteReserve ? fmtNum(Number(formatUnits(BigInt(st.quoteReserve), 18)), { maximumFractionDigits: 4 }) + ' ETH' : '—';
+  let quoteSym = 'ETH';
+  let quoteDec = 18;
+  if (st?.quoteToken) {
+    const qm = await tokenMeta(st.quoteToken as Address).catch(() => null);
+    if (qm?.symbol) { quoteSym = qm.symbol; quoteDec = qm.decimals; }
+  }
+  const raised = st?.quoteReserve ? fmtNum(Number(formatUnits(BigInt(st.quoteReserve), quoteDec)), { maximumFractionDigits: 4 }) + ' ' + quoteSym : '—';
   const holders = l.evidence.holders
     ? `<p class="card-line">${esc(t('coin.state.holders'))}: ${fmtNum(l.evidence.holders.count)}</p>
        <p class="card-line">${esc(t('coin.state.holders.note', { top1: fmtNum(l.evidence.holders.top1Pct, { maximumFractionDigits: 1 }) + '%', top10: fmtNum(l.evidence.holders.top10Pct, { maximumFractionDigits: 1 }) + '%' }))}</p>`
@@ -280,7 +286,7 @@ async function pageCoin(curve: string): Promise<string> {
     <section class="panel">
       <h2>${esc(t('coin.quote.title'))}</h2>
       <form id="quoteForm" class="quote-form">
-        <label>${esc(t('coin.quote.amount'))} (ETH)
+        <label>${esc(t('coin.quote.amount'))} (${esc(quoteSym)})
           <input id="quoteAmount" inputmode="decimal" value="0.01"></label>
         <button class="btn" type="submit">${esc(t('chain.check.btn'))}</button>
       </form>
@@ -301,9 +307,15 @@ function wireCoin(curve: string) {
   const form = $<HTMLFormElement>('#quoteForm');
   const out = $('#quoteOut');
   const runQuote = async () => {
+    let quoteDec = 18;
+    let quoteSym = 'ETH';
+    if (l.state?.quoteToken) {
+      const qm = await tokenMeta(l.state.quoteToken as Address).catch(() => null);
+      if (qm?.symbol) { quoteSym = qm.symbol; quoteDec = qm.decimals; }
+    }
     const raw = $<HTMLInputElement>('#quoteAmount').value.trim().replace(',', '.');
     let amountIn: bigint;
-    try { amountIn = parseUnits(raw as `${number}`, 18); if (amountIn <= 0n) throw new Error('zero'); }
+    try { amountIn = parseUnits(raw as `${number}`, quoteDec); if (amountIn <= 0n) throw new Error('zero'); }
     catch { out.innerHTML = `<p class="card-line">${esc(t('coin.quote.none'))}</p>`; return; }
     out.innerHTML = `<p class="card-line">${esc(t('common.loading'))}</p>`;
     const withTimeout = <T,>(p: Promise<T>, ms: number) => Promise.race([p, new Promise<never>((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
@@ -312,7 +324,7 @@ function wireCoin(curve: string) {
       let sellLine = '';
       try {
         const sell = await withTimeout(liveQuote(l.curve as Address, buy.amountOut, true), 6000);
-        sellLine = `<p class="card-line">${esc(t('coin.quote.sellback'))} ${esc(fmtNum(Number(formatUnits(sell.amountOut, 18)), { maximumFractionDigits: 6 }))} ETH</p>`;
+        sellLine = `<p class="card-line">${esc(t('coin.quote.sellback'))} ${esc(fmtNum(Number(formatUnits(sell.amountOut, quoteDec)), { maximumFractionDigits: 6 }))} ${esc(quoteSym)}</p>`;
       } catch { /* sell-back is a bonus line; the buy quote already landed */ }
       out.innerHTML = `<p class="card-line">${esc(t('coin.quote.gets'))} ${esc(fmtNum(Number(formatUnits(buy.amountOut, l.decimals)), { maximumFractionDigits: 2 }))} ${esc(l.symbol ?? '')}</p>
         ${sellLine}
@@ -322,8 +334,8 @@ function wireCoin(curve: string) {
       const st = l.state;
       if (st?.sqrtPrice) {
         const sqrt = Number(BigInt(st.sqrtPrice)) / 2 ** 96;
-        const price = sqrt * sqrt * 10 ** (l.decimals - 18); // quote per base, human units
-        const est = price > 0 ? Number(formatUnits(amountIn, 18)) / price : 0;
+        const price = sqrt * sqrt * 10 ** (l.decimals - quoteDec); // quote per base, human units
+        const est = price > 0 ? Number(formatUnits(amountIn, quoteDec)) / price : 0;
         out.innerHTML = `<p class="card-line">${esc(t('coin.quote.gets'))} ${esc(fmtNum(est, { maximumFractionDigits: 2 }))} ${esc(l.symbol ?? '')}</p>
           <p class="card-line dim">${esc(t('coin.quote.stale', { block: fmtNum(snap.headBlock) }))}</p>`;
       } else {

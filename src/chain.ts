@@ -45,7 +45,7 @@ export async function curveStatus(curve: Address): Promise<number | null> {
 
 // ---------- delta sync: LaunchCreated from the snapshot watermark ----------
 const LAUNCH_TOPIC = keccak256(toHex('LaunchCreated(address,address,address,uint256,bytes32,uint16,string)'));
-const launchAbi = [parseAbiItem('event LaunchCreated(address token, address curve, address creator, uint256 configId, bytes32 configHash, uint16 protocolVersion, string metadataURI)')];
+const launchAbi = [parseAbiItem('event LaunchCreated(address indexed token, address indexed curve, address indexed creator, uint256 configId, bytes32 configHash, uint16 protocolVersion, string metadataURI)')];
 const CHUNK = 10_000;
 
 export interface DeltaLaunch {
