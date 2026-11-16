@@ -579,25 +579,43 @@ function snapshotLine(): string {
   return stale ? `<div class="stale-banner">${line}</div>` : line;
 }
 
-function presetRowHtml(f: FilterState): string {
+function presetChipsHtml(f: FilterState): string {
   const chips = PRESETS.map((p) =>
     `<button type="button" class="preset-chip" data-act="preset" data-preset="${p}" aria-pressed="${f.preset === p}">${esc(t(`preset.${p}`))} <span class="cnt">${fmtNum(presetCount(f, p))}</span></button>`).join('');
   const views = savedViews().map((v, i) =>
     `<button type="button" class="preset-chip saved" data-act="apply-view" data-idx="${i}">${esc(v.name)}</button>`).join('');
-  return `<div class="preset-row" role="group" aria-label="${esc(t('filter.title'))}">${chips}${views}</div>`;
+  return chips + views;
 }
 
-/** Quick verdict row in the sticky bar: the Creator-record facet one
- *  tap from the board, so the core shortlist path (preset + verdict)
- *  costs 2 taps on a phone, inside the T2 budget. The same values live
- *  in the sheet and the rail with identical counts. */
-function quickRowHtml(f: FilterState): string {
-  const vals = FACET_VALUES.verdict.map((v) => {
+/** Quick verdict chips: the Creator-record facet one tap from the
+ *  board, so the core shortlist path (preset + verdict) costs 2 taps
+ *  on a phone, inside the T2 budget. The same values live in the sheet
+ *  and the rail with identical counts. */
+function quickChipsHtml(f: FilterState): string {
+  return FACET_VALUES.verdict.map((v) => {
     const n = facetCount(f, 'verdict', v);
     const on = f.verdict.includes(v);
     return `<button type="button" class="facet-val" data-act="facet" data-group="verdict" data-value="${v}" aria-pressed="${on}" ${n === 0 && !on ? 'disabled' : ''}>${esc(t(FACET_VALUE_LABEL.verdict[v]))} <span class="cnt">${fmtNum(n)}</span></button>`;
   }).join('');
-  return `<div class="quick-row" role="group" aria-label="${esc(t('filter.facet.verdict'))}"><span class="quick-label">${esc(t('filter.facet.verdict'))}</span>${vals}</div>`;
+}
+
+/** The sticky bar's single scrollable strip: filter trigger (mobile),
+ *  sort, presets, quick verdict chips. One line tall at every width:
+ *  the first coin card has to reach the first viewport (Gate 13, T1),
+ *  and a three-row bar measured 296px and pushed it out. */
+function stripHtml(f: FilterState): string {
+  return `<button type="button" class="btn btn-ghost" id="filterBtn" data-act="open-filters">${esc(t('filter.btn'))}${activeFilterCount(f) ? ` <span class="badge">${fmtNum(activeFilterCount(f))}</span>` : ''}</button>
+    <label class="sort-label">${esc(t('filter.sort'))}
+      <select id="sortSel" class="sort-select">
+        <option value="grad" ${f.sort === 'grad' ? 'selected' : ''}>${esc(t('filter.sort.grad'))}</option>
+        <option value="newest" ${f.sort === 'newest' ? 'selected' : ''}>${esc(t('filter.sort.newest'))}</option>
+        <option value="buyers" ${f.sort === 'buyers' ? 'selected' : ''}>${esc(t('filter.sort.buyers'))}</option>
+        <option value="raised" ${f.sort === 'raised' ? 'selected' : ''}>${esc(t('filter.sort.raised'))}</option>
+      </select></label>
+    <span class="sep" aria-hidden="true"></span>
+    ${presetChipsHtml(f)}
+    <span class="sep" aria-hidden="true"></span>
+    ${quickChipsHtml(f)}`;
 }
 
 function facetGroupsHtml(f: FilterState): string {
@@ -624,7 +642,11 @@ function savedViewsHtml(): string {
 }
 function railHtml(f: FilterState): string {
   return `<h2 class="rail-title">${esc(t('filter.title'))}</h2>${facetGroupsHtml(f)}${savedViewsHtml()}
-    <button type="button" class="btn btn-ghost rail-clear" data-act="clear-all">${esc(t('filter.clear'))}</button>`;
+    <button type="button" class="btn btn-ghost rail-clear" data-act="clear-all">${esc(t('filter.clear'))}</button>
+    <div class="view-toggle" role="group" aria-label="${esc(t('filter.view.cards'))} / ${esc(t('filter.view.list'))}">
+      <button type="button" data-act="view" data-view="cards" aria-pressed="${f.view === 'cards'}">${esc(t('filter.view.cards'))}</button>
+      <button type="button" data-act="view" data-view="list" aria-pressed="${f.view === 'list'}">${esc(t('filter.view.list'))}</button>
+    </div>`;
 }
 
 function appliedChipsHtml(f: FilterState): string {
@@ -733,28 +755,13 @@ function pageBoard(basePath: string): string {
       <h1>${esc(t('home.promise'))}</h1>
       <p class="fact">${esc(t('home.fact', { creators: fmtNum(snap.creators.length), coins: fmtNum(snap.launches.length) }))}</p>
       ${snapshotLine()}
+    </section>
+    <div class="filterbar">
       <div class="search-wrap">
         <div class="search-row"><input id="boardSearch" type="search" value="${esc(f.query)}" placeholder="${esc(t('home.search.placeholder'))}" aria-label="${esc(t('home.search.placeholder'))}" autocomplete="off"></div>
         <div id="searchSuggest" class="suggest" hidden></div>
       </div>
-    </section>
-    <div class="filterbar">
-      <div id="presetRow">${presetRowHtml(f)}</div>
-      <div id="quickRow">${quickRowHtml(f)}</div>
-      <div class="filter-controls">
-        <button type="button" class="btn btn-ghost" id="filterBtn" data-act="open-filters">${esc(t('filter.btn'))}${activeFilterCount(f) ? ` <span class="badge">${fmtNum(activeFilterCount(f))}</span>` : ''}</button>
-        <label class="sort-label">${esc(t('filter.sort'))}
-          <select id="sortSel" class="sort-select">
-            <option value="grad" ${f.sort === 'grad' ? 'selected' : ''}>${esc(t('filter.sort.grad'))}</option>
-            <option value="newest" ${f.sort === 'newest' ? 'selected' : ''}>${esc(t('filter.sort.newest'))}</option>
-            <option value="buyers" ${f.sort === 'buyers' ? 'selected' : ''}>${esc(t('filter.sort.buyers'))}</option>
-            <option value="raised" ${f.sort === 'raised' ? 'selected' : ''}>${esc(t('filter.sort.raised'))}</option>
-          </select></label>
-        <div class="view-toggle" role="group" aria-label="${esc(t('filter.view.cards'))} / ${esc(t('filter.view.list'))}">
-          <button type="button" data-act="view" data-view="cards" aria-pressed="${f.view === 'cards'}">${esc(t('filter.view.cards'))}</button>
-          <button type="button" data-act="view" data-view="list" aria-pressed="${f.view === 'list'}">${esc(t('filter.view.list'))}</button>
-        </div>
-      </div>
+      <div class="chips-strip" id="chipsRow">${stripHtml(f)}</div>
     </div>
     <div class="board-shell">
       <aside class="filter-rail" id="filterRail">${railHtml(f)}</aside>
@@ -769,14 +776,9 @@ function refreshBoard() {
   if (!boardCtx) return;
   const f = boardCtx.f;
   const y = window.scrollY;
-  const pr = $('#presetRow'); if (pr) pr.innerHTML = presetRowHtml(f);
-  const qr = $('#quickRow'); if (qr) qr.innerHTML = quickRowHtml(f);
+  const cr = $('#chipsRow'); if (cr) cr.innerHTML = stripHtml(f);
   const rail = $('#filterRail'); if (rail) rail.innerHTML = railHtml(f);
   const main = $('#boardMain'); if (main) main.innerHTML = boardMainHtml(f);
-  const btn = $('#filterBtn');
-  if (btn) btn.innerHTML = `${esc(t('filter.btn'))}${activeFilterCount(f) ? ` <span class="badge">${fmtNum(activeFilterCount(f))}</span>` : ''}`;
-  const sel = document.querySelector<HTMLSelectElement>('#sortSel');
-  if (sel && sel.value !== f.sort) sel.value = f.sort;
   document.querySelectorAll<HTMLButtonElement>('[data-act="view"]').forEach((b) =>
     b.setAttribute('aria-pressed', String(b.dataset.view === f.view)));
   const search = document.querySelector<HTMLInputElement>('#boardSearch');
