@@ -683,6 +683,20 @@
   @media (pointer: coarse) {
     input, select, textarea { font-size: 16px; }
   }
+  /* Small-height phones: the first card must still land in the first
+     viewport (T1 at 360x740 and the 344 foldable cover), so the lane
+     headers and hero fact tighten instead of wrapping tall. */
+  @media (max-width: 768px) {
+    .stage-head h2 { font-size: var(--fs-h3); line-height: var(--lh-h3); }
+    .stage-head .stage-meaning {
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+    }
+    .board-shell { margin-top: var(--space-2); }
+  }
+  @media (max-width: 480px) {
+    .hero-compact .fact { font-size: var(--fs-small); line-height: var(--lh-small); }
+    .hidden-chip { border-style: dashed; }
+  }
   @media (min-width: 1024px) {
     #filterBtn { display: none; }
     .view-toggle { display: inline-flex; }

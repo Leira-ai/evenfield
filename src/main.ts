@@ -615,7 +615,23 @@ function stripHtml(f: FilterState): string {
     <span class="sep" aria-hidden="true"></span>
     ${presetChipsHtml(f)}
     <span class="sep" aria-hidden="true"></span>
-    ${quickChipsHtml(f)}`;
+    ${quickChipsHtml(f)}${hiddenChipsHtml(f)}`;
+}
+
+/** Safe-default announcements as strip chips: how many coins the
+ *  defaults are hiding, with the lift built into the same chip. */
+function hiddenChipsHtml(f: FilterState): string {
+  const shown = applyFilters(f).length;
+  let out = '';
+  if (!f.showTests) {
+    const hidden = applyFilters({ ...f, showTests: true }).length - shown;
+    if (hidden > 0) out += `<button type="button" class="facet-val hidden-chip" data-act="toggle" data-toggle="tests">${esc(t('filter.hidden.tests', { n: hidden }))} · ${esc(t('filter.show.them'))}</button>`;
+  }
+  if (!f.showStopped) {
+    const hidden = applyFilters({ ...f, showStopped: true }).length - shown;
+    if (hidden > 0) out += `<button type="button" class="facet-val hidden-chip" data-act="toggle" data-toggle="stopped">${esc(t('filter.hidden.stopped', { n: hidden }))} · ${esc(t('filter.show.them'))}</button>`;
+  }
+  return out;
 }
 
 function facetGroupsHtml(f: FilterState): string {
@@ -665,17 +681,12 @@ function appliedChipsHtml(f: FilterState): string {
 }
 
 function whyLineHtml(f: FilterState, shown: number): string {
-  const total = snap!.launches.length;
-  let extra = '';
-  if (!f.showTests) {
-    const hidden = applyFilters({ ...f, showTests: true }).length - shown;
-    if (hidden > 0) extra += ` · ${esc(t('filter.hidden.tests', { n: hidden }))} <button type="button" class="inline-btn" data-act="toggle" data-toggle="tests">${esc(t('filter.show.them'))}</button>`;
-  }
-  if (!f.showStopped) {
-    const hidden = applyFilters({ ...f, showStopped: true }).length - shown;
-    if (hidden > 0) extra += ` · ${esc(t('filter.hidden.stopped', { n: hidden }))} <button type="button" class="inline-btn" data-act="toggle" data-toggle="stopped">${esc(t('filter.show.them'))}</button>`;
-  }
-  return `<p class="why-line" aria-live="polite">${esc(t('filter.showing', { n: shown, total }))}${extra}</p>`;
+  // The hidden-by-default counts ride in the sticky strip as toggle
+  // chips (see stripHtml): as inline text here they wrapped to four
+  // lines at 344-360px and pushed the first card out of the first
+  // viewport (T1). The sentence keeps the showing count; the chips
+  // keep the hidden counts and the one-tap way to lift them.
+  return `<p class="why-line" aria-live="polite">${esc(t('filter.showing', { n: shown, total: snap!.launches.length }))}</p>`;
 }
 
 /** The one-tap way back from an empty result: try relaxations in a
