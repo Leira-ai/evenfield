@@ -16,8 +16,30 @@ const distIndex = new URL('../dist/index.html', import.meta.url);
 let html = readFileSync(distIndex, 'utf8');
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const VERDICT_EN = { careful: 'Worth a careful look', clean: 'Record looks clean so far', toonew: 'Too new to judge', test: 'Protocol test launch', unknown: 'We could not read this one yet' };
+// Port of the app's verdictKind (src/main.ts, 3.0.0): face-value labels,
+// the two caution kinds kept apart. Keep the two implementations in
+// step; the app render replaces this static copy on boot.
+const creatorsByAddr = new Map(snap.creators.map((c) => [c.address.toLowerCase(), c]));
+function kindOf(l) {
+  if (l.testLaunch) return 'test';
+  if (l.statusName === 'unreadable' || l.verdict === 'unknown') return 'unknown';
+  const c = creatorsByAddr.get(l.creator.toLowerCase());
+  if (l.evidence.creatorSoldEarly || (c && c.earlySellCount > 0)) return 'caution-early';
+  if (l.stopped || (c && c.stopped > 0)) return 'caution-stopped';
+  if (l.verdict === 'toonew') return 'toonew';
+  return 'clean';
+}
+const KIND_EN = {
+  test: 'Protocol test launch', unknown: 'We could not read this one yet',
+  'caution-early': 'Caution: sold early', 'caution-stopped': 'Caution: their coins stopped',
+  toonew: 'Too new to judge', clean: 'Clean record so far',
+};
+const KIND_CLASS = { test: 'test', unknown: 'unknown', 'caution-early': 'careful', 'caution-stopped': 'careful', toonew: 'toonew', clean: 'clean' };
 const fmt = (n) => new Intl.NumberFormat('en-US').format(n);
+const fmtDate = (d) => new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(d);
+// 1.0 s per block, measured on this chain (see src/main.ts).
+const blockDate = (block) => new Date(Date.parse(snap.builtAt) + (block - snap.headBlock) * 1000);
+const shortAddr = (a) => `${a.slice(0, 6)}…${a.slice(-4)}`;
 
 function stageOf(l) {
   if (l.statusName === 'graduated') return 'graduated';
@@ -27,23 +49,27 @@ function stageOf(l) {
 }
 function card(l) {
   const name = l.name || l.symbol || l.token.slice(0, 6) + '…' + l.token.slice(-4);
+  const kind = kindOf(l);
   const pct = l.progressPct !== null ? `<p class="card-line">${fmt(l.progressPct)}% of the way to graduation</p>` : '';
   return `<article class="card"><div class="card-top"><div class="card-names"><a class="card-name" href="#/coin/${l.curve}">${esc(name)}</a><span class="card-sym">${esc(l.symbol ?? '')}</span></div></div>
-    <p class="card-line"><span class="chip chip-${esc(l.verdict)}">${esc(VERDICT_EN[l.verdict] ?? '')}</span></p>
+    <p class="card-line dim small">by ${esc(shortAddr(l.creator))}</p>
+    <p class="card-line"><span class="chip chip-${KIND_CLASS[kind]}">${esc(KIND_EN[kind])}</span></p>
     <p class="card-line dim small">${fmt(l.evidence.uniqueBuyers)} buyers so far</p>${pct}</article>`;
 }
-const stages = [['new', 'Just launched'], ['near', 'Close to graduation'], ['graduated', 'Graduated']]
+// The static home honours the same safe defaults as the app (Gate 16):
+// protocol test launches and stopped coins are hidden by default.
+const visible = snap.launches.filter((l) => !l.testLaunch && !l.stopped);
+const stages = [['new', 'Just launched'], ['near', 'Close to graduation'], ['graduated', 'Graduated'], ['other', 'Still trading']]
   .map(([key, label]) => {
-    const items = snap.launches.filter((l) => stageOf(l) === key).slice(0, 12);
+    const all = visible.filter((l) => stageOf(l) === key);
+    const items = all.slice(0, 12);
     if (!items.length) return '';
-    return `<section class="stage"><div class="stage-head"><h2>${label}</h2><span class="stage-count">${fmt(snap.launches.filter((l) => stageOf(l) === key).length)}</span></div><div class="cq"><div class="grid">${items.map(card).join('')}</div></div></section>`;
+    return `<section class="stage"><div class="stage-head"><h2>${label}</h2><span class="stage-count">${fmt(all.length)}</span></div><div class="cq"><div class="grid">${items.map(card).join('')}</div></div></section>`;
   }).join('');
-const builtAgo = snap.builtAt;
-const homeStatic = `<section class="hero">
-      <h1>Every coin on Ammora. The good ones, the sketchy ones, and the receipts to tell them apart.</h1>
-      <p class="sub">See what is launching, read the record of the human behind it before you buy, and launch your own when you are ready. Plain words, real receipts, no terminal speak.</p>
+const homeStatic = `<section class="hero hero-compact">
+      <h1>Every Ammora coin, judged.</h1>
       <p class="fact">${fmt(snap.creators.length)} creators have launched ${fmt(snap.launches.length)} coins on Ammora so far. Every one of those launches is in this index, with its outcome attached.</p>
-      <p class="snapshot-line">Data as of block ${fmt(snap.headBlock)} (snapshot built ${esc(builtAgo)}). Live checks are catching up.</p>
+      <p class="snapshot-line">Snapshot built ${esc(fmtDate(new Date(snap.builtAt)))}. Live checks are catching up.</p>
     </section>${stages}`;
 
 const start = html.indexOf('<main id="app"');
@@ -96,16 +122,16 @@ ${body}
 let coinPages = 0;
 for (const l of snap.launches) {
   const name = l.name || l.symbol || 'Unnamed coin';
-  const verdict = VERDICT_EN[l.verdict] ?? '';
+  const verdict = KIND_EN[kindOf(l)] ?? '';
   const og = existsSync(new URL(`../public/og/coin-${l.curve.toLowerCase()}.jpg`, import.meta.url))
     ? `og/coin-${l.curve.toLowerCase()}.jpg` : 'og.png';
   sharePage({
     path: `coin/${l.curve}/`,
     title: `${name} (${l.symbol ?? ''}) on Evenfield: ${verdict}`,
-    description: `${name} on Ammora (GIWA Sepolia). Lookout verdict: ${verdict}. ${fmt(l.evidence.uniqueBuyers)} buyers so far, launched at block ${fmt(l.block)}. Read the receipts before you buy.`,
+    description: `${name} on Ammora (GIWA Sepolia). Lookout verdict: ${verdict}. ${fmt(l.evidence.uniqueBuyers)} buyers so far, launched ${fmtDate(blockDate(l.block))}. Read the receipts before you buy.`,
     ogImage: og,
     heading: `${name} (${l.symbol ?? ''})`,
-    body: `<p><span class="chip">${esc(verdict)}</span></p><p>${fmt(l.evidence.uniqueBuyers)} buyers so far · ${fmt(l.evidence.swapCount)} trades read · launched at block ${fmt(l.block)} · status: ${esc(l.statusName)}.</p>`,
+    body: `<p><span class="chip">${esc(verdict)}</span></p><p>${fmt(l.evidence.uniqueBuyers)} buyers so far · ${fmt(l.evidence.swapCount)} trades read · launched ${fmtDate(blockDate(l.block))} · status: ${esc(l.statusName)}.</p>`,
     appHash: `/coin/${l.curve}`,
   });
   coinPages++;

@@ -1,11 +1,16 @@
-// Wallet layer, Gate 8 (wagmi v3, study decision D3): EIP-6963
-// discovery, one injected connector per announced provider, a
-// WalletConnect option for mobile users, four explicit states
-// (disconnected, connecting, connected, wrong-network), silent
-// reconnect on load, and chain switching with an EIP-3085 add-chain
-// fallback using the verified GIWA Sepolia profile. No signature is
-// ever requested for browsing or connecting; signatures happen only
-// inside an action, after Gate 9 simulation, in the money engine.
+// Wallet layer, Gate 8 (wagmi v3, study decisions D3 + D11): EIP-6963
+// discovery, one injected connector per announced provider, four
+// explicit states (disconnected, connecting, connected, wrong-network),
+// silent reconnect on load, and chain switching with an EIP-3085
+// add-chain fallback using the verified GIWA Sepolia profile. No
+// signature is ever requested for browsing or connecting; signatures
+// happen only inside an action, after Gate 9 simulation, in the money
+// engine.
+// WalletConnect leg (D11): the standalone @walletconnect/ethereum-
+// provider package (pinned, WalletConnect Community License, Reown
+// Inc., royalty-free for application development; see BUILD.md), loaded
+// by dynamic import only when a project id is configured for this
+// origin. The @wagmi/connectors walletConnect connector is NOT used.
 // The 9134 guard is a copy rule, not a block: 9134 is GIWA's
 // reserved-but-unreleased mainnet id, and this app never points a
 // wallet at it.
@@ -13,8 +18,8 @@ import {
   createConfig, connect, disconnect, reconnect, watchAccount, getAccount,
   switchChain, getWalletClient, http, type Config,
 } from '@wagmi/core';
-import { injected, walletConnect } from '@wagmi/connectors';
-import { defineChain, type Address, type WalletClient } from 'viem';
+import { injected } from '@wagmi/connectors';
+import { createWalletClient, custom, defineChain, type Address, type WalletClient } from 'viem';
 import { CHAIN_ID } from './chain';
 
 export interface WalletState {
@@ -40,7 +45,7 @@ interface Announced { info: { uuid: string; name: string; icon?: string; rdns?: 
 const announced = new Map<string, Announced>();
 let discoveryStarted = false;
 let config: Config | null = null;
-let connectorById = new Map<string, ReturnType<typeof injected> | ReturnType<typeof walletConnect>>();
+let connectorById = new Map<string, ReturnType<typeof injected>>();
 let unwatch: (() => void) | null = null;
 const listeners = new Set<(s: WalletState) => void>();
 let state: WalletState = { status: 'disconnected' };
@@ -50,7 +55,7 @@ function setState(next: WalletState) { state = next; emit(); }
 
 function rebuildConfig() {
   connectorById = new Map();
-  const connectors: Array<ReturnType<typeof injected> | ReturnType<typeof walletConnect>> = [];
+  const connectors: Array<ReturnType<typeof injected>> = [];
   for (const [uuid, a] of announced) {
     const c = injected({
       target: { id: a.info.rdns ?? a.info.uuid, name: a.info.name, provider: a.provider as never },
@@ -63,11 +68,6 @@ function rebuildConfig() {
     connectorById.set('injected-shim', shim);
     connectors.push(shim);
   }
-  if (WALLETCONNECT_PROJECT_ID) {
-    const wc = walletConnect({ projectId: WALLETCONNECT_PROJECT_ID, showQrModal: true });
-    connectorById.set('walletconnect', wc);
-    connectors.push(wc);
-  }
   config = createConfig({
     chains: [giwaChain],
     connectors,
@@ -76,6 +76,7 @@ function rebuildConfig() {
   if (unwatch) unwatch();
   unwatch = watchAccount(config, {
     onChange(account) {
+      if (wcActive) return; // the WalletConnect leg owns the state while active
       if (account.status === 'connected') {
         setState({
           status: account.chainId === giwaChain.id ? 'connected' : 'wrong-network',
@@ -105,6 +106,81 @@ function startDiscovery() {
   rebuildConfig();
 }
 
+// ---------- WalletConnect leg (D11, standalone provider package) ----------
+interface WcProviderLike {
+  accounts: string[];
+  chainId: number;
+  session?: unknown;
+  connect(): Promise<void>;
+  disconnect(): Promise<void>;
+  request<T>(args: { method: string; params?: unknown }): Promise<T>;
+  on(event: string, fn: (data: never) => void): void;
+}
+let wcProvider: WcProviderLike | null = null;
+let wcActive = false;
+
+async function loadWcProvider(): Promise<WcProviderLike> {
+  if (wcProvider) return wcProvider;
+  const mod = await import('@walletconnect/ethereum-provider');
+  const EthereumProvider = (mod as unknown as {
+    EthereumProvider: { init(opts: Record<string, unknown>): Promise<WcProviderLike> };
+  }).EthereumProvider;
+  wcProvider = await EthereumProvider.init({
+    projectId: WALLETCONNECT_PROJECT_ID,
+    chains: [giwaChain.id],
+    optionalChains: [giwaChain.id],
+    showQrModal: true,
+    rpcMap: { [giwaChain.id]: 'https://sepolia-rpc.giwa.io' },
+    metadata: {
+      name: 'Evenfield',
+      description: 'Every Ammora coin, judged, with the receipts.',
+      url: 'https://leira-ai.github.io/evenfield/',
+      icons: [],
+    },
+  });
+  wcProvider.on('accountsChanged', (accounts: never) => {
+    const list = accounts as unknown as string[];
+    if (!wcActive) return;
+    if (!list.length) { wcActive = false; setState({ status: 'disconnected' }); return; }
+    setState({
+      status: wcProvider!.chainId === giwaChain.id ? 'connected' : 'wrong-network',
+      address: list[0] as Address,
+      chainId: wcProvider!.chainId,
+    });
+  });
+  wcProvider.on('chainChanged', (chainIdHex: never) => {
+    if (!wcActive || !state.address) return;
+    const id = parseInt(chainIdHex as unknown as string, 16);
+    setState({ status: id === giwaChain.id ? 'connected' : 'wrong-network', address: state.address, chainId: id });
+  });
+  wcProvider.on('disconnect', () => {
+    if (!wcActive) return;
+    wcActive = false;
+    setState({ status: 'disconnected' });
+  });
+  return wcProvider;
+}
+
+async function connectWalletConnect(): Promise<void> {
+  setState({ status: 'connecting' });
+  try {
+    const provider = await loadWcProvider();
+    await provider.connect();
+    const address = provider.accounts[0] as Address | undefined;
+    if (!address) throw new Error('no account returned');
+    wcActive = true;
+    setState({
+      status: provider.chainId === giwaChain.id ? 'connected' : 'wrong-network',
+      address,
+      chainId: provider.chainId,
+    });
+  } catch (e) {
+    wcActive = false;
+    setState({ status: 'disconnected' });
+    throw e;
+  }
+}
+
 export function subscribeWallet(fn: (s: WalletState) => void): () => void {
   listeners.add(fn);
   fn(state);
@@ -117,6 +193,20 @@ export async function initWallet(): Promise<void> {
   if (announced.size > 0) rebuildConfig();
   if (!config) rebuildConfig();
   try { await reconnect(config!); } catch { /* nothing stored, fine */ }
+  // Restore a live WalletConnect session silently, if one exists.
+  if (WALLETCONNECT_PROJECT_ID && state.status === 'disconnected') {
+    try {
+      const provider = await loadWcProvider();
+      if (provider.session && provider.accounts.length) {
+        wcActive = true;
+        setState({
+          status: provider.chainId === giwaChain.id ? 'connected' : 'wrong-network',
+          address: provider.accounts[0] as Address,
+          chainId: provider.chainId,
+        });
+      }
+    } catch { /* WalletConnect stays an option in the sheet */ }
+  }
 }
 
 export function listWalletOptions(): WalletOption[] {
@@ -131,6 +221,11 @@ export function listWalletOptions(): WalletOption[] {
 }
 
 export async function connectWith(id: string): Promise<void> {
+  if (id === 'walletconnect') {
+    if (!WALLETCONNECT_PROJECT_ID) throw new Error('walletconnect not configured');
+    await connectWalletConnect();
+    return;
+  }
   if (!config) rebuildConfig();
   const connector = connectorById.get(id);
   if (!connector) throw new Error('wallet option unavailable');
@@ -144,12 +239,25 @@ export async function connectWith(id: string): Promise<void> {
 }
 
 export async function disconnectWallet(): Promise<void> {
+  if (wcActive && wcProvider) {
+    wcActive = false;
+    try { await wcProvider.disconnect(); } catch { /* already gone */ }
+    setState({ status: 'disconnected' });
+    return;
+  }
   if (!config) return;
   try { await disconnect(config); } catch { /* already gone */ }
   setState({ status: 'disconnected' });
 }
 
 export async function switchToGiwa(): Promise<void> {
+  if (wcActive && wcProvider) {
+    await wcProvider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: '0x' + giwaChain.id.toString(16) }],
+    });
+    return;
+  }
   if (!config) rebuildConfig();
   try {
     await switchChain(config!, { chainId: giwaChain.id });
@@ -188,7 +296,16 @@ export async function anyProviderChainId(): Promise<number | null> {
 
 /** The connected visitor wallet for the money engine (Gate 9 lives there). */
 export async function getConnectedWallet(): Promise<{ address: Address; client: WalletClient }> {
-  if (!config || state.status !== 'connected' || !state.address) throw new Error('wallet not connected');
+  if (state.status !== 'connected' || !state.address) throw new Error('wallet not connected');
+  if (wcActive && wcProvider) {
+    const client = createWalletClient({
+      account: state.address,
+      chain: giwaChain,
+      transport: custom(wcProvider as never),
+    });
+    return { address: state.address, client };
+  }
+  if (!config) throw new Error('wallet not connected');
   const client = await getWalletClient(config, { chainId: giwaChain.id });
   return { address: state.address, client };
 }

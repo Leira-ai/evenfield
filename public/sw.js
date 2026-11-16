@@ -1,4 +1,4 @@
-// Evenfield service worker, release 2.0.0: cache the app shell and the
+// Evenfield service worker, release 3.0.0: cache the app shell and the
 // last snapshot so the board still opens on a bad connection. The cache
 // name is versioned per release; old caches are deleted on activate.
 // Snapshot fetches prefer the network and fall back to the cache;
@@ -6,7 +6,7 @@
 // are handled: wallet and POST responses are never cached. Kill switch:
 // post {type: 'EVENFIELD_CLEAR_CACHES'} from the page (or ship a new SW)
 // to clear every cache and unregister.
-const CACHE = 'evenfield-v2.0.0';
+const CACHE = 'evenfield-v3.0.0';
 const SHELL = ['./', './index.html', './snapshot.json', './manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {
