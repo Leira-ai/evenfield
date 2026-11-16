@@ -264,24 +264,22 @@ function verdictStage(l: Launch): string {
 
 /** Real SVG bonding-curve chart from snapshot data: the fill progress is
  *  the measured fact; the path is the curve's rising price shape, and the
- *  marker sits at the measured progress with the measured spot price. */
+ *  marker sits at the measured progress. No spot price is printed here:
+ *  the launch curve's sqrtPrice is not a Uniswap-style X96 anyone can
+ *  rescale safely (it disagrees with the reserves ratio and with the
+ *  live quote by orders of magnitude), so the only prices this page
+ *  prints come from the live quote engine in the rail. */
 function curveChart(l: Launch, quoteSym: string, quoteDec: number): string {
   const st = l.state;
   if (!st?.sqrtPrice || l.progressPct === null) {
     return `<section class="panel"><h2>${esc(t('chart.title'))}</h2><p class="dim">${esc(t('chart.nodata'))}</p></section>`;
   }
-  const sqrt = Number(BigInt(st.sqrtPrice)) / 2 ** 96;
-  const price = sqrt * sqrt * 10 ** (l.decimals - quoteDec);
   const pct = Math.max(0, Math.min(100, l.progressPct));
   const W = 640, H = 220, PL = 8, PB = 24, PT = 12;
   const x = (p: number) => PL + (p / 100) * (W - PL - 8);
   const y = (p: number) => PT + (1 - (p / 100) ** 2) * (H - PT - PB);
   let d = `M ${x(0).toFixed(1)} ${y(0).toFixed(1)}`;
   for (let p = 5; p <= 100; p += 5) d += ` L ${x(p).toFixed(1)} ${y(p).toFixed(1)}`;
-  const priceTxt = Number.isFinite(price) && price > 0
-    ? (price >= 1e-6
-      ? `<p class="card-line">${esc(t('chart.price', { price: fmtPrice(price), sym: quoteSym }))}</p>`
-      : `<p class="card-line">${esc(t('chart.price.million', { price: fmtNum(price * 1e6, { maximumFractionDigits: 6 }), sym: quoteSym }))}</p>`) : '';
   return `<section class="panel"><h2>${esc(t('chart.title'))}</h2>
     <div class="chart-wrap"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t('chart.note', { pct: fmtNum(pct, { maximumFractionDigits: 1 }) + '%' }))}">
       <path d="${d} L ${x(100).toFixed(1)} ${y(0).toFixed(1)} Z" fill="var(--action)" opacity="0.14"></path>
@@ -291,17 +289,7 @@ function curveChart(l: Launch, quoteSym: string, quoteDec: number): string {
       <text x="${(x(100) - 34).toFixed(1)}" y="${H - 6}" fill="var(--text-2)" font-size="12">100%</text>
     </svg></div>
     <p class="dim small">${esc(t('chart.note', { pct: fmtNum(pct, { maximumFractionDigits: 1 }) + '%' }))}</p>
-    ${priceTxt}
   </section>`;
-}
-
-/** Spot prices on fresh curves are tiny; format them with significant
- *  digits so a real price never renders as "0" (Gate 7 formatting). */
-function fmtPrice(v: number): string {
-  if (!Number.isFinite(v) || v <= 0) return '0';
-  if (v >= 0.001) return fmtNum(v, { maximumFractionDigits: 6 });
-  const decimals = Math.min(18, -Math.floor(Math.log10(v)) + 3);
-  return fmtNum(v, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 }
 
 function statBlock(label: string, value: string, meaning: string): string {

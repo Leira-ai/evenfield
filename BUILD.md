@@ -302,7 +302,7 @@ wallet layer, and the defects the audit measured.
 | G4 WCAG 2.2 AA + axe | PASS | axe-core zero critical/serious on home dark, home light, coin dark (one real find fixed: stage-count text.3 at 16px → text.2); keyboard pass: evidence drawer opens via Enter, focus visible |
 | G5 performance budget | PASS | initial JS 24.0 KB gzip (entry), CSS 4.2 KB gzip; snapshot ships ONCE (in-bundle fallback copy deleted; SW cache is the offline copy); throttled run (4x CPU + Fast 3G): cards usable in 2.8s |
 | G6 security | PASS with platform note | CSP meta with hashed inline bootstrap + `_headers` for hosts that honour it; deps pinned exactly (viem 2.57.20, @wagmi/core 3.6.9, @wagmi/connectors 8.2.4, @ammora-protocol/sdk 0.3.9); sink audit below; GitHub Pages cannot send frame-ancestors / HSTS / X-Content-Type-Options headers, the meta CSP omits only those |
-| G7 five states + formatting | PASS | loading skeletons, empty, error + retry, stale banner (simulated 3-day-old snapshot), partial (per-stream unavailable lines); amounts by magnitude; spot price never renders 0 (significant digits, per-million quoting below 1e-6); dust grouped, labelled, claim disabled |
+| G7 five states + formatting | PASS | loading skeletons, empty, error + retry, stale banner (simulated 3-day-old snapshot), partial (per-stream unavailable lines); amounts by magnitude; dust grouped, labelled, claim disabled. One honest subtraction: the chart prints no spot price, because the launch curve's sqrtPrice cannot be rescaled safely (see defects) and the only prices printed come from the live quote engine |
 | G8 wallet | PARTIAL (one criterion) | wagmi v3 + per-provider EIP-6963 connectors + custom sheet; four states exercised against a mock EIP-6963 wallet in Chromium (discover → connect → wrong-network on chain change → switch back); 9134 guard kept. WalletConnect is wired but INACTIVE: it needs a Reown project id registered for this origin, which does not exist yet; the sheet says so honestly instead of offering a dead button |
 | G9 simulate before signing | PASS | money.executeClaim simulates the exact transaction via publicClient.call before sendTransaction (code + code path unchanged from Slice A claim flow) |
 | G10 snapshot pipeline | PASS | unchanged CI (atomic publish + head block watermark); fallback-copy removal applied to build-snapshot.mjs and the workflow's git add list |
@@ -318,9 +318,16 @@ wallet layer, and the defects the audit measured.
    238px container): all grids now minmax(0, 1fr), cards min-width 0.
 3. axe light-theme contrast: stage counts in text.3 (4.20:1 at 16px
    bold) → text.2.
-4. Spot price rendered as "0 WETH" (and, at the extreme, 18 zeros):
-   significant-digit formatting, and per-million-coins quoting when the
-   per-coin price is below 1e-6.
+4. Spot price rendered as "0 WETH": the chart initially derived a spot
+   price from the curve's sqrtPrice as if it were a Uniswap X96. It is
+   not: rescaled it disagrees with the reserves ratio and with the
+   engine's live quote by orders of magnitude (BAEKHO: implied 1e-19
+   scale vs a verified live quote of 0.01 WETH → 800,544 coins). The
+   unverifiable number was removed, not reformatted: the chart shows
+   the measured progress and marker only, and every price on the page
+   now comes from the live quote engine. (The Slice A quote fallback
+   uses the same sqrtPrice but behind a total-supply sanity bound, so
+   it degrades to the honest no-quote state; left untouched.)
 5. Topnav labels wrapped to two lines at desktop widths: nowrap.
 6. QA harness finds (not product defects): the mock wallet's chain hex
    (91342 = 0x164CE), eth_accounts must stay empty until authorised,
@@ -330,12 +337,16 @@ wallet layer, and the defects the audit measured.
 
 ### Money parity (live, this rebuild)
 
-A1 sweep in the rebuilt UI matches the direct engine probe at the same
-sitting: AUICON and ANRCON 0.246887728 exact; the WETH row is a moving
-balance (the beneficiary claims from it), see the run note in
-probe/qa/summary-part2.json. The 1-wei class rows render inside the
-dust box with exact amounts under a <details> toggle and a disabled
-claim button; no 18-decimal string appears anywhere in the results.
+A1 sweep in the rebuilt UI against the direct engine probe (same
+engine code, untouched): AUICON and ANRCON match exactly at
+0.246887728 (UI display rounds to 0.246888, exact value on the toggle).
+The WETH row is a moving balance: the Slice A probe read 296,086 wei,
+and by this rebuild's sweep the beneficiary had claimed it down to a
+7-wei dust remainder, direct evidence of the balance moving between
+sittings rather than a read error. The 1-wei class rows render inside
+the dust box with exact amounts under a <details> toggle and a
+disabled claim button; no 18-decimal string appears as a primary
+amount anywhere in the results.
 
 ### Sink audit (Gate 6)
 
