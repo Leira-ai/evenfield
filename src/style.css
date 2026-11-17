@@ -691,9 +691,10 @@
 
   /* ---------- v3.1: signal-first card, holders, money totals ---------- */
   .price-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-width: 0; }
+  .price-row > * { min-width: 0; }
   .price-line { font-weight: 700; font-variant-numeric: tabular-nums; }
   .spark { width: 96px; height: 24px; flex: none; }
-  .spark-none { color: var(--text-2); font-size: var(--fs-caption); line-height: var(--lh-caption); white-space: nowrap; }
+  .spark-none { color: var(--text-2); font-size: var(--fs-caption); line-height: var(--lh-caption); text-align: right; }
   .card-stats { margin: 0; font-variant-numeric: tabular-nums; font-weight: 600; }
   .card-holders { margin: 0; color: var(--text-2); font-size: var(--fs-small); line-height: var(--lh-small); font-variant-numeric: tabular-nums; }
   .card-verdict { display: flex; flex-direction: column; gap: var(--space-1); align-items: flex-start; }
