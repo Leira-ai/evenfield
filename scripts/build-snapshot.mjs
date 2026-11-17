@@ -144,7 +144,7 @@ async function erc20Meta(token) {
 
 const addrOfTopic = (t) => ('0x' + t.slice(26)).toLowerCase();
 
-async function gatherEvidence(rec, head) {
+async function gatherEvidence(rec, head, excludeAddrs = []) {
   const curve = rec.curve;
   const launchBlock = rec.block;
   const fwdTo = Math.min(launchBlock + EARLY_WINDOW, head);
@@ -201,7 +201,8 @@ async function gatherEvidence(rec, head) {
       }
     }
     const curveLc = curve.toLowerCase();
-    const pos = [...balances.entries()].filter(([a, v]) => v > 0n && a !== curveLc);
+    const excluded = new Set([curveLc, ...excludeAddrs.map((a) => (a || '').toLowerCase())]);
+    const pos = [...balances.entries()].filter(([a, v]) => v > 0n && !excluded.has(a));
     const total = pos.reduce((s, [, v]) => s + v, 0n);
     if (total > 0n && pos.length) {
       pos.sort((x, y) => (y[1] > x[1] ? 1 : -1));
@@ -210,6 +211,22 @@ async function gatherEvidence(rec, head) {
       holders = { count: pos.length, top1Pct: top1, top10Pct: top10, windowed: true };
     }
   } catch { holders = null; }
+  // Early-sell magnitude for THIS coin (perfection audit P-1): the share
+  // of what the creator bought on this curve that they sold inside the
+  // early window. Bands: A under 1%, B 1-25%, C over 25%. Null when the
+  // creator never bought, so no percentage can be claimed.
+  const buyTotalBn = creatorBuys.reduce((sum, s) => sum + BigInt(s.amountOut), 0n);
+  const earlySoldBn = earlySells.reduce((sum, s) => sum + BigInt(s.amountIn), 0n);
+  const earlySellPct = buyTotalBn > 0n ? Number((earlySoldBn * 10000n) / buyTotalBn) / 100 : null;
+  // Activity sparkline (audit F-2): swap counts in 12 equal block
+  // windows from the launch block to head. An activity chart, never a
+  // price chart; the UI labels it as one.
+  const activitySpark = new Array(12).fill(0);
+  const span = Math.max(1, head - launchBlock);
+  for (const s of list) {
+    const idx = Math.min(11, Math.floor(((s.block - launchBlock) / span) * 12));
+    activitySpark[idx]++;
+  }
   return {
     swapCount: list.length,
     uniqueBuyers: buyers.size,
@@ -221,11 +238,37 @@ async function gatherEvidence(rec, head) {
     creatorSellTotal: creatorSells.reduce((sum, s) => sum + BigInt(s.amountIn), 0n).toString(),
     creatorSells: creatorSells.map((s) => ({ block: s.block, tx: s.tx, amountIn: s.amountIn, blocksAfterLaunch: s.block - launchBlock })),
     creatorSoldEarly: earlySells.length > 0,
+    earlySellPct,
+    activitySpark,
     currentCreator: currentCreator ? currentCreator.address : creator,
     creatorTransferred: currentCreator ? { tx: currentCreator.tx, block: currentCreator.block } : null,
     holders,
     windows: ranges,
   };
+}
+
+// ---------- snapshot price (audit F-2) ----------
+// Sampled once per trading curve at build time through the same SDK
+// quote path the coin page verifies live (0.01 WETH in). Stored with
+// its block so the UI can label it as a snapshot price with an age.
+// Graduated curves revert the quote and honestly store null.
+const REGISTRY = sdk.giwaSepoliaAutoRouteDeployment.contracts.launch.configRegistry;
+async function samplePrice(rec, decimals, statusName, head) {
+  if (statusName !== 'trading') return null;
+  try {
+    const alc = new sdk.ALCClient(client, rec.curve, REGISTRY);
+    const q = await withRetry(() => alc.quoteExactInput(10n ** 16n, false), 2, 500);
+    const out = BigInt(q.amountOut);
+    if (out <= 0n) return null;
+    const humanOut = Number(out) / 10 ** decimals;
+    if (!(humanOut > 0)) return null;
+    return {
+      perTokenWeth: String(0.01 / humanOut),
+      block: head,
+      amountIn: '10000000000000000',
+      amountOut: out.toString(),
+    };
+  } catch { return null; }
 }
 
 // ---------- main ----------
@@ -262,11 +305,9 @@ const launches = [...byCurve.values()].sort((a, b) => b.block - a.block);
 console.log(`total unique launches: ${launches.length}`);
 
 const enriched = await pool(launches, 3, async (rec) => {
-  const [meta, state, evidence] = [
-    await erc20Meta(rec.token),
-    await readCurveState(rec.curve),
-    await gatherEvidence(rec, head),
-  ];
+  const [meta, state] = await Promise.all([erc20Meta(rec.token), readCurveState(rec.curve)]);
+  const poolAddr = state?.canonicalPool && state.canonicalPool !== '0x0000000000000000000000000000000000000000' ? state.canonicalPool : null;
+  const evidence = await gatherEvidence(rec, head, poolAddr ? [poolAddr] : []);
   const testReason = classifyTest(meta.name ?? '', meta.symbol ?? '', rec.uri);
   // Curve lifecycle (SDK docs/v4-graduation-lifecycle.md): 0 pending,
   // 1 Trading, 2 ReadyToMigrate (fill complete), 3 Migrated (pool live).
@@ -283,11 +324,13 @@ const enriched = await pool(launches, 3, async (rec) => {
     : state && state.migrationQuoteThreshold && state.quoteReserve && BigInt(state.migrationQuoteThreshold) > 0n
       ? Math.min(100, Number((BigInt(state.quoteReserve) * 10000n) / BigInt(state.migrationQuoteThreshold)) / 100)
       : null;
+  const price = await samplePrice(rec, meta.decimals, statusName, head);
   return {
     ...rec,
     name: meta.name, symbol: meta.symbol, decimals: meta.decimals, totalSupply: meta.totalSupply,
     state, statusName, readyToMigrate, stopped, progressPct,
     evidence,
+    price,
     testLaunch: testReason !== null, testReason,
   };
 });
@@ -306,6 +349,10 @@ const creatorRecords = [...creators.values()].map((c) => {
   const real = mine.filter((l) => !l.testLaunch);
   const count = (arr, fn) => arr.filter(fn).length;
   const earlySellLaunches = real.filter((l) => l.evidence.creatorSoldEarly);
+  // Calibrated early sells (audit P-1): only a sale of at least 1% of
+  // what the creator bought counts against the record; under 1% is a
+  // neutral fact, not a caution.
+  const effectiveEarlySellLaunches = real.filter((l) => (l.evidence.earlySellPct ?? 0) >= 1);
   return {
     address: c.address,
     totalLaunches: mine.length,
@@ -318,6 +365,9 @@ const creatorRecords = [...creators.values()].map((c) => {
     unreadable: count(real, (l) => l.statusName === 'unreadable'),
     earlySellCount: earlySellLaunches.length,
     earlySellLaunches: earlySellLaunches.map((l) => l.curve),
+    effectiveEarlySellCount: effectiveEarlySellLaunches.length,
+    effectiveEarlySellLaunches: effectiveEarlySellLaunches.map((l) => l.curve),
+    tradeCount: real.reduce((s, l) => s + l.evidence.swapCount, 0),
     firstLaunchBlock: Math.min(...mine.map((l) => l.block)),
     lastLaunchBlock: Math.max(...mine.map((l) => l.block)),
   };
@@ -336,14 +386,27 @@ for (const l of enriched) {
     verdict = 'unknown';
     reasons.push({ kind: 'unreadable' });
   } else {
-    if (c && c.earlySellCount > 0) reasons.push({ kind: 'creator_early_sell', launches: c.earlySellLaunches.length, total: c.realLaunches });
-    if (l.evidence.creatorSoldEarly) reasons.push({ kind: 'this_coin_early_sell', sells: l.evidence.creatorSells.filter((s) => s.blocksAfterLaunch <= EARLY_BLOCKS) });
+    // Calibrated verdicts (perfection audit P-1 + F-1). An early sell
+    // counts only at band B or C (at least 1% of what the creator
+    // bought on that curve); band A is recorded as a reason of kind
+    // 'early_sell_small' and never produces a caution. The positive
+    // tier is reachable by definition: creator with at least one real
+    // launch, zero effective early sells, zero stopped coins, and
+    // this coin has a buyer or has graduated.
+    const effEarlyThis = (l.evidence.earlySellPct ?? 0) >= 1;
+    const creatorEffEarly = c ? (c.effectiveEarlySellCount ?? 0) > 0 : false;
+    if (creatorEffEarly) reasons.push({ kind: 'creator_early_sell', launches: c.effectiveEarlySellCount, total: c.realLaunches });
+    if (effEarlyThis) reasons.push({ kind: 'this_coin_early_sell', pct: l.evidence.earlySellPct, sells: l.evidence.creatorSells.filter((s) => s.blocksAfterLaunch <= EARLY_BLOCKS) });
+    else if (l.evidence.creatorSoldEarly) reasons.push({ kind: 'early_sell_small', pct: l.evidence.earlySellPct });
     if (l.stopped) reasons.push({ kind: 'stopped', lastSwapBlock: l.evidence.lastSwapBlock, tx: l.evidence.lastSwapTx });
     if (l.statusName === 'graduated') reasons.push({ kind: 'graduated' });
     const ageBlocks = head - l.block;
-    if (reasons.some((r) => r.kind === 'creator_early_sell' || r.kind === 'this_coin_early_sell' || r.kind === 'stopped')) verdict = 'careful';
+    const positive = !!c && c.realLaunches >= 1 && (c.effectiveEarlySellCount ?? 0) === 0 && c.stopped === 0
+      && !l.stopped && (l.evidence.uniqueBuyers >= 1 || l.statusName === 'graduated');
+    if (creatorEffEarly || effEarlyThis || l.stopped) verdict = 'careful';
+    else if (positive) verdict = 'clean';
     else if (ageBlocks <= EARLY_BLOCKS || l.evidence.swapCount < 3) verdict = 'toonew';
-    else verdict = 'clean';
+    else verdict = 'toonew';
   }
   l.verdict = verdict;
   l.verdictReasons = reasons;
@@ -354,7 +417,7 @@ const snapshot = {
   builtAt: new Date().toISOString(),
   headBlock: head,
   chainId: 91342,
-  params: { stopBlocks: STOP_BLOCKS, earlyBlocks: EARLY_BLOCKS },
+  params: { stopBlocks: STOP_BLOCKS, earlyBlocks: EARLY_BLOCKS, earlyBandBPct: 1, earlyBandCPct: 25 },
   factories: factories.map((f) => ({ factory: f.factory, slots: f.slots })),
   launches: enriched,
   creators: creatorRecords,

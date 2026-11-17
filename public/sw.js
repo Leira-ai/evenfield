@@ -6,7 +6,7 @@
 // are handled: wallet and POST responses are never cached. Kill switch:
 // post {type: 'EVENFIELD_CLEAR_CACHES'} from the page (or ship a new SW)
 // to clear every cache and unregister.
-const CACHE = 'evenfield-v3.0.0';
+const CACHE = 'evenfield-v3.1.0';
 const SHELL = ['./', './index.html', './snapshot.json', './manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {

@@ -1,5 +1,12 @@
 // Evenfield: the whole Ammora launch day in one place.
-// UX rebuild 3.0.0 (spec redesign/ux-spec-v2.md, skill Gates 13-16):
+// Perfection pass 3.1.0 (redesign/perfection-audit.md, skill Gate 17)
+// on top of the 3.0.0 usability rebuild (Gates 13-16): verdicts are
+// calibrated to tiered early-sell bands with meanings generated from
+// each coin's own measured values and a reachable positive tier,
+// cards are signal-first (snapshot price, activity sparkline, one
+// fact, meaning behind "Why"), zero-count presets are status text,
+// the money summary is plain words, and wide desktops get a true
+// sortable dense table.
 // the board leads with a one-line promise and a working filter system
 // (six one-tap presets, cross-counted facets, safe defaults that hide
 // protocol test launches and stopped coins), verdicts render in three
@@ -29,26 +36,31 @@ interface Evidence {
   swapCount: number; uniqueBuyers: number; firstSwapBlock: number | null; lastSwapBlock: number | null;
   lastSwapTx: string | null; creatorBuys: number; creatorBuyTotal: string; creatorSellTotal: string;
   creatorSells: { block: number; tx: string; amountIn: string; blocksAfterLaunch: number }[];
-  creatorSoldEarly: boolean; currentCreator: string; creatorTransferred: { tx: string; block: number } | null;
+  creatorSoldEarly: boolean; earlySellPct: number | null; activitySpark: number[];
+  currentCreator: string; creatorTransferred: { tx: string; block: number } | null;
   holders: { count: number; top1Pct: number; top10Pct: number; windowed: boolean } | null;
   windows: [number, number][];
 }
+interface SnapshotPrice { perTokenWeth: string; block: number; amountIn: string; amountOut: string }
 interface Launch {
   token: string; curve: string; creator: string; configId: string;
   protocolVersion: number; uri: string; block: number; tx: string; slots: string[]; factory: string;
   name: string | null; symbol: string | null; decimals: number; totalSupply: string | null;
   state: CurveState | null; statusName: string; readyToMigrate?: boolean; stopped: boolean; progressPct: number | null;
   evidence: Evidence; testLaunch: boolean; testReason: string | null;
+  price: SnapshotPrice | null;
   verdict: string; verdictReasons: { kind: string;[k: string]: unknown }[];
 }
 interface CreatorRec {
   address: string; totalLaunches: number; testLaunches: number; realLaunches: number;
   graduated: number; trading: number; stopped: number; pending: number; unreadable: number;
-  earlySellCount: number; earlySellLaunches: string[]; firstLaunchBlock: number; lastLaunchBlock: number;
+  earlySellCount: number; earlySellLaunches: string[];
+  effectiveEarlySellCount?: number; effectiveEarlySellLaunches?: string[]; tradeCount?: number;
+  firstLaunchBlock: number; lastLaunchBlock: number;
 }
 interface Snapshot {
   schema: number; builtAt: string; headBlock: number; chainId: number;
-  params: { stopBlocks: number; earlyBlocks: number };
+  params: { stopBlocks: number; earlyBlocks: number; earlyBandBPct?: number; earlyBandCPct?: number };
   factories: { factory: string; slots: string[] }[];
   launches: Launch[]; creators: CreatorRec[];
 }
@@ -182,23 +194,52 @@ function pushRecent(r: Recent) {
   } catch { /* ignore */ }
 }
 
-// ---------- verdicts (Gate 15: three parts, face-value labels) ----------
-// The display kind refines the engine verdict: the old single "careful"
-// label split into the two caution kinds a user must tell apart, and the
-// priority is test tag first (never a verdict), then unreadable, then
-// the creator's early sale, then stopped coins, then too-new, then
-// clean. The engine's underlying verdict fields are not modified.
+// ---------- verdicts (v3.1: calibrated bands + reachable positive tier) ----------
+// Perfection audit P-1/F-1, definitions published on the methodology
+// page: an early sell counts only when it is at least 1% of what the
+// creator bought on that curve (band B 1-25%, band C over 25%); under
+// 1% (band A) is a neutral fact with no chip and no caution wording.
+// The positive tier "No red flags found" requires a creator with at
+// least one real launch, zero effective early sells, zero stopped
+// coins, and this coin having a buyer or being graduated. Every fact
+// and meaning line is generated from this coin's and this creator's
+// measured values, never pasted from a kind-level template.
 type VerdictKind = 'test' | 'unknown' | 'caution-early' | 'caution-stopped' | 'toonew' | 'clean';
 function creatorOf(l: Launch): CreatorRec | undefined { return byCreator.get(l.creator.toLowerCase()); }
 function displayName(l: Launch): string { return l.name || l.symbol || shortAddr(l.token); }
+
+/** Launches by this creator that carry an effective (band B/C) early sell. */
+function effectiveEarlyLaunches(c: CreatorRec | undefined): Launch[] {
+  if (!snap || !c) return [];
+  return snap.launches.filter((x) =>
+    !x.testLaunch && x.creator.toLowerCase() === c.address.toLowerCase() && (x.evidence.earlySellPct ?? 0) >= 1);
+}
+function effectiveEarlyCount(c: CreatorRec | undefined): number {
+  if (!c) return 0;
+  if (typeof c.effectiveEarlySellCount === 'number') return c.effectiveEarlySellCount;
+  return effectiveEarlyLaunches(c).length;
+}
+/** Total trades read across the creator's real launches. */
+function creatorTradeCount(c: CreatorRec | undefined): number {
+  if (!c) return 0;
+  if (typeof c.tradeCount === 'number') return c.tradeCount;
+  if (!snap) return 0;
+  return snap.launches
+    .filter((x) => !x.testLaunch && x.creator.toLowerCase() === c.address.toLowerCase())
+    .reduce((s, x) => s + x.evidence.swapCount, 0);
+}
+function isPositiveTier(l: Launch, c: CreatorRec | undefined): boolean {
+  return !!c && c.realLaunches >= 1 && effectiveEarlyCount(c) === 0 && c.stopped === 0
+    && !l.stopped && (l.evidence.uniqueBuyers >= 1 || l.statusName === 'graduated');
+}
 function verdictKind(l: Launch): VerdictKind {
   if (l.testLaunch) return 'test';
   if (l.statusName === 'unreadable' || l.verdict === 'unknown') return 'unknown';
   const c = creatorOf(l);
-  if (l.evidence.creatorSoldEarly || (c !== undefined && c.earlySellCount > 0)) return 'caution-early';
+  if ((l.evidence.earlySellPct ?? 0) >= 1 || effectiveEarlyCount(c) > 0) return 'caution-early';
   if (l.stopped || (c !== undefined && c.stopped > 0)) return 'caution-stopped';
-  if (l.verdict === 'toonew') return 'toonew';
-  return 'clean';
+  if (isPositiveTier(l, c)) return 'clean';
+  return 'toonew';
 }
 const KIND_LABEL: Record<VerdictKind, string> = {
   test: 'verdict.test', unknown: 'verdict.unknown',
@@ -228,52 +269,98 @@ function earlySellFact(l: Launch): string | null {
   });
 }
 
+function fmtPct(v: number): string {
+  return fmtNum(v, { maximumFractionDigits: 1 }) + '%';
+}
+/** The percentage that drives a caution-early verdict for this coin:
+ *  its own band if it has one, else the worst band among the creator's
+ *  effective early-sell launches. Null when neither exists. */
+function cautionPct(l: Launch): { pct: number; own: boolean } | null {
+  const own = l.evidence.earlySellPct;
+  if (own !== null && own >= 1) return { pct: own, own: true };
+  const others = effectiveEarlyLaunches(creatorOf(l))
+    .map((x) => x.evidence.earlySellPct ?? 0);
+  if (!others.length) return null;
+  return { pct: Math.max(...others), own: false };
+}
+
 function verdictFact(l: Launch, kind: VerdictKind): string {
   const c = creatorOf(l);
   switch (kind) {
     case 'caution-early': {
       const own = earlySellFact(l);
-      if (own) return own;
-      return t('verdict.fact.early.other', { n: c?.earlySellCount ?? 0, total: c?.realLaunches ?? 0 });
+      if (own && (l.evidence.earlySellPct ?? 0) >= 1) return own;
+      return t('verdict.fact.early.other', { n: effectiveEarlyCount(c), total: c?.realLaunches ?? 0 });
     }
     case 'caution-stopped': {
       if (l.stopped) return t('verdict.fact.stopped.this', { ago: agoOfBlock(l.evidence.lastSwapBlock ?? l.block) });
       return t('verdict.fact.stopped.creator', { s: c?.stopped ?? 0, n: Math.max(0, (c?.realLaunches ?? 0) - (c?.unreadable ?? 0)) });
     }
-    case 'clean': return t('verdict.fact.clean');
+    case 'clean': return t('verdict.fact.clean2', { n: c?.realLaunches ?? 0, m: fmtNum(creatorTradeCount(c)) });
     case 'toonew': return t('verdict.fact.new', { ago: agoOfBlock(l.block), n: fmtNum(l.evidence.swapCount) });
     case 'unknown': return t('verdict.reason.unreadable');
     default: return t('verdict.reason.test', { reason: l.testReason ?? '' });
   }
 }
-function verdictMeaning(kind: VerdictKind): string {
+/** Meaning lines are generated from the measured values behind the
+ *  verdict (audit P-1): the band, the percentage, the counts and the
+ *  ages are interpolated, so the wording can never claim more than
+ *  its own fact line and identical prose cannot repeat across cards
+ *  whose numbers differ. */
+function verdictMeaning(l: Launch, kind: VerdictKind): string {
+  const c = creatorOf(l);
   switch (kind) {
-    case 'caution-early': return t('verdict.meaning.early');
-    case 'caution-stopped': return t('verdict.meaning.stopped');
-    case 'clean': return t('verdict.meaning.clean');
-    case 'toonew': return t('verdict.meaning.new');
+    case 'caution-early': {
+      const cp = cautionPct(l);
+      if (!cp) return t('verdict.meaning.early');
+      if (!cp.own) {
+        return `${t('verdict.meaning.early.creator', { pct: fmtPct(cp.pct) })} ${t('verdict.meaning.creator.coin', { n: fmtNum(l.evidence.swapCount) })}`;
+      }
+      return cp.pct > 25
+        ? t('verdict.meaning.early.c', { pct: fmtPct(cp.pct) })
+        : t('verdict.meaning.early.b', { pct: fmtPct(cp.pct) });
+    }
+    case 'caution-stopped': {
+      const n = Math.max(0, (c?.realLaunches ?? 0) - (c?.unreadable ?? 0));
+      if (l.stopped) {
+        return t('verdict.meaning.stopped.this', {
+          ago: agoOfBlock(l.evidence.lastSwapBlock ?? l.block), s: c?.stopped ?? 0, n,
+        });
+      }
+      const coinClause = l.evidence.lastSwapBlock
+        ? t('verdict.meaning.stopped.coin', { ago: agoOfBlock(l.evidence.lastSwapBlock) })
+        : t('verdict.meaning.stopped.coin.none');
+      return `${t('verdict.meaning.stopped.creator', { s: c?.stopped ?? 0, n })} ${coinClause}`;
+    }
+    case 'clean': return `${t('verdict.meaning.clean2')} ${t('verdict.meaning.clean.coin', { b: fmtNum(l.evidence.uniqueBuyers) })}`;
+    case 'toonew': return t('verdict.meaning.new2', { n: fmtNum(l.evidence.swapCount), ago: agoOfBlock(l.block) });
     case 'unknown': return t('verdict.meaning.unknown');
     default: return '';
   }
 }
-/** Fact + meaning lines (the chip itself sits beside the creator's name
- *  on the card, and at the top of the verdict stage on the coin page). */
+/** The threshold sentence that belongs next to the judgement (audit:
+ *  methodology must be present at the moment of judgement). */
+function verdictThresholdLine(l: Launch, kind: VerdictKind): string {
+  if (kind === 'caution-early') return t('verdict.threshold.early', { blocks: fmtNum(snap?.params.earlyBlocks ?? 7200) });
+  if (kind === 'clean') return t('verdict.threshold.clean');
+  return '';
+}
+/** Card face: fact line only. The meaning line and the threshold live
+ *  behind the card's "Why" expander (audit P-2) and in full on the
+ *  coin page's verdict stage. */
 function verdictLines(l: Launch): string {
   const kind = verdictKind(l);
   if (kind === 'test') return `<p class="card-reason">${esc(verdictFact(l, kind))}</p>`;
-  return `<p class="verdict-fact">${esc(verdictFact(l, kind))}</p>
-    <p class="verdict-meaning"><strong>${esc(t('verdict.meaning.label'))}</strong> ${esc(verdictMeaning(kind))}</p>`;
+  return `<p class="verdict-fact">${esc(verdictFact(l, kind))}</p>`;
 }
-
-/** The coin's own state, labelled as the coin's so it never reads as a
- *  second, contradictory creator verdict (audit C4). */
-function coinStateLine(l: Launch): string {
-  const ev = l.evidence;
-  let txt: string;
-  if (l.stopped) txt = t('card.coin.stopped', { ago: agoOfBlock(ev.lastSwapBlock ?? l.block) });
-  else if (ev.lastSwapBlock) txt = t('card.coin.trading', { ago: agoOfBlock(ev.lastSwapBlock) });
-  else txt = t('card.coin.notrades');
-  return `<p class="coin-state"><span class="coin-state-label">${esc(t('card.coinstate'))}</span> ${esc(txt)}</p>`;
+/** The full three-part verdict for the coin page stage. */
+function verdictStageLines(l: Launch): string {
+  const kind = verdictKind(l);
+  if (kind === 'test') return `<p class="card-reason">${esc(verdictFact(l, kind))}</p>`;
+  const th = verdictThresholdLine(l, kind);
+  return `<p class="verdict-fact">${esc(verdictFact(l, kind))}</p>
+    <p class="verdict-meaning"><strong>${esc(t('verdict.meaning.label'))}</strong> ${esc(verdictMeaning(l, kind))}</p>
+    ${th ? `<p class="verdict-threshold dim small">${esc(th)}</p>` : ''}`;
 }
 
 function stageOf(l: Launch): 'new' | 'near' | 'graduated' | 'other' {
@@ -311,46 +398,116 @@ function progressHtml(l: Launch): string {
   return `<p class="card-line">${esc(t('board.progress.none'))}</p>`;
 }
 
+/** Format a snapshot price in WETH per token at any magnitude: plain
+ *  decimals down to the smallest sampled prices, never exponent form. */
+function fmtPrice(v: number): string {
+  if (!(v > 0)) return '0';
+  if (v >= 0.001) return fmtNum(v, { maximumFractionDigits: v >= 1 ? 4 : 6 });
+  const s = v.toPrecision(3);
+  if (!s.includes('e')) return s;
+  const [mant, expStr] = s.split('e');
+  const exp = parseInt(expStr, 10);
+  const digits = mant.replace('-', '').replace('.', '');
+  return '0.' + '0'.repeat(Math.max(0, -exp - 1)) + digits;
+}
+
+/** Activity sparkline from the snapshot's 12-window swap counts. It is
+ *  an activity chart and is labelled as one, never as price. All path
+ *  coordinates are computed numbers. */
+function sparkSvg(l: Launch): string {
+  const spark = l.evidence.activitySpark ?? [];
+  const total = spark.reduce((a, b) => a + b, 0);
+  if (!spark.length || total === 0) return `<span class="spark-none">${esc(t('card.notrades.spark'))}</span>`;
+  const W = 96, H = 24;
+  const max = Math.max(...spark, 1);
+  const pts = spark.map((v, i) => `${(i * (W / (spark.length - 1))).toFixed(1)},${(H - 2 - (v / max) * (H - 5)).toFixed(1)}`).join(' ');
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t('card.activity'))}: ${fmtNum(total)}"><polyline points="${pts}" fill="none" stroke="var(--action)" stroke-width="2" stroke-linejoin="round"/></svg>`;
+}
+
+function priceLineHtml(l: Launch): string {
+  if (l.price) {
+    return `<div class="price-row"><span class="price-line">${esc(t('card.price.snapshot', { price: fmtPrice(Number(l.price.perTokenWeth)), ago: agoOfBlock(l.price.block) }))}</span>${sparkSvg(l)}</div>`;
+  }
+  if (l.statusName === 'graduated') {
+    return `<div class="price-row"><span class="price-line dim">${esc(t('card.price.graduated'))}</span>${sparkSvg(l)}</div>`;
+  }
+  return `<div class="price-row"><span class="price-line dim">${esc(t('card.price.none'))}</span>${sparkSvg(l)}</div>`;
+}
+
+/** Signal-first card (audit P-2): name, snapshot price + activity,
+ *  progress, one tabular stats line, verdict chip + ONE fact line,
+ *  creator line, and the meaning behind a "Why" expander. */
 function coinCard(l: Launch): string {
   const watching = watchlist().includes(l.curve.toLowerCase());
-  const meta = [
-    t('board.buyers', { n: fmtNum(l.evidence.uniqueBuyers) }),
+  const ev = l.evidence;
+  const stats = [
+    t('board.buyers', { n: fmtNum(ev.uniqueBuyers) }),
     raisedText(l),
-    t('card.launched', { ago: agoOfBlock(l.block) }),
+    ev.lastSwapBlock ? t('card.lasttrade', { ago: agoOfBlock(ev.lastSwapBlock) }) : t('card.coin.notrades'),
   ].filter(Boolean).join(' · ');
+  const holdersLine = ev.holders
+    ? `<p class="card-holders">${esc(t('card.holders.line', { top1: fmtPct(ev.holders.top1Pct), top10: fmtPct(ev.holders.top10Pct) }))}</p>`
+    : '';
+  const kind = verdictKind(l);
+  const why = kind === 'test' ? '' : `<details class="why"><summary>${esc(t('verdict.why'))}</summary>
+      <p class="verdict-meaning"><strong>${esc(t('verdict.meaning.label'))}</strong> ${esc(verdictMeaning(l, kind))}</p>
+      ${verdictThresholdLine(l, kind) ? `<p class="dim small">${esc(verdictThresholdLine(l, kind))}</p>` : ''}
+      <p><a href="#/coin/${l.curve}">${esc(t('card.why.receipts'))}</a></p></details>`;
   return `<article class="card" tabindex="0" data-curve="${esc(l.curve)}">
     <div class="card-top">${identicon(l.curve)}
       <div class="card-names"><a class="card-name" href="#/coin/${l.curve}">${esc(displayName(l))}</a>
       <span class="card-sym">${esc(l.symbol ?? '')}</span></div>${stagePill(l)}</div>
+    ${priceLineHtml(l)}
+    ${progressHtml(l)}
+    <p class="card-stats">${esc(stats)}</p>
+    ${holdersLine}
+    <div class="card-verdict">${verdictChip(l)}${verdictLines(l)}</div>
     <div class="creator-row">${identicon(l.creator, 'identicon-sm')}
       <a class="creator-link" href="#/creator/${l.creator}">${esc(shortAddr(l.creator))}</a>
-      ${verdictChip(l)}
       <button type="button" class="watch-btn" data-act="watch" data-curve="${esc(l.curve)}" aria-pressed="${watching}" aria-label="${esc(t(watching ? 'watch.remove' : 'watch.add'))}">${watching ? '★' : '☆'}</button>
     </div>
-    ${verdictLines(l)}
-    ${coinStateLine(l)}
-    <p class="card-line dim small">${esc(meta)}</p>
-    ${progressHtml(l)}
+    ${why}
   </article>`;
 }
 
-/** Dense list row (desktop density toggle, Gate 14). Same facts as the
- *  card, one line each: name, creator verdict chip, progress, buyers,
- *  raised, launched. */
+/** Dense list row (desktop density toggle, Gate 14/15): one line per
+ *  coin in the true table built by listTableHtml: name, snapshot
+ *  price, progress, buyers, raised, last trade, creator verdict. */
 function coinRow(l: Launch): string {
   const pct = l.statusName === 'graduated' ? '100%' : l.progressPct !== null ? fmtNum(l.progressPct, { maximumFractionDigits: 1 }) + '%' : '—';
+  const price = l.price ? `${fmtPrice(Number(l.price.perTokenWeth))} WETH` : '—';
   return `<a class="lrow" href="#/coin/${l.curve}">
     <span class="lrow-name">${identicon(l.curve, 'identicon-sm')}<span class="lrow-nm">${esc(displayName(l))}</span> <span class="dim small">${esc(l.symbol ?? '')}</span></span>
+    <span class="lrow-num">${esc(price)}</span>
+    <span class="lrow-num">${esc(pct)}</span>
+    <span class="lrow-num">${fmtNum(l.evidence.uniqueBuyers)}</span>
+    <span class="lrow-num">${esc(raisedText(l)?.replace(/^[^0-9<]*/, '') ?? '—')}</span>
+    <span class="lrow-num">${esc(l.evidence.lastSwapBlock ? agoOfBlock(l.evidence.lastSwapBlock) : '—')}</span>
     <span class="lrow-chip">${verdictChip(l)}</span>
-    <span class="lrow-num" data-l="${esc(t('board.progress.label'))}">${esc(pct)}</span>
-    <span class="lrow-num" data-l="${esc(t('coin.state.swaps'))}">${fmtNum(l.evidence.uniqueBuyers)}</span>
-    <span class="lrow-num lrow-wide" data-l="${esc(t('coin.state.raised'))}">${esc(raisedText(l)?.replace(/^[^0-9<]*/, '') ?? '—')}</span>
-    <span class="lrow-num lrow-wide" data-l="${esc(t('card.coinstate'))}">${esc(agoOfBlock(l.block))}</span>
   </a>`;
 }
 
+/** The dense table header: sortable columns wired to the same sort
+ *  state as the sort select (audit P-8). */
+function listTableHtml(items: Launch[], f: FilterState): string {
+  const sortBtn = (id: SortId, label: string) =>
+    `<button type="button" class="lhead-btn" data-act="sort" data-sort="${id}" aria-pressed="${f.sort === id}">${esc(label)}${f.sort === id ? ' ↓' : ''}</button>`;
+  return `<div class="ltable">
+    <div class="lrow lhead" aria-hidden="false">
+      <span>${esc(t('table.coin'))}</span>
+      <span>${sortBtn('price', t('table.price'))}</span>
+      <span>${sortBtn('grad', t('table.progress'))}</span>
+      <span>${sortBtn('buyers', t('table.buyers'))}</span>
+      <span>${sortBtn('raised', t('table.raised'))}</span>
+      <span>${sortBtn('lasttrade', t('table.lasttrade'))}</span>
+      <span>${esc(t('table.verdict'))}</span>
+    </div>
+    <div class="list-rows">${items.map(coinRow).join('')}</div>
+  </div>`;
+}
+
 // ---------- filter system (Gate 14, spec S1) ----------
-type SortId = 'grad' | 'newest' | 'buyers' | 'raised';
+type SortId = 'grad' | 'newest' | 'buyers' | 'raised' | 'price' | 'lasttrade';
 interface FilterState {
   preset: string | null;
   stage: string[]; verdict: string[]; creator: string[]; activity: string[];
@@ -476,6 +633,8 @@ function sortLaunches(list: Launch[], sort: SortId): Launch[] {
     if (sort === 'newest') return b.block - a.block;
     if (sort === 'buyers') return b.evidence.uniqueBuyers - a.evidence.uniqueBuyers;
     if (sort === 'raised') return raised(b) > raised(a) ? 1 : raised(b) < raised(a) ? -1 : 0;
+    if (sort === 'price') return Number(b.price?.perTokenWeth ?? -1) - Number(a.price?.perTokenWeth ?? -1);
+    if (sort === 'lasttrade') return (b.evidence.lastSwapBlock ?? -1) - (a.evidence.lastSwapBlock ?? -1);
     const pa = a.statusName === 'graduated' ? 101 : (a.progressPct ?? -1);
     const pb = b.statusName === 'graduated' ? 101 : (b.progressPct ?? -1);
     return pb - pa;
@@ -523,7 +682,7 @@ function filtersFromParams(q: URLSearchParams): FilterState {
   f.showTests = q.get('t') === '1';
   f.showStopped = q.get('s') === '1';
   const sort = q.get('sort');
-  if (sort === 'newest' || sort === 'buyers' || sort === 'raised') f.sort = sort;
+  if (sort === 'newest' || sort === 'buyers' || sort === 'raised' || sort === 'price' || sort === 'lasttrade') f.sort = sort;
   f.query = (q.get('q') ?? '').slice(0, 80);
   if (q.get('v') === 'list') f.view = 'list';
   return f;
@@ -540,7 +699,7 @@ function filtersFromStorage(): FilterState | null {
     }
     f.showTests = j.showTests === true;
     f.showStopped = j.showStopped === true;
-    if (j.sort === 'newest' || j.sort === 'buyers' || j.sort === 'raised' || j.sort === 'grad') f.sort = j.sort;
+    if (j.sort === 'newest' || j.sort === 'buyers' || j.sort === 'raised' || j.sort === 'grad' || j.sort === 'price' || j.sort === 'lasttrade') f.sort = j.sort;
     if (typeof j.query === 'string') f.query = j.query.slice(0, 80);
     if (j.view === 'list') f.view = 'list';
     return f;
@@ -583,9 +742,32 @@ function snapshotLine(): string {
   return stale ? `<div class="stale-banner">${line}</div>` : line;
 }
 
+/** The trading coin closest to graduation, for honest zero-status
+ *  text (audit V10): a zero preset names the closest real candidate
+ *  instead of opening an empty board. */
+function closestToGraduation(): Launch | null {
+  if (!snap) return null;
+  const cand = snap.launches.filter((l) => l.statusName === 'trading' && !l.testLaunch && l.progressPct !== null);
+  if (!cand.length) return null;
+  return cand.reduce((a, b) => ((b.progressPct ?? 0) > (a.progressPct ?? 0) ? b : a));
+}
+
 function presetChipsHtml(f: FilterState): string {
-  const chips = PRESETS.map((p) =>
-    `<button type="button" class="preset-chip" data-act="preset" data-preset="${p}" aria-pressed="${f.preset === p}">${esc(t(`preset.${p}`))} <span class="cnt">${fmtNum(presetCount(f, p))}</span></button>`).join('');
+  const chips = PRESETS.map((p) => {
+    const n = presetCount(f, p);
+    // A preset whose live count is zero is a status, never a door to
+    // an empty board (audit P-3/V10). An active zero preset (reachable
+    // only via a shared URL) stays a chip so it can be switched off.
+    if (n === 0 && f.preset !== p) {
+      let status = t('preset.status.none');
+      if (p === 'gradsoon') {
+        const closest = closestToGraduation();
+        if (closest) status = t('preset.status.gradsoon', { name: displayName(closest), pct: fmtPct(closest.progressPct ?? 0) });
+      }
+      return `<span class="preset-status" role="status">${esc(t(`preset.${p}`))}: ${esc(status)}</span>`;
+    }
+    return `<button type="button" class="preset-chip" data-act="preset" data-preset="${p}" aria-pressed="${f.preset === p}">${esc(t(`preset.${p}`))} <span class="cnt">${fmtNum(n)}</span></button>`;
+  }).join('');
   const views = savedViews().map((v, i) =>
     `<button type="button" class="preset-chip saved" data-act="apply-view" data-idx="${i}">${esc(v.name)}</button>`).join('');
   return chips + views;
@@ -615,6 +797,8 @@ function stripHtml(f: FilterState): string {
         <option value="newest" ${f.sort === 'newest' ? 'selected' : ''}>${esc(t('filter.sort.newest'))}</option>
         <option value="buyers" ${f.sort === 'buyers' ? 'selected' : ''}>${esc(t('filter.sort.buyers'))}</option>
         <option value="raised" ${f.sort === 'raised' ? 'selected' : ''}>${esc(t('filter.sort.raised'))}</option>
+        <option value="price" ${f.sort === 'price' ? 'selected' : ''}>${esc(t('filter.sort.price'))}</option>
+        <option value="lasttrade" ${f.sort === 'lasttrade' ? 'selected' : ''}>${esc(t('filter.sort.lasttrade'))}</option>
       </select></label>
     <span class="sep" aria-hidden="true"></span>
     ${presetChipsHtml(f)}
@@ -725,9 +909,13 @@ function boardMainHtml(f: FilterState): string {
       <button type="button" class="btn btn-ghost" data-act="clear-all">${esc(t('filter.clear'))}</button></div></div>`;
   }
   pendingLoosen = null;
-  const renderItems = (items: Launch[]) => f.view === 'list'
-    ? `<div class="list-rows">${items.map(coinRow).join('')}</div>`
-    : `<div class="cq"><div class="grid">${items.map(coinCard).join('')}</div></div>`;
+  if (f.view === 'list') {
+    // Dense mode is one true table over the whole result set (audit
+    // P-8), not per-lane row stacks.
+    const heading = f.query.trim() ? `<div class="stage-head"><h2>${esc(t('search.resultsfor', { q: f.query.trim() }))}</h2><span class="stage-count">${fmtNum(results.length)}</span></div>` : '';
+    return `${why}${chips}<section class="stage flat">${heading}${listTableHtml(results, f)}</section>`;
+  }
+  const renderItems = (items: Launch[]) => `<div class="cq"><div class="grid">${items.map(coinCard).join('')}</div></div>`;
   if (isDefaultFilters(f) && f.view === 'cards') {
     const lanes = (['new', 'near', 'graduated', 'other'] as const).map((s) => {
       const items = results.filter((l) => stageOf(l) === s);
@@ -973,6 +1161,8 @@ function initDelegates() {
       }
     } else if (a === 'view') {
       mutateFilters((f) => { f.view = act.dataset.view as 'cards' | 'list'; }, 'board');
+    } else if (a === 'sort') {
+      mutateFilters((f) => { f.sort = act.dataset.sort as SortId; }, 'board');
     } else if (a === 'watch') {
       const curve = act.dataset.curve!;
       const now = toggleWatch(curve);
@@ -1125,7 +1315,7 @@ function verdictStage(l: Launch): string {
   return `<section class="verdict-panel" aria-label="${esc(t('verdict.title'))}">
     <h2>${esc(t('verdict.title'))}</h2>
     <p>${verdictChip(l)}</p>
-    ${verdictLines(l)}
+    ${verdictStageLines(l)}
     ${totals}
     <div class="btn-row">
       <button class="btn btn-ghost" data-evidence="${l.curve}" aria-expanded="false">${esc(t('verdict.receipts.btn'))}</button>
@@ -1200,8 +1390,24 @@ async function pageCoin(curve: string): Promise<string> {
       l.evidence.lastSwapBlock ? agoOfBlock(l.evidence.lastSwapBlock) : '—',
       l.evidence.lastSwapBlock ? t('coin.state.lasttrade.meaning') : t('coin.state.lasttrade.none'),
     ),
-    ...(l.evidence.holders ? [statBlock(t('coin.state.holders'), fmtNum(l.evidence.holders.count), t('coin.state.holders.note', { top1: fmtNum(l.evidence.holders.top1Pct, { maximumFractionDigits: 1 }) + '%', top10: fmtNum(l.evidence.holders.top10Pct, { maximumFractionDigits: 1 }) + '%' }))] : []),
   ].join('');
+  // Holder concentration (audit F-3): its own panel with the scale
+  // line printed next to the number, three-state honest when the
+  // snapshot could not read holders for this coin.
+  const holdersPanel = l.evidence.holders
+    ? `<section class="panel cg-holders"><h2>${esc(t('coin.holders.title'))}</h2>
+      <div class="stats">
+        ${statBlock(t('coin.state.holders'), fmtNum(l.evidence.holders.count), t('coin.holders.note2'))}
+        ${statBlock(t('coin.holders.top1'), fmtPct(l.evidence.holders.top1Pct), t('coin.holders.note2'))}
+        ${statBlock(t('coin.holders.top10'), fmtPct(l.evidence.holders.top10Pct), t('coin.holders.note2'))}
+      </div>
+      <div class="holder-scale" role="img" aria-label="${esc(t(l.evidence.holders.top10Pct <= 30 ? 'coin.holders.scale.inside' : 'coin.holders.scale.above', { top10: fmtPct(l.evidence.holders.top10Pct) }))}">
+        <div class="holder-scale-fill" style="width:${Math.min(100, l.evidence.holders.top10Pct)}%"></div>
+        <span class="holder-scale-mark" style="left:30%"></span>
+      </div>
+      <p class="card-line" style="margin-top:8px">${esc(t(l.evidence.holders.top10Pct <= 30 ? 'coin.holders.scale.inside' : 'coin.holders.scale.above', { top10: fmtPct(l.evidence.holders.top10Pct) }))}</p>
+    </section>`
+    : `<section class="panel cg-holders"><h2>${esc(t('coin.holders.title'))}</h2><p class="card-line dim">${esc(t('coin.holders.none'))}</p></section>`;
   const others = snap!.launches.filter((x) =>
     x.creator.toLowerCase() === l.creator.toLowerCase() && x.curve.toLowerCase() !== l.curve.toLowerCase());
   const moreFrom = others.length
@@ -1234,6 +1440,7 @@ async function pageCoin(curve: string): Promise<string> {
       </section>
       <div class="cg-chart">${curveChart(l)}</div>
       <section class="panel cg-stats"><h2>${esc(t('coin.state.title'))}</h2><div class="stats">${stats}</div></section>
+      ${holdersPanel}
       <section class="panel cg-more"><h2>${esc(t('coin.morefrom'))}</h2>${moreFrom}</section>
     </div>
     <div class="quote-dock" role="group" aria-label="${esc(t('coin.quotebar'))}">
@@ -1605,17 +1812,35 @@ async function renderMoneyRows(res: LookupResult) {
     cur.amount += r.amount!;
     totals.set(key, cur);
   }
-  const worthParts: string[] = [];
+  // Plain-words summary first (audit P-5): one line saying how many
+  // amounts are worth claiming, the biggest in words, then per-token
+  // totals as their own rows. Dust is counted and named as dust in
+  // its own sentence, never inside the worth-claiming sentence, and
+  // no "<0.001" string ever appears in the summary.
+  const worthRows: string[] = [];
   for (const v of totals.values()) {
     const md = await metaOf(v.token);
-    worthParts.push(`${fmtAmountDisplay(v.amount, md.decimals).text} ${md.symbol}`);
+    const disp = fmtAmountDisplay(v.amount, md.decimals);
+    worthRows.push(`<li><span class="money-amount">${esc(disp.text)}</span> <strong>${esc(md.symbol)}</strong></li>`);
+  }
+  let biggestText = '';
+  {
+    let best = -1;
+    for (const r of realClaimable) {
+      const md = await metaOf(r.token);
+      const human = Number(formatUnits(r.amount!, md.decimals));
+      if (human > best) { best = human; biggestText = moneyDisplay.get(r.key) ?? ''; }
+    }
   }
   const connectedAddr = walletState.status === 'connected' || walletState.status === 'wrong-network' ? walletState.address : undefined;
   const isOwner = walletState.status === 'connected' && connectedAddr?.toLowerCase() === res.address.toLowerCase();
   const differs = connectedAddr && connectedAddr.toLowerCase() !== res.address.toLowerCase();
   const summary = `<section class="panel summary-card">
-    ${worthParts.length
-      ? `<p class="fact">${esc(t('money.summary.worth', { amounts: worthParts.join(' · ') }))}</p>`
+    ${realClaimable.length
+      ? `<p class="fact">${esc(t('money.summary.worth2', { n: realClaimable.length }))}</p>
+    ${biggestText ? `<p class="card-line" style="margin-top:4px">${esc(t('money.summary.biggest', { amount: biggestText }))}</p>` : ''}
+    <p class="card-line dim" style="margin-top:8px">${esc(t('money.summary.totals'))}</p>
+    <ul class="money-totals">${worthRows.join('')}</ul>`
       : `<p class="fact">${esc(t('money.summary.none'))}</p>`}
     ${dustRows.length ? `<p class="card-line dim" style="margin-top:8px">${esc(t('money.summary.dust', { n: dustRows.length }))}</p>` : ''}
     ${realClaimable.length && isOwner ? `<div class="btn-row"><button class="btn" type="button" id="claimAllBtn">${esc(t('money.claimall'))}</button></div>` : ''}
@@ -1669,15 +1894,15 @@ async function renderMoneyRows(res: LookupResult) {
     }
     const okLine = res.streamOk[s]
       ? (mine.length || dust.length ? '' : `<p class="card-line dim">${esc(t('row.zero'))}</p>`)
-      : `<p class="card-line dim">${esc(t('row.unavailable'))}</p>`;
+      : `<p class="card-line dim">${esc(t('row.unavailable.note'))}</p>`;
     streamSections.push(`<section class="panel"><h2>${esc(t(`stream.${s}.title`))}</h2><p class="card-line dim">${esc(t(`stream.${s}.about`))}</p>${rowHtml.join('')}${dustHtml}${okLine}</section>`);
   }
   out.innerHTML = `<p class="card-line" style="margin-top:16px">${esc(t('money.resultsfor', { addr: '' }))} ${addrChip(res.address)}</p>
     <p class="dim small">${esc(t('money.asof', { time: fmtAgo(new Date()) }))}</p>
     ${differs ? `<p class="stale-banner">${esc(t('money.differs', { addr: shortAddr(connectedAddr!) }))}</p>` : ''}
     ${summary}
-    ${Object.values(res.streamOk).some((v) => !v) ? `<p class="card-line dim">${esc(t('money.unavail'))}</p>` : ''}
-    ${streamSections.join('')}`;
+    ${streamSections.join('')}
+    ${Object.values(res.streamOk).some((v) => !v) ? `<p class="card-line dim" style="margin-top:16px">${esc(t('money.unavail.calm'))}</p>` : ''}`;
   wireAddrChips(out);
   out.querySelectorAll<HTMLButtonElement>('[data-amount-toggle]').forEach((b) =>
     b.addEventListener('click', () => {
@@ -1865,7 +2090,10 @@ function pageMethod(): string {
     <h1>${esc(t('method.title'))}</h1>
     <p class="sub">${esc(t('method.intro'))}</p>
     <section class="panel"><p>${esc(t('method.graduated'))}</p><p style="margin-top:12px">${esc(t('method.stopped', { stop: fmtNum(snap.params.stopBlocks) }))}</p>
-    <p style="margin-top:12px">${esc(t('method.early', { early: fmtNum(snap.params.earlyBlocks) }))}</p><p style="margin-top:12px">${esc(t('method.bundle'))}</p>
+    <p style="margin-top:12px">${esc(t('method.early', { early: fmtNum(snap.params.earlyBlocks) }))}</p>
+    <p style="margin-top:12px">${esc(t('method.earlybands'))}</p>
+    <p style="margin-top:12px">${esc(t('method.clean'))}</p>
+    <p style="margin-top:12px">${esc(t('method.bundle'))}</p>
     <p style="margin-top:12px">${esc(t('method.test'))}</p><p style="margin-top:12px">${esc(t('method.creators'))}</p></section>
   </article>`;
 }
@@ -1994,8 +2222,8 @@ async function boot(retry = false) {
           protocolVersion: d.protocolVersion, uri: d.uri, block: d.block, tx: d.tx, slots: d.slots, factory: d.factory,
           name: meta?.name || null, symbol: meta?.symbol || null, decimals: meta?.decimals ?? 18, totalSupply: null,
           state: null, statusName: 'pending', readyToMigrate: false, stopped: false, progressPct: null,
-          evidence: { swapCount: 0, uniqueBuyers: 0, firstSwapBlock: null, lastSwapBlock: null, lastSwapTx: null, creatorBuys: 0, creatorBuyTotal: '0', creatorSellTotal: '0', creatorSells: [], creatorSoldEarly: false, currentCreator: d.creator, creatorTransferred: null, holders: null, windows: [] },
-          testLaunch: false, testReason: null, verdict: 'toonew', verdictReasons: [],
+          evidence: { swapCount: 0, uniqueBuyers: 0, firstSwapBlock: null, lastSwapBlock: null, lastSwapTx: null, creatorBuys: 0, creatorBuyTotal: '0', creatorSellTotal: '0', creatorSells: [], creatorSoldEarly: false, earlySellPct: null, activitySpark: [], currentCreator: d.creator, creatorTransferred: null, holders: null, windows: [] },
+          testLaunch: false, testReason: null, verdict: 'toonew', verdictReasons: [], price: null,
         };
         snap.launches.unshift(nl);
         byCurve.set(nl.curve.toLowerCase(), nl);

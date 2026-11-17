@@ -171,8 +171,8 @@
   }
   .lang-toggle button.active { background: var(--surface-3); color: var(--text-1); }
 
-  .layout { max-width: 1200px; margin: 0 auto; padding: var(--space-5) var(--space-4) var(--space-7); }
-  .site-footer { max-width: 1200px; margin: 0 auto; padding: 0 var(--space-4) var(--space-7); color: var(--text-2); font-size: var(--fs-small); line-height: var(--lh-small); }
+  .layout { max-width: 1760px; margin: 0 auto; padding: var(--space-5) var(--space-4) var(--space-7); }
+  .site-footer { max-width: 1760px; margin: 0 auto; padding: 0 var(--space-4) var(--space-7); color: var(--text-2); font-size: var(--fs-small); line-height: var(--lh-small); }
   .dim { color: var(--text-2); }
   .small { font-size: var(--fs-small); line-height: var(--lh-small); }
   .caption { font-size: var(--fs-caption); line-height: var(--lh-caption); }
@@ -254,6 +254,7 @@
   .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); margin-top: var(--space-4); min-width: 0; }
   @container (min-width: 560px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @container (min-width: 900px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @container (min-width: 1250px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 
   .card {
     background: var(--surface-1); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
@@ -627,7 +628,7 @@
 
   .list-rows { display: flex; flex-direction: column; margin-top: var(--space-4); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; }
   .lrow {
-    display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1.7fr) 0.7fr 0.7fr 1fr 1fr;
+    display: grid; grid-template-columns: minmax(0, 2fr) 1.3fr 0.7fr 0.6fr 1fr 1fr 1.4fr;
     gap: var(--space-3); align-items: center; padding: var(--space-3) var(--space-4);
     background: var(--surface-1); border-top: 1px solid var(--border-subtle);
     text-decoration: none; color: inherit; min-height: 56px; min-width: 0;
@@ -637,9 +638,17 @@
   .lrow-name { display: flex; align-items: center; gap: var(--space-2); min-width: 0; }
   .lrow-nm { font-weight: 700; overflow-wrap: anywhere; }
   .lrow-num { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .ltable { margin-top: var(--space-4); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; }
+  .ltable .list-rows { margin-top: 0; border: 0; border-radius: 0; }
+  .lhead { background: var(--surface-2); font-weight: 700; min-height: 48px; }
+  .lhead-btn {
+    background: none; border: 0; font: inherit; font-weight: 700; cursor: pointer; color: inherit;
+    padding: 0; text-align: left; min-height: 32px;
+  }
+  .lhead-btn[aria-pressed="true"] { color: var(--action); }
   @media (max-width: 767px) {
-    .lrow { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.5fr) 0.7fr; }
-    .lrow > :nth-child(4), .lrow > :nth-child(5), .lrow > :nth-child(6) { display: none; }
+    .lrow { grid-template-columns: minmax(0, 1.6fr) 1.2fr 1.2fr; }
+    .lrow > :nth-child(3), .lrow > :nth-child(4), .lrow > :nth-child(5), .lrow > :nth-child(6) { display: none; }
   }
 
   .coin-grid { display: flex; flex-direction: column; margin-top: var(--space-4); min-width: 0; }
@@ -680,6 +689,33 @@
     border-bottom-width: 2px; border-radius: var(--radius-sm); padding: 2px var(--space-2); font-weight: 700;
   }
 
+  /* ---------- v3.1: signal-first card, holders, money totals ---------- */
+  .price-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-width: 0; }
+  .price-line { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .spark { width: 96px; height: 24px; flex: none; }
+  .spark-none { color: var(--text-2); font-size: var(--fs-caption); line-height: var(--lh-caption); white-space: nowrap; }
+  .card-stats { margin: 0; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .card-holders { margin: 0; color: var(--text-2); font-size: var(--fs-small); line-height: var(--lh-small); font-variant-numeric: tabular-nums; }
+  .card-verdict { display: flex; flex-direction: column; gap: var(--space-1); align-items: flex-start; }
+  .card-verdict .verdict-fact { margin: 0; }
+  .verdict-fact, .verdict-meaning { margin: 0; }
+  .verdict-threshold { margin: 0; }
+  .why summary {
+    cursor: pointer; font-weight: 700; color: var(--link); min-height: 36px;
+    display: flex; align-items: center; list-style-position: inside;
+  }
+  .why p { margin-top: var(--space-2); }
+  .preset-status {
+    display: inline-flex; align-items: center; border: 1px dashed var(--border-interactive);
+    border-radius: var(--radius-pill); padding: var(--space-1) var(--space-3);
+    font-size: var(--fs-small); line-height: var(--lh-small); color: var(--text-2); font-weight: 600; min-height: 36px;
+  }
+  .money-totals { list-style: none; margin: var(--space-2) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+  .money-totals li { font-variant-numeric: tabular-nums; }
+  .holder-scale { position: relative; height: 10px; border-radius: var(--radius-pill); background: var(--meter-track); margin-top: var(--space-3); }
+  .holder-scale-fill { height: 100%; background: var(--action); border-radius: var(--radius-pill); }
+  .holder-scale-mark { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--text-1); }
+
   @media (pointer: coarse) {
     input, select, textarea { font-size: 16px; }
   }
@@ -711,13 +747,14 @@
     .quote-dock { display: none; }
     .coin-grid {
       display: grid; grid-template-columns: minmax(0, 1fr) 360px; column-gap: var(--space-5);
-      grid-template-areas: "verdict quote" "chart quote" "stats quote" "more quote";
+      grid-template-areas: "verdict quote" "chart quote" "stats quote" "holders quote" "more quote";
       align-items: start;
     }
     .cg-verdict { grid-area: verdict; min-width: 0; }
     .cg-quote { grid-area: quote; position: sticky; top: 72px; margin-top: 0; }
     .cg-chart { grid-area: chart; min-width: 0; }
     .cg-stats { grid-area: stats; }
+    .cg-holders { grid-area: holders; }
     .cg-more { grid-area: more; }
   }
 }

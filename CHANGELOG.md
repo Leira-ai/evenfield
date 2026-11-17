@@ -1,5 +1,48 @@
 # Evenfield changelog
 
+## 3.1.0, 17 Nov 2026: the perfection pass
+
+Built from the self-audit (`redesign/perfection-audit.md`) after v3
+was rejected without feedback. The audit's charges were calibration,
+density, and honesty of presentation; the data engine and the 2.0.0
+theme tokens are unchanged.
+
+- Verdict calibration (audit P-1/F-1): early sells are banded by
+  size. Under 1% of what the creator bought is a recorded fact and
+  never raises a caution; 1-25% and over 25% raise cautions whose
+  wording names the fraction and follows it exactly ("cashed out"
+  is only said over 25%). Meaning lines are generated from each
+  coin's and creator's own measured values, never pasted per kind.
+  New positive tier "No red flags found" with a published, reachable
+  definition and its boundary sentence (a clean record so far, not
+  a guarantee), wired into the Clean creators preset and the
+  methodology page.
+- Signal-first cards (P-2): snapshot price sampled through the
+  proven quote path at index build time, block-stamped and labelled
+  with its age; an activity sparkline from indexed swap counts
+  (labelled activity, never price); progress; one tabular stats
+  line; verdict chip + one fact; the meaning behind a "Why"
+  expander. Holder concentration (top holder, top 10) on the card
+  and as its own panel with a scale line on the coin page (F-3).
+- Empty doors removed (P-3): a preset whose live count is zero
+  renders as status text ("Graduating soon: none yet, closest is X
+  at N%"), never as a button to an empty board.
+- Money center summary rewritten (P-5): plain words first (how many
+  amounts are worth claiming, the biggest, per-token totals as
+  rows); dust counted and named as dust in its own sentence, never
+  inside the worth-claiming sentence; the partial-read honesty line
+  moved to the end of the results with calmer wording, and each
+  unread stream says so in its own panel.
+- Desktop (P-8): content width 1760px, four-column card grid at
+  wide containers, and the list density is now a true sortable
+  table (Coin, Price, Progress, Buyers, Raised, Last trade,
+  Creator verdict) with two new sorts (snapshot price, last trade).
+- QA foundations (D-1): new probe `probe/qa-readability.mjs` with
+  measured truncation assertions, an H1-largest check, a
+  boilerplate detector (no meaning sentence on more than 3 cards),
+  the zero-preset status check, a mid-scroll sticky-bar tap test,
+  and the 1920 dense-mode checks; it runs in release QA.
+
 ## 3.0.0, 17 Nov 2026: the usability rebuild
 
 Rebuilt around how people actually find and judge a coin, under the
