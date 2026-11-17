@@ -1,53 +1,12 @@
 Evenfield digest
-Data as of block 41508207.
+Data as of block 41532174.
 
 New launches:
-- Pepper Test Token (PTT)
-- Bebop Test Token (BBPT)
-- BaekhoGiwa (BAEKHO)
-- Guts (GUTS)
-- TESTING (TST)
-- MekiPad Test (MEKI)
-- Ammora Builder Token (BUILD)
-- Alun Alun Kidul (MUYA)
-- OWI (OWII)
-- Ammora Builder Token (BUILD)
+- DGAY (DGAY)
+- DGAY (DGAY)
 
-New graduations:
-- MekiPad Test (MEKI)
-- Ammora Test Token (AMT)
-- MuseTest (MUSE)
-- AMMORA (AMMORA)
-- Korean Guide Partner Test (KGPT)
-- Public Agent Guide Test (PAG)
-- Agent Guide GIWA (AAG)
-- SDK038 Vesting Check (S038V)
-- Guide Launchpad Demo (GLPD)
-- SDK034 compounding builder (BLDRP)
-- SDK034 concentrated builder (BLDRC)
-- SDK031 GIWA Prerequisite Test (P27TEST)
-- Ammora SDK030 Test (ASDKT)
-- Ammora Test (ATST)
-- Ammora UI Acceptance compounding (AUICMP)
-- Ammora UI Acceptance concentrated (AUICON)
-- Ammora Native Acceptance compounding (ANRCMP)
-- Ammora Native Acceptance concentrated (ANRCON)
-- Baekho Chart Lifecycle Test (BCTEST)
-- Baekho Chart Lifecycle Test (BCTEST)
-- Ammora Browser E2E 1788174980037 (ABE2E)
-- Verify Drill (VDRL)
-- Ammora V4 GIWA Sepolia E2E (AV4E2E)
-- Ammora V4 GIWA Sepolia E2E (AV4E2E)
-- Ammora V4 GIWA E2E (AV4E2E)
-- Example Token (EXT)
-- Ammora GIWA Canary (AGC)
-- Ammora GIWA Canary (AGC)
-- Ammora GIWA Canary (AGC)
-- Ammora GIWA Canary (AGC)
-- Ammora GIWA Canary (AGC)
-
-This week: 35 new launches.
+This week: 44 new launches.
 Closest to graduation:
+- Reika (REIKA): 99.29%
 - Quick Launch Test (QLT): 99%
 - newom (NWM): 61.28%
-- Giwa (GIWA): 44.08%
