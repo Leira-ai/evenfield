@@ -799,9 +799,14 @@
     .cg-more { grid-area: more; }
     .toast-region { bottom: var(--space-5); left: auto; width: 400px; }
   }
-  @media (min-width: 1440px) {
+  @media (min-width: 1750px) {
     .lanes { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   }
+  /* Lane cards are narrow: the activity sparkline would take half
+     the price row and squeeze the price text into a one-character
+     column (Gate 17 screenshot, 1440px lanes). In lanes the dial and
+     the price carry the row; the sparkline stays on board cards. */
+  .lane .spark, .lane .spark-none { display: none; }
   @media (prefers-reduced-motion: no-preference) {
     .skeleton::after {
       content: ""; position: absolute; inset: 0;
