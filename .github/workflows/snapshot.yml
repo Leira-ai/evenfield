@@ -53,8 +53,22 @@ jobs:
           git push
       - name: Build the app
         run: npm run build
+      # Asset preservation (2026-11-17): the publish step below replaces
+      # the whole gh-pages tree, which used to delete every previous
+      # build's hashed assets. A phone still holding the previous
+      # build's HTML (an old service-worker cache) then got 404s for
+      # its CSS/JS and painted the page with no styles at all. Keep the
+      # previous generation's /assets/ files: copy in only what the new
+      # build does not already have.
+      - name: Check out the previous gh-pages tree (asset preservation)
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: prev-pages
       - name: Publish to gh-pages
         run: |
+          if [ -d prev-pages/assets ]; then mkdir -p dist/assets && cp -rn prev-pages/assets/. dist/assets/ || true; fi
           cd dist
           git init -b gh-pages
           git config user.name "evenfield-ci"

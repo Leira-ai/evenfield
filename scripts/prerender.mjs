@@ -77,6 +77,50 @@ const end = html.indexOf('</main>');
 if (start < 0 || end < 0) throw new Error('dist/index.html main not found');
 const mainOpenEnd = html.indexOf('>', start) + 1;
 html = html.slice(0, mainOpenEnd) + '\n' + homeStatic + '\n' + html.slice(end);
+
+// ---------- finalize: inline the CSS, stamp the service worker ----------
+// 2026-11-17 unstyled-page incident: the app CSS lived only in a hashed
+// /assets/ file, and every deploy deletes the previous build's assets.
+// Any cached HTML (above all the old service worker's, which served
+// index.html cache-first forever) then pointed at a deleted stylesheet
+// and the browser painted the prerendered page with NO styles at all;
+// on a ~5 KB/s connection the same page also sat unstyled for seconds
+// while the external sheet was still in flight. Inlining the whole
+// stylesheet into the HTML removes the failure class: the first paint
+// is styled as soon as the HTML itself arrives, whatever happens to
+// the asset files afterwards.
+const cssLink = html.match(/<link[^>]*rel="stylesheet"[^>]*>/);
+if (cssLink) {
+  const cssHref = cssLink[0].match(/href="([^"]+)"/)?.[1];
+  if (!cssHref) throw new Error('finalize: stylesheet href not found');
+  const cssPath = new URL(`../dist/${cssHref.replace(/^\/?evenfield\//, '')}`, import.meta.url);
+  const css = readFileSync(cssPath, 'utf8');
+  if (css.includes('</style')) throw new Error('finalize: CSS contains </style, cannot inline safely');
+  html = html.replace(cssLink[0], `<style data-evenfield-inlined-css>\n${css}\n</style>`);
+  console.log(`finalize: inlined ${cssPath.pathname.split('/').pop()} (${css.length} chars)`);
+} else if (html.includes('data-evenfield-inlined-css')) {
+  console.log('finalize: CSS already inlined (prerender re-run), skipping');
+} else {
+  throw new Error('finalize: stylesheet link not found in dist/index.html');
+}
+
+// Stamp dist/sw.js for THIS build: a cache name derived from the entry
+// chunk hash (so CI snapshot deploys also roll the worker, not just
+// manual releases) and a shell list naming the real entry chunk. The
+// snapshot is deliberately NOT precached (307 KB install payload).
+const jsSrc = html.match(/<script[^>]*type="module"[^>]*src="([^"]+)"/)?.[1]
+  ?? html.match(/<script[^>]*src="([^"]+\.js)"[^>]*>/)?.[1];
+if (!jsSrc) throw new Error('finalize: entry script not found in dist/index.html');
+const jsRel = jsSrc.replace(/^\/?evenfield\//, '');
+const jsBase = jsRel.split('/').pop().replace(/\.js$/, '').replace(/^index-/, '');
+const swTemplate = readFileSync(new URL('../public/sw.js', import.meta.url), 'utf8');
+if (!swTemplate.includes('__EVENFIELD_CACHE__')) throw new Error('finalize: sw.js template placeholders missing');
+const swStamped = swTemplate
+  .replace('__EVENFIELD_CACHE__', `evenfield-b${jsBase}`)
+  .replace('__EVENFIELD_SHELL__', JSON.stringify(['./', './index.html', `./${jsRel}`, './manifest.webmanifest']));
+writeFileSync(new URL('../dist/sw.js', import.meta.url), swStamped);
+console.log(`finalize: sw cache evenfield-b${jsBase}, shell entry ${jsRel}`);
+
 writeFileSync(distIndex, html);
 
 // ---------- share pages ----------
