@@ -517,7 +517,7 @@ function coinCard(l: Launch): string {
       <p><a href="#/coin/${l.curve}">${esc(t('card.why.receipts'))}</a></p></details>`;
   return `<article class="card" tabindex="0" data-curve="${esc(l.curve)}">
     <div class="card-top">${identicon(l.curve)}
-      <div class="card-names"><a class="card-name" href="#/coin/${l.curve}">${esc(displayName(l))}</a>
+      <div class="card-names"><a class="card-name" href="#/coin/${l.curve}" title="${esc(displayName(l))}">${esc(displayName(l))}</a>
       <span class="card-sym">${esc(l.symbol ?? '')}</span></div>${stagePill(l)}</div>
     ${priceLineHtml(l)}
     ${progressHtml(l)}
