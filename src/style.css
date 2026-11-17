@@ -784,6 +784,15 @@
       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
     .board-shell { margin-top: var(--space-2); }
+    /* The stale state adds a two-line banner above the fold; with it,
+       the un-tightened stack pushed the first card to 91px visible at
+       360x740 and 62px at 344x740 (T1 variants failed on the final
+       3.1.2 build once the snapshot aged past the stale threshold).
+       Tighten the three spacings that only exist above the first
+       card: lane top margin, search row margin, banner padding. */
+    .stage { margin-top: var(--space-4); }
+    .search-row { margin-top: var(--space-3); }
+    .stale-banner { margin-top: var(--space-2); padding: var(--space-2) var(--space-3); }
     /* Stat grids are two columns on phones; an odd final tile spans
        the row instead of leaving a half-empty gap beside it. */
     .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
