@@ -185,8 +185,8 @@
   }
   .lang-toggle button.active { background: var(--surface-3); color: var(--text-1); }
 
-  .layout { max-width: 1560px; margin: 0 auto; padding: var(--space-5) var(--space-4) var(--space-7); min-width: 0; }
-  .site-footer { max-width: 1560px; margin: 0 auto; padding: 0 var(--space-4) var(--space-7); color: var(--text-2); font-size: var(--fs-small); line-height: var(--lh-small); }
+  .layout { max-width: 1760px; margin: 0 auto; padding: var(--space-5) var(--space-4) var(--space-7); min-width: 0; }
+  .site-footer { max-width: 1760px; margin: 0 auto; padding: 0 var(--space-4) var(--space-7); color: var(--text-2); font-size: var(--fs-small); line-height: var(--lh-small); }
   .dim { color: var(--text-2); }
   .small { font-size: var(--fs-small); line-height: var(--lh-small); }
   .caption { font-size: var(--fs-caption); line-height: var(--lh-caption); }
