@@ -148,8 +148,8 @@ function sharePage({ path, title, description, ogImage, heading, body, appHash }
 <meta name="twitter:title" content="${esc(title)}" />
 <meta name="twitter:description" content="${esc(description)}" />
 <meta name="twitter:image" content="${BASE}${ogImage}" />
-<meta name="theme-color" content="#0D130F" />
-<style>body{background:#0D130F;color:#EDF4EE;font-family:system-ui,sans-serif;margin:0;padding:24px;line-height:1.55}main{max-width:720px;margin:0 auto}a{color:#6FE3AC}.chip{display:inline-block;border:1px solid #597D65;border-radius:999px;padding:2px 12px;font-weight:700}</style>
+<meta name="theme-color" content="#17142B" />
+<style>body{background:#17142B;color:#F2F0FA;font-family:system-ui,sans-serif;margin:0;padding:24px;line-height:1.55}main{max-width:720px;margin:0 auto}a{color:#C4B0FF}.chip{display:inline-block;border:1px solid #8B7FD4;border-radius:999px;padding:2px 12px;font-weight:700}</style>
 <script>location.replace('${BASE}#${appHash}');</script>
 </head>
 <body><main>

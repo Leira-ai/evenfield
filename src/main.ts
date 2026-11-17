@@ -164,7 +164,7 @@ function applyTheme(theme: Theme) {
   document.documentElement.dataset.theme = theme;
   try { localStorage.setItem(THEME_KEY, theme); } catch { /* ignore */ }
   const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-  if (meta) meta.content = theme === 'dark' ? '#0D130F' : '#F6F4EC';
+  if (meta) meta.content = theme === 'dark' ? '#17142B' : '#F5F3FC';
 }
 
 // ---------- watchlist + recents ----------
@@ -432,15 +432,43 @@ function raisedText(l: Launch): string | null {
   if (!(v > 0)) return null;
   return t('card.raised', { amt: `${fmtNum(v, { maximumFractionDigits: v >= 100 ? 2 : 4 })} ${sym}` });
 }
+/** The Graduation Dial (4.0 signature device): a 240-degree radial
+ *  gauge whose filled arc and needle track the measured curve fill,
+ *  with a gold zone at the top end where graduation lives. Graduated
+ *  coins read full gold. All coordinates are computed numbers; the
+ *  percentage text beside it carries the same fact in words. */
+function dialSvg(l: Launch, size: number): string {
+  const pct = l.statusName === 'graduated' ? 100 : l.progressPct;
+  const label = pct === null
+    ? t('board.progress.none')
+    : t('board.progress', { pct: fmtNum(pct, { maximumFractionDigits: 1 }) + '%' });
+  const frac = pct === null ? 0 : Math.max(0, Math.min(100, pct)) / 100;
+  const R = 40, C = 2 * Math.PI * R, SWEEP = 0.75; // 270-degree gauge, gap at the bottom
+  const arc = (from: number, to: number) => {
+    const len = Math.max(0, (to - from)) * SWEEP * C;
+    return `stroke-dasharray="${len.toFixed(1)} ${C.toFixed(1)}" stroke-dashoffset="${(-from * SWEEP * C).toFixed(1)}"`;
+  };
+  const ang = Math.PI * 0.75 + frac * Math.PI * 1.5;
+  const nx = 50 + 30 * Math.cos(ang), ny = 50 + 30 * Math.sin(ang);
+  const fill = l.statusName === 'graduated' ? 'var(--gold)' : 'var(--action)';
+  return `<svg class="dial" width="${size}" height="${size}" viewBox="0 0 100 100" role="img" aria-label="${esc(label)}">
+    <circle cx="50" cy="50" r="${R}" fill="none" stroke="var(--meter-track)" stroke-width="9" ${arc(0, 1)} transform="rotate(135 50 50)" stroke-linecap="round"/>
+    <circle cx="50" cy="50" r="${R}" fill="none" stroke="var(--gold)" stroke-width="9" ${arc(0.86, 1)} transform="rotate(135 50 50)" opacity="0.45"/>
+    ${frac > 0 ? `<circle class="dial-arc" cx="50" cy="50" r="${R}" fill="none" stroke="${fill}" stroke-width="9" ${arc(0, frac)} transform="rotate(135 50 50)" stroke-linecap="round"/>` : ''}
+    ${pct === null ? '' : `<line class="dial-needle" x1="50" y1="50" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="var(--text-1)" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="50" r="4.5" fill="var(--text-1)"/>`}
+    <text x="50" y="88" text-anchor="middle" fill="var(--text-2)" font-size="12.5" font-weight="600">${pct === null ? '—' : esc(fmtNum(pct, { maximumFractionDigits: 0 }) + '%')}</text>
+  </svg>`;
+}
+
 function progressHtml(l: Launch): string {
   if (l.statusName === 'graduated') {
-    return `<p class="card-line">${esc(t(l.readyToMigrate ? 'board.progress.ready' : 'board.progress.done'))}</p>`;
+    return `<div class="dial-row">${dialSvg(l, 62)}<p class="card-line dial-line">${esc(t(l.readyToMigrate ? 'board.progress.ready' : 'board.progress.done'))}</p></div>`;
   }
   if (l.progressPct !== null) {
     const pct = fmtNum(l.progressPct, { maximumFractionDigits: 1 }) + '%';
-    return `<div class="meter" role="img" aria-label="${esc(t('board.progress', { pct }))}"><div class="meter-fill" style="width:${Math.max(2, Math.min(100, l.progressPct))}%"></div></div><p class="card-line">${esc(t('board.progress', { pct }))}</p>`;
+    return `<div class="dial-row">${dialSvg(l, 62)}<p class="card-line dial-line">${esc(t('board.progress', { pct }))}</p></div>`;
   }
-  return `<p class="card-line">${esc(t('board.progress.none'))}</p>`;
+  return `<div class="dial-row">${dialSvg(l, 62)}<p class="card-line dial-line">${esc(t('board.progress.none'))}</p></div>`;
 }
 
 /** Format a snapshot price in WETH per token at any magnitude: plain
@@ -541,7 +569,7 @@ function coinRow(l: Launch): string {
   return `<a class="lrow" href="#/coin/${l.curve}">
     <span class="lrow-name">${identicon(l.curve, 'identicon-sm')}<span class="lrow-nm">${esc(displayName(l))}</span> <span class="dim small">${esc(l.symbol ?? '')}</span></span>
     <span class="lrow-num">${esc(price)}</span>
-    <span class="lrow-num">${esc(pct)}</span>
+    <span class="lrow-num lrow-dial">${dialSvg(l, 36)}${esc(pct)}</span>
     <span class="lrow-num">${fmtNum(l.evidence.uniqueBuyers)}</span>
     <span class="lrow-num">${esc(raisedText(l)?.replace(/^[^0-9<]*/, '') ?? '—')}</span>
     <span class="lrow-num">${esc(l.evidence.lastSwapBlock ? agoOfBlock(l.evidence.lastSwapBlock) : '—')}</span>
@@ -574,7 +602,7 @@ interface FilterState {
   preset: string | null;
   stage: string[]; verdict: string[]; creator: string[]; activity: string[];
   showTests: boolean; showStopped: boolean;
-  sort: SortId; query: string; view: 'cards' | 'list';
+  sort: SortId; query: string; view: 'cards' | 'list' | 'lanes';
 }
 const PRESETS = ['worth', 'gradsoon', 'newtoday', 'clean', 'graduated', 'watching'] as const;
 const FACET_GROUPS = ['stage', 'verdict', 'creator', 'activity'] as const;
@@ -747,6 +775,7 @@ function filtersFromParams(q: URLSearchParams): FilterState {
   if (sort === 'newest' || sort === 'buyers' || sort === 'raised' || sort === 'price' || sort === 'lasttrade') f.sort = sort;
   f.query = (q.get('q') ?? '').slice(0, 80);
   if (q.get('v') === 'list') f.view = 'list';
+  if (q.get('v') === 'lanes') f.view = 'lanes';
   return f;
 }
 function filtersFromStorage(): FilterState | null {
@@ -764,6 +793,7 @@ function filtersFromStorage(): FilterState | null {
     if (j.sort === 'newest' || j.sort === 'buyers' || j.sort === 'raised' || j.sort === 'grad' || j.sort === 'price' || j.sort === 'lasttrade') f.sort = j.sort;
     if (typeof j.query === 'string') f.query = j.query.slice(0, 80);
     if (j.view === 'list') f.view = 'list';
+    if (j.view === 'lanes') f.view = 'lanes';
     return f;
   } catch { return null; }
 }
@@ -912,6 +942,7 @@ function railHtml(f: FilterState): string {
     <div class="view-toggle" role="group" aria-label="${esc(t('filter.view.cards'))} / ${esc(t('filter.view.list'))}">
       <button type="button" data-act="view" data-view="cards" aria-pressed="${f.view === 'cards'}">${esc(t('filter.view.cards'))}</button>
       <button type="button" data-act="view" data-view="list" aria-pressed="${f.view === 'list'}">${esc(t('filter.view.list'))}</button>
+      <button type="button" data-act="view" data-view="lanes" aria-pressed="${f.view === 'lanes'}">${esc(t('filter.view.lanes'))}</button>
     </div>`;
 }
 
@@ -971,6 +1002,16 @@ function boardMainHtml(f: FilterState): string {
       <button type="button" class="btn btn-ghost" data-act="clear-all">${esc(t('filter.clear'))}</button></div></div>`;
   }
   pendingLoosen = null;
+  if (f.view === 'lanes') {
+    // Stage lanes (Axiom Pulse pattern): the three life stages side by
+    // side on wide screens, stacked on phones. Same cards, same order.
+    const lanes = (['new', 'near', 'graduated', 'other'] as const).map((s) => {
+      const items = results.filter((l) => stageOf(l) === s);
+      return `<section class="stage lane"><div class="stage-head"><h2>${esc(t(`stage.${s}`))}</h2><span class="stage-count">${fmtNum(items.length)}</span></div>
+        ${items.length ? `<div class="lane-cards">${items.map(coinCard).join('')}</div>` : `<p class="empty lane-empty">${esc(t(`stage.meaning.${s}`))}</p>`}</section>`;
+    }).join('');
+    return `${why}${chips}<div class="lanes">${lanes}</div>`;
+  }
   if (f.view === 'list') {
     // Dense mode is one true table over the whole result set (audit
     // P-8), not per-lane row stacks.
@@ -1221,7 +1262,7 @@ function initDelegates() {
         refreshBoard();
       }
     } else if (a === 'view') {
-      mutateFilters((f) => { f.view = act.dataset.view as 'cards' | 'list'; }, 'board');
+      mutateFilters((f) => { f.view = act.dataset.view as 'cards' | 'list' | 'lanes'; }, 'board');
     } else if (a === 'sort') {
       mutateFilters((f) => { f.sort = act.dataset.sort as SortId; }, 'board');
     } else if (a === 'watch') {
@@ -1490,6 +1531,7 @@ async function pageCoin(curve: string): Promise<string> {
     <div class="coin-head">${identicon(l.curve, 'identicon-lg')}
       <div class="card-names"><h1>${esc(displayName(l))}</h1><span class="card-sym">${esc(l.symbol ?? '')}</span></div>
       ${stagePill(l)}
+      <span class="coin-dial">${dialSvg(l, 92)}</span>
       <button class="btn btn-ghost" id="watchBtn" aria-pressed="${watching}">${esc(t(watching ? 'watch.remove' : 'watch.add'))}</button>
     </div>
     <p class="card-line" style="margin-top:12px">${esc(t('coin.creator'))} ${addrChip(l.creator)} <span class="nowrap">· ${esc(t('card.launched', { ago: agoOfBlock(l.block) }))}</span></p>
@@ -1655,8 +1697,8 @@ function navActive(path: string): string {
 function shellHtml(active: string): string {
   const themeIcon = currentTheme() === 'dark' ? '☀' : '☾';
   return `<header class="topbar">
-      <a class="brand" href="#/">Evenfield</a>
-      <nav class="topnav" aria-label="Primary">${NAV_TABS.map(([href, key]) => `<a href="#${href}" class="${active === href ? 'active' : ''}">${esc(t(key))}</a>`).join('')}</nav>
+      <a class="brand" href="#/"><svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="40" fill="none" stroke="var(--meter-track)" stroke-width="11" stroke-dasharray="188.5 251.3" stroke-dashoffset="0" transform="rotate(135 50 50)" stroke-linecap="round"/><circle cx="50" cy="50" r="40" fill="none" stroke="var(--action)" stroke-width="11" stroke-dasharray="141 251.3" transform="rotate(135 50 50)" stroke-linecap="round"/><circle cx="50" cy="50" r="40" fill="none" stroke="var(--gold)" stroke-width="11" stroke-dasharray="25 251.3" stroke-dashoffset="-163.5" transform="rotate(135 50 50)"/></svg><span class="brand-name">Evenfield</span></a>
+      <nav class="topnav" aria-label="Primary">${NAV_TABS.map(([href, key, icon]) => `<a href="#${href}" class="${active === href ? 'active' : ''}"><span class="nav-icon" aria-hidden="true">${icon}</span>${esc(t(key))}</a>`).join('')}</nav>
       <div class="top-right">
         <span class="chain-badge"><span class="dot" aria-hidden="true"></span>${esc(t('chain.badge.short'))}</span>
         <span id="wallet-slot">${walletButtonHtml()}</span>

@@ -14,11 +14,11 @@ const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<
 
 function cardHtml(title, line, chip) {
   return `<!doctype html><html><head><meta charset="utf-8"><style>
-    body{margin:0;width:1200px;height:630px;background:#0D130F;color:#EDF4EE;font-family:'Plus Jakarta Sans',system-ui,sans-serif;display:flex;flex-direction:column;justify-content:space-between;padding:64px;box-sizing:border-box}
-    .brand{font-size:34px;font-weight:800;color:#2FD68A;letter-spacing:-0.02em}
+    body{margin:0;width:1200px;height:630px;background:#17142B;color:#F2F0FA;font-family:'Sora','Inter',system-ui,sans-serif;display:flex;flex-direction:column;justify-content:space-between;padding:64px;box-sizing:border-box}
+    .brand{font-size:34px;font-weight:800;color:#A78BFA;letter-spacing:-0.02em}
     h1{font-size:76px;line-height:1.05;margin:0 0 20px;letter-spacing:-0.02em;overflow-wrap:anywhere}
     .line{font-size:32px;color:#AEC2B2;line-height:1.35}
-    .chip{display:inline-block;margin-top:28px;border:2px solid #597D65;border-radius:999px;padding:8px 22px;font-size:28px;font-weight:800;color:#EDF4EE}
+    .chip{display:inline-block;margin-top:28px;border:2px solid #8B7FD4;border-radius:999px;padding:8px 22px;font-size:28px;font-weight:800;color:#F2F0FA}
     .foot{font-size:24px;color:#7E937F}
   </style></head><body>
     <div class="brand">Evenfield</div>
