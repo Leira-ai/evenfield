@@ -246,7 +246,7 @@ const KIND_LABEL: Record<VerdictKind, string> = {
   'caution-early': 'verdict.caution.early', 'caution-stopped': 'verdict.caution.stopped',
   toonew: 'verdict.toonew', clean: 'verdict.clean',
 };
-const KIND_ICON: Record<VerdictKind, string> = { test: '⚗', unknown: '?', 'caution-early': '⚠', 'caution-stopped': '⚠', toonew: '◔', clean: '✓' };
+const KIND_ICON: Record<VerdictKind, string> = { test: '⚗', unknown: '?', 'caution-early': '⚠', 'caution-stopped': '⚠', toonew: '◑', clean: '✓' };
 const KIND_CLASS: Record<VerdictKind, string> = { test: 'test', unknown: 'unknown', 'caution-early': 'careful', 'caution-stopped': 'careful', toonew: 'toonew', clean: 'clean' };
 function verdictChip(l: Launch): string {
   const k = verdictKind(l);
@@ -469,9 +469,24 @@ function sparkSvg(l: Launch): string {
   return `<svg class="spark" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t('card.activity'))}: ${fmtNum(total)}"><polyline points="${pts}" fill="none" stroke="var(--action)" stroke-width="2" stroke-linejoin="round"/></svg>`;
 }
 
+const SUBSCRIPT_DIGITS = '₀₁₂₃₄₅₆₇₈₉';
+/** Compact card form of a tiny price: below 0.0001 the plain decimal
+ *  runs to a dozen places and wraps the card's price line over three
+ *  rows, so the leading zeros fold into a subscript count (0.0₉590).
+ *  The significant digits are fmtPrice's own, unchanged; the exact
+ *  decimal stays on the coin page quote and in the dense list. */
+function fmtPriceShort(v: number): string {
+  if (!(v > 0) || v >= 0.0001) return fmtPrice(v);
+  const full = fmtPrice(v);
+  const m = /^0\.(0+)([1-9]\d*)$/.exec(full);
+  if (!m || m[1].length < 4) return full;
+  const zeros = String(m[1].length).split('').map((d) => SUBSCRIPT_DIGITS[Number(d)]).join('');
+  return `0.0${zeros}${m[2]}`;
+}
+
 function priceLineHtml(l: Launch): string {
   if (l.price) {
-    return `<div class="price-row"><span class="price-line">${esc(t('card.price.snapshot', { price: fmtPrice(Number(l.price.perTokenWeth)), ago: agoOfBlock(l.price.block) }))}</span>${sparkSvg(l)}</div>`;
+    return `<div class="price-row"><span class="price-line">${esc(t('card.price.snapshot', { price: fmtPriceShort(Number(l.price.perTokenWeth)), ago: agoOfBlock(l.price.block) }))}</span>${sparkSvg(l)}</div>`;
   }
   if (l.statusName === 'graduated') {
     return `<div class="price-row"><span class="price-line dim">${esc(t('card.price.graduated'))}</span>${sparkSvg(l)}</div>`;
@@ -878,7 +893,7 @@ function facetGroupsHtml(f: FilterState): string {
     }).join('');
     return `<div class="facet-group"><h3>${esc(t(`filter.facet.${g}`))}</h3><div class="facet-values">${vals}</div></div>`;
   }).join('');
-  const toggles = `<div class="facet-group"><h3>${esc(t('filter.title'))}</h3>
+  const toggles = `<div class="facet-group"><h3>${esc(t('filter.facet.include'))}</h3>
     <button type="button" class="toggle-row" data-act="toggle" data-toggle="tests" aria-pressed="${f.showTests}"><span>${esc(t('filter.t.tests'))}</span><span class="toggle-ui" aria-hidden="true"></span></button>
     <button type="button" class="toggle-row" data-act="toggle" data-toggle="stopped" aria-pressed="${f.showStopped}"><span>${esc(t('filter.t.stopped'))}</span><span class="toggle-ui" aria-hidden="true"></span></button>
   </div>`;
@@ -969,7 +984,7 @@ function boardMainHtml(f: FilterState): string {
       if (!items.length) return '';
       return `<section class="stage"><div class="stage-head"><h2>${esc(t(`stage.${s}`))}</h2><span class="stage-meaning">${esc(t(`stage.meaning.${s}`))}</span><span class="stage-count">${fmtNum(items.length)}</span></div>${renderItems(items)}</section>`;
     }).join('');
-    return `${why}${chips}${lanes}`;
+    return `${why}${chips}${lanes}${boardExtrasHtml()}`;
   }
   const heading = f.query.trim() ? `<div class="stage-head"><h2>${esc(t('search.resultsfor', { q: f.query.trim() }))}</h2><span class="stage-count">${fmtNum(results.length)}</span></div>` : '';
   return `${why}${chips}<section class="stage flat">${heading}${renderItems(results)}</section>`;
@@ -991,7 +1006,7 @@ function boardExtrasHtml(): string {
     <div class="cq"><div class="grid">${topCreators.map((c) => `<article class="card"><div class="card-top">${identicon(c.address)}
       <div class="card-names"><a class="card-name" href="#/creator/${c.address}">${esc(shortAddr(c.address))}</a>
       <span class="card-sym">${esc(t('passport.launched', { n: c.totalLaunches }))}</span></div></div>
-      <p class="card-line dim small">${esc(t('verdict.sentence', { n: Math.max(0, c.realLaunches - c.unreadable), g: c.graduated, t: Math.max(0, c.realLaunches - c.unreadable - c.graduated - c.stopped), s: c.stopped }))}</p>
+      <p class="card-line dim small">${esc(creatorSentence(c))}</p>
       </article>`).join('')}</div></div></section>`;
   return weekly + creatorStrip;
 }
@@ -1016,8 +1031,7 @@ function pageBoard(basePath: string): string {
     <div class="board-shell">
       <aside class="filter-rail" id="filterRail">${railHtml(f)}</aside>
       <div class="board-main" id="boardMain">${boardMainHtml(f)}</div>
-    </div>
-    ${boardExtrasHtml()}`;
+    </div>`;
 }
 
 /** Re-render the filter-dependent regions in place (scroll position is
@@ -1026,7 +1040,7 @@ function refreshBoard() {
   if (!boardCtx) return;
   const f = boardCtx.f;
   const y = window.scrollY;
-  const cr = $('#chipsRow'); if (cr) cr.innerHTML = stripHtml(f);
+  const cr = $('#chipsRow'); if (cr) { cr.innerHTML = stripHtml(f); cr.scrollLeft = 0; }
   const rail = $('#filterRail'); if (rail) rail.innerHTML = railHtml(f);
   const main = $('#boardMain'); if (main) main.innerHTML = boardMainHtml(f);
   document.querySelectorAll<HTMLButtonElement>('[data-act="view"]').forEach((b) =>
@@ -1351,13 +1365,20 @@ function evidenceList(l: Launch): string {
   return items.length ? `<ul class="evidence">${items.join('')}</ul>` : `<p>${esc(t('evidence.empty'))}</p>`;
 }
 
+/** The creator summary sentence, with a singular form for a
+ *  one-launch creator (the plural template printed "1 coins"). */
+function creatorSentence(c: CreatorRec): string {
+  const n = Math.max(0, c.realLaunches - c.unreadable);
+  return t(n === 1 ? 'verdict.sentence.one' : 'verdict.sentence', {
+    n, g: c.graduated,
+    t: Math.max(0, c.realLaunches - c.unreadable - c.graduated - c.stopped), s: c.stopped,
+  });
+}
+
 function verdictStage(l: Launch): string {
   const c = creatorOf(l);
   const totals = c && c.realLaunches > 0 && verdictKind(l) !== 'test'
-    ? `<p>${esc(t('verdict.sentence', {
-      n: Math.max(0, c.realLaunches - c.unreadable), g: c.graduated,
-      t: Math.max(0, c.realLaunches - c.unreadable - c.graduated - c.stopped), s: c.stopped,
-    }))}</p>`
+    ? `<p>${esc(creatorSentence(c))}</p>`
     : '';
   return `<section class="verdict-panel" aria-label="${esc(t('verdict.title'))}">
     <h2>${esc(t('verdict.title'))}</h2>
@@ -1389,7 +1410,7 @@ function curveChart(l: Launch): string {
     return `<section class="panel"><h2>${esc(t('chart.title'))}</h2><p class="dim">${esc(t('chart.nodata'))}</p></section>`;
   }
   const pct = Math.max(0, Math.min(100, l.progressPct));
-  const W = 640, H = 220, PL = 8, PB = 24, PT = 12;
+  const W = 640, H = 232, PL = 8, PB = 38, PT = 12;
   const x = (p: number) => PL + (p / 100) * (W - PL - 8);
   const y = (p: number) => PT + (1 - (p / 100) ** 2) * (H - PT - PB);
   let d = `M ${x(0).toFixed(1)} ${y(0).toFixed(1)}`;
@@ -1399,8 +1420,8 @@ function curveChart(l: Launch): string {
       <path d="${d} L ${x(100).toFixed(1)} ${y(0).toFixed(1)} Z" fill="var(--action)" opacity="0.14"></path>
       <path d="${d}" fill="none" stroke="var(--action)" stroke-width="3" stroke-linejoin="round"></path>
       <circle cx="${x(pct).toFixed(1)}" cy="${y(pct).toFixed(1)}" r="7" fill="var(--canvas)" stroke="var(--action)" stroke-width="3"></circle>
-      <text x="${x(0).toFixed(1)}" y="${H - 6}" fill="var(--text-2)" font-size="12">0%</text>
-      <text x="${(x(100) - 34).toFixed(1)}" y="${H - 6}" fill="var(--text-2)" font-size="12">100%</text>
+      <text x="${x(0).toFixed(1)}" y="${H - 10}" fill="var(--text-2)" font-size="17">0%</text>
+      <text x="${(x(100) - 46).toFixed(1)}" y="${H - 10}" fill="var(--text-2)" font-size="17">100%</text>
     </svg></div>
     <p class="dim small">${esc(t('chart.note', { pct: fmtNum(pct, { maximumFractionDigits: 1 }) + '%' }))}</p>
   </section>`;
@@ -1449,7 +1470,7 @@ async function pageCoin(curve: string): Promise<string> {
         ${statBlock(t('coin.holders.top10'), fmtPct(l.evidence.holders.top10Pct), t('coin.holders.note2'))}
       </div>
       <div class="holder-scale" role="img" aria-label="${esc(t(l.evidence.holders.top10Pct <= 30 ? 'coin.holders.scale.inside' : 'coin.holders.scale.above', { top10: fmtPct(l.evidence.holders.top10Pct) }))}">
-        <div class="holder-scale-fill" style="width:${Math.min(100, l.evidence.holders.top10Pct)}%"></div>
+        <div class="holder-scale-fill${l.evidence.holders.top10Pct > 30 ? ' hot' : ''}" style="width:${Math.min(100, l.evidence.holders.top10Pct)}%"></div>
         <span class="holder-scale-mark" style="left:30%"></span>
       </div>
       <p class="card-line" style="margin-top:8px">${esc(t(l.evidence.holders.top10Pct <= 30 ? 'coin.holders.scale.inside' : 'coin.holders.scale.above', { top10: fmtPct(l.evidence.holders.top10Pct) }))}</p>
@@ -1471,7 +1492,7 @@ async function pageCoin(curve: string): Promise<string> {
       ${stagePill(l)}
       <button class="btn btn-ghost" id="watchBtn" aria-pressed="${watching}">${esc(t(watching ? 'watch.remove' : 'watch.add'))}</button>
     </div>
-    <p class="card-line" style="margin-top:12px">${esc(t('coin.creator'))} ${addrChip(l.creator)} · ${esc(t('card.launched', { ago: agoOfBlock(l.block) }))}</p>
+    <p class="card-line" style="margin-top:12px">${esc(t('coin.creator'))} ${addrChip(l.creator)} <span class="nowrap">· ${esc(t('card.launched', { ago: agoOfBlock(l.block) }))}</span></p>
     ${l.evidence.currentCreator.toLowerCase() !== l.creator.toLowerCase() ? `<p class="card-line dim">${esc(t('passport.currentnote', { addr: shortAddr(l.evidence.currentCreator) }))}</p>` : ''}
     <div class="coin-grid">
       <div class="cg-verdict">${verdictStage(l)}</div>
@@ -1583,7 +1604,7 @@ function pageCreator(addr: string): string {
   return `<article class="creator">
     <p><a class="back-link" href="#/">${esc(t('common.back'))}</a></p>
     <div class="coin-head">${identicon(addr, 'identicon-lg')}<h1>${esc(t('passport.title'))}</h1></div>
-    <p class="card-line" style="margin-top:12px">${addrChip(addr)} <a href="${addrLink(addr)}" target="_blank" rel="noopener">${esc(t('evidence.explorer'))}</a></p>
+    <p class="card-line" style="margin-top:12px">${addrChip(addr)} <a class="explorer-link" href="${addrLink(addr)}" target="_blank" rel="noopener">${esc(t('evidence.explorer'))}</a></p>
     <p class="card-line">${esc(t('passport.launched', { n: c?.totalLaunches ?? mine.length }))}</p>
     ${c && c.testLaunches ? `<p class="card-line dim">${esc(t('passport.testnote', { n: c.testLaunches }))}</p>` : ''}
     <section class="panel"><h2>${esc(t('passport.outcomes'))}</h2>
@@ -1777,7 +1798,7 @@ function pageMoney(): string {
     gate = `<div class="btn-row"><button class="btn" id="moneyConnect" type="button">${esc(t('money.connectcheck'))}</button></div>`;
   }
   return `<article class="money">
-    <h1>${esc(t('money.title'))}</h1>
+    <h1 class="page-title">${esc(t('money.title'))}</h1>
     <p class="sub">${esc(t('money.sub'))}</p>
     ${gate}
     <section class="panel">
@@ -2092,7 +2113,7 @@ function wireMoney() {
 function pageChain(): string {
   countView('chain');
   return `<article class="chain">
-    <h1>${esc(t('chain.title'))}</h1>
+    <h1 class="page-title">${esc(t('chain.title'))}</h1>
     <p class="sub">${esc(t('chain.sub'))}</p>
     <section class="panel"><p>${esc(t('chain.story'))}</p></section>
     <form id="chainForm" class="quote-form chain-form" style="margin-top:16px">
@@ -2140,7 +2161,7 @@ function pageMethod(): string {
   countView('method');
   if (!snap) return '';
   return `<article class="method">
-    <h1>${esc(t('method.title'))}</h1>
+    <h1 class="page-title">${esc(t('method.title'))}</h1>
     <p class="sub">${esc(t('method.intro'))}</p>
     <section class="panel"><p>${esc(t('method.graduated'))}</p><p style="margin-top:12px">${esc(t('method.stopped', { stop: fmtNum(snap.params.stopBlocks) }))}</p>
     <p style="margin-top:12px">${esc(t('method.early', { early: fmtNum(snap.params.earlyBlocks) }))}</p>
@@ -2154,7 +2175,7 @@ function pageMethod(): string {
 function pageDispute(): string {
   countView('dispute');
   return `<article class="dispute">
-    <h1>${esc(t('dispute.title'))}</h1>
+    <h1 class="page-title">${esc(t('dispute.title'))}</h1>
     <p class="sub">${esc(t('dispute.sub'))}</p>
     <section class="panel"><p>${esc(t('dispute.policy'))}</p></section>
     <form id="disputeForm" class="dispute-form" style="margin-top:16px">
@@ -2184,7 +2205,7 @@ function pageMore(): string {
     ['w', 'shortcuts.watch'], ['?', 'shortcuts.help'],
   ];
   return `<article class="more">
-    <h1>${esc(t('more.title'))}</h1>
+    <h1 class="page-title">${esc(t('more.title'))}</h1>
     <p class="sub">${esc(t('more.sub'))}</p>
     <section class="panel more-links">
       <a class="more-card" href="#/method"><strong>${esc(t('nav.method'))}</strong><span>${esc(t('method.intro'))}</span></a>
