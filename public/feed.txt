@@ -1,11 +1,15 @@
 Evenfield digest
-Data as of block 41532174.
+Data as of block 41535329.
 
 New launches:
-- DGAY (DGAY)
-- DGAY (DGAY)
+- OrbitPad2 (OP2)
+- OrbitPad (OP)
+- Bindery (BND)
 
-This week: 44 new launches.
+New graduations:
+- OrbitPad (OP)
+
+This week: 47 new launches.
 Closest to graduation:
 - Reika (REIKA): 99.29%
 - Quick Launch Test (QLT): 99%

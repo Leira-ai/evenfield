@@ -1,21 +1,31 @@
 {
- "generatedAt": "2026-11-17T01:41:02.516Z",
- "headBlock": 41532174,
+ "generatedAt": "2026-11-17T02:34:03.530Z",
+ "headBlock": 41535329,
  "newLaunches": [
   {
-   "name": "DGAY (DGAY)",
-   "curve": "0xd4b6Ea1F50902402AC28287Da9CaD8B7Ea2fc7c4",
-   "block": 41528238
+   "name": "OrbitPad2 (OP2)",
+   "curve": "0x33DfB0f1482Edb9e0bbBbEE61a0FD0dcb5a30Cd6",
+   "block": 41535314
   },
   {
-   "name": "DGAY (DGAY)",
-   "curve": "0x168Dfaf10Aa9e8A77629f7E0b2392b0353EFE2ec",
-   "block": 41528210
+   "name": "OrbitPad (OP)",
+   "curve": "0x059f1af60da81A5834e01C73bCFe0aA43703aB59",
+   "block": 41534974
+  },
+  {
+   "name": "Bindery (BND)",
+   "curve": "0x3835588D4811Ef86dDf4575989e76930C7A46410",
+   "block": 41533301
   }
  ],
- "newGraduations": [],
+ "newGraduations": [
+  {
+   "name": "OrbitPad (OP)",
+   "curve": "0x059f1af60da81A5834e01C73bCFe0aA43703aB59"
+  }
+ ],
  "weekly": {
-  "newLaunches": 44,
+  "newLaunches": 47,
   "closestToGraduation": [
    {
     "name": "Reika (REIKA)",
