@@ -1,35 +1,122 @@
 {
- "generatedAt": "2026-11-17T02:34:03.530Z",
- "headBlock": 41535329,
+ "generatedAt": "2026-11-17T16:52:00.997Z",
+ "headBlock": 41586693,
  "newLaunches": [
   {
-   "name": "OrbitPad2 (OP2)",
-   "curve": "0x33DfB0f1482Edb9e0bbBbEE61a0FD0dcb5a30Cd6",
-   "block": 41535314
+   "name": "Koin Fajar (FAJR)",
+   "curve": "0x585E541D51D6689e322322b38Ca64d48D8c076d7",
+   "block": 41584173
   },
   {
-   "name": "OrbitPad (OP)",
-   "curve": "0x059f1af60da81A5834e01C73bCFe0aA43703aB59",
-   "block": 41534974
+   "name": "token (TOKEN)",
+   "curve": "0x0a75294Eb8A44107B51067E494EBd5576D360952",
+   "block": 41581747
   },
   {
-   "name": "Bindery (BND)",
-   "curve": "0x3835588D4811Ef86dDf4575989e76930C7A46410",
-   "block": 41533301
+   "name": "sea (SEA)",
+   "curve": "0x08d01c5c80341d07fAF2E2d2791080B28bE161Cd",
+   "block": 41580697
+  },
+  {
+   "name": "Cat1 (GCAT)",
+   "curve": "0x09851aDDe824171C5b19497d695D4Df0454F9a98",
+   "block": 41577881
+  },
+  {
+   "name": "1111111 (12121)",
+   "curve": "0x647e18726771271b9BA59A97C60A58206D63466b",
+   "block": 41577710
+  },
+  {
+   "name": "Turtle (TURTLE)",
+   "curve": "0x08D73690d8Ebe894a779F2878b5c342eA8bE615F",
+   "block": 41576658
+  },
+  {
+   "name": "Gojo (GOJO)",
+   "curve": "0xe6095dd54E0c5241E30A363C3f5914271a40a2B4",
+   "block": 41573112
+  },
+  {
+   "name": "FrogCoin (FROG)",
+   "curve": "0xDEba99184EE84cD14Fe77cD870a6F752F8Ed26cf",
+   "block": 41564787
+  },
+  {
+   "name": "EMP (EMP)",
+   "curve": "0x2F520e4e7E201E4391E1265625Dec76751dBCd8C",
+   "block": 41547308
+  },
+  {
+   "name": "NAILOONG (LOONG)",
+   "curve": "0x551dc22c0C7532C9Ac889F30d0e0C86DE2e2F215",
+   "block": 41542820
+  },
+  {
+   "name": "AROMMA (AROMMA)",
+   "curve": "0xb1f65D6CD359598B2c3c156C9aadFB18Cf88975D",
+   "block": 41542347
+  },
+  {
+   "name": "NARU (NARU)",
+   "curve": "0x12179f2B63a0ED6F70B53Db2b8a80c8E21c1Ffd3",
+   "block": 41542191
+  },
+  {
+   "name": "CAP (CAP)",
+   "curve": "0x48A0AeC72543f5f4De18796F0908CD558FEfD9c9",
+   "block": 41542082
+  },
+  {
+   "name": "AMMORA (AMMORA)",
+   "curve": "0x7b6d9198D4dfFd10931Fe3282A2878ee28035b94",
+   "block": 41542009
+  },
+  {
+   "name": "GIWA (GIWA)",
+   "curve": "0x51a83b398a078872069e5F383767D544dC9CBb90",
+   "block": 41541961
+  },
+  {
+   "name": "GGG (GGG)",
+   "curve": "0xF2d1359D1DB3f7e92ED80231Bbbe0B867F108259",
+   "block": 41539698
+  },
+  {
+   "name": "Metric (METRIC)",
+   "curve": "0xe8C8EbA0f6B28064C799684266ea0671Ff9eE294",
+   "block": 41537623
+  },
+  {
+   "name": "Maje (MAJE)",
+   "curve": "0xa281D3d41313242C06e17f1Bc2412893324062D2",
+   "block": 41537512
   }
  ],
  "newGraduations": [
   {
-   "name": "OrbitPad (OP)",
-   "curve": "0x059f1af60da81A5834e01C73bCFe0aA43703aB59"
+   "name": "NAILOONG (LOONG)",
+   "curve": "0x551dc22c0C7532C9Ac889F30d0e0C86DE2e2F215"
+  },
+  {
+   "name": "Metric (METRIC)",
+   "curve": "0xe8C8EbA0f6B28064C799684266ea0671Ff9eE294"
+  },
+  {
+   "name": "OrbitPad2 (OP2)",
+   "curve": "0x33DfB0f1482Edb9e0bbBbEE61a0FD0dcb5a30Cd6"
+  },
+  {
+   "name": "Reika (REIKA)",
+   "curve": "0x792fbf757014Ee75A53Ac6f97b07eE6D215E14D1"
   }
  ],
  "weekly": {
-  "newLaunches": 47,
+  "newLaunches": 65,
   "closestToGraduation": [
    {
-    "name": "Reika (REIKA)",
-    "progressPct": 99.29
+    "name": "Bindery (BND)",
+    "progressPct": 99
    },
    {
     "name": "Quick Launch Test (QLT)",

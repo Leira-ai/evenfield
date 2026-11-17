@@ -1,16 +1,26 @@
 Evenfield digest
-Data as of block 41535329.
+Data as of block 41586693.
 
 New launches:
-- OrbitPad2 (OP2)
-- OrbitPad (OP)
-- Bindery (BND)
+- Koin Fajar (FAJR)
+- token (TOKEN)
+- sea (SEA)
+- Cat1 (GCAT)
+- 1111111 (12121)
+- Turtle (TURTLE)
+- Gojo (GOJO)
+- FrogCoin (FROG)
+- EMP (EMP)
+- NAILOONG (LOONG)
 
 New graduations:
-- OrbitPad (OP)
+- NAILOONG (LOONG)
+- Metric (METRIC)
+- OrbitPad2 (OP2)
+- Reika (REIKA)
 
-This week: 47 new launches.
+This week: 65 new launches.
 Closest to graduation:
-- Reika (REIKA): 99.29%
+- Bindery (BND): 99%
 - Quick Launch Test (QLT): 99%
 - newom (NWM): 61.28%
