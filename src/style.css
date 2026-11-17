@@ -727,6 +727,11 @@
     .lang-toggle button { padding: var(--space-1) var(--space-2); }
     .icon-btn { min-width: 40px; }
     .tabbar a { font-size: 11px; }
+    /* At 320 the full wordmark plus wallet, theme and language
+       controls measured 17px wider than the screen; the dial mark
+       alone carries the brand at this width. */
+    .brand-name { display: none; }
+    .topbar { gap: var(--space-1); }
   }
   @media (max-width: 768px) {
     .stage-head h2 { font-size: var(--fs-h3); line-height: var(--lh-h3); }
