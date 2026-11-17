@@ -501,7 +501,7 @@ function coinCard(l: Launch): string {
   const watching = watchlist().includes(l.curve.toLowerCase());
   const ev = l.evidence;
   const stats = [
-    t('board.buyers', { n: fmtNum(ev.uniqueBuyers) }),
+    ev.uniqueBuyers === 1 ? t('board.buyers.one') : t('board.buyers', { n: fmtNum(ev.uniqueBuyers) }),
     raisedText(l),
     ev.lastSwapBlock ? t('card.lasttrade', { ago: agoOfBlock(ev.lastSwapBlock) }) : t('card.coin.notrades'),
   ].filter(Boolean).join(' · ');
