@@ -492,7 +492,7 @@ function coinCard(l: Launch): string {
   ].filter(Boolean).join(' · ');
   const holdersLine = ev.holders
     ? (ev.holders.count <= 2
-      ? `<p class="card-holders">${esc(t('card.holders.few', { n: fmtNum(ev.holders.count) }))}</p>`
+      ? `<p class="card-holders">${esc(ev.holders.count === 1 ? t('card.holders.few.one') : t('card.holders.few', { n: fmtNum(ev.holders.count) }))}</p>`
       : `<p class="card-holders">${esc(t('card.holders.line', { top1: fmtPct(ev.holders.top1Pct), top10: fmtPct(ev.holders.top10Pct) }))}</p>`)
     : '';
   const kind = verdictKind(l);
