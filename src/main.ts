@@ -352,7 +352,15 @@ function verdictMeaning(l: Launch, kind: VerdictKind): string {
           : t('verdict.meaning.clean.coin', { ...slots, pct: fmtNum(l.progressPct, { maximumFractionDigits: 1 }) + '%' });
       return `${t('verdict.meaning.clean2')} ${coin}`;
     }
-    case 'toonew': return t('verdict.meaning.new2', { n: fmtNum(l.evidence.swapCount), ago: agoOfBlock(l.block) });
+    case 'toonew': {
+      const base = t('verdict.meaning.new2', { n: fmtNum(l.evidence.swapCount), ago: agoOfBlock(l.block) });
+      const total = c?.realLaunches ?? 1;
+      if (!c || total <= 1) return `${base} ${t('verdict.meaning.new.first')}`;
+      const k = snap
+        ? snap.launches.filter((x) => x.creator.toLowerCase() === l.creator.toLowerCase() && !x.testLaunch && x.block <= l.block).length
+        : 1;
+      return `${base} ${t('verdict.meaning.new.ordinal', { k: fmtNum(Math.max(1, k)), n: fmtNum(total) })}`;
+    }
     case 'unknown': return t('verdict.meaning.unknown');
     default: return '';
   }
