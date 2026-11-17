@@ -338,7 +338,20 @@ function verdictMeaning(l: Launch, kind: VerdictKind): string {
         : t('verdict.meaning.stopped.coin.none');
       return `${t('verdict.meaning.stopped.creator', { s: c?.stopped ?? 0, n })} ${coinClause}`;
     }
-    case 'clean': return `${t('verdict.meaning.clean2')} ${t('verdict.meaning.clean.coin', { b: fmtNum(l.evidence.uniqueBuyers) })}`;
+    case 'clean': {
+      const b = l.evidence.uniqueBuyers;
+      const s = l.evidence.swapCount;
+      const slots = {
+        buyers: b === 1 ? t('verdict.buyers.one') : t('verdict.buyers.many', { n: fmtNum(b) }),
+        trades: s === 1 ? t('verdict.trades.one') : t('verdict.trades.many', { n: fmtNum(s) }),
+      };
+      const coin = l.progressPct === null
+        ? t('verdict.meaning.clean.coin.bare', slots)
+        : l.progressPct >= 100
+          ? t('verdict.meaning.clean.coin.grad', slots)
+          : t('verdict.meaning.clean.coin', { ...slots, pct: fmtNum(l.progressPct, { maximumFractionDigits: 1 }) + '%' });
+      return `${t('verdict.meaning.clean2')} ${coin}`;
+    }
     case 'toonew': return t('verdict.meaning.new2', { n: fmtNum(l.evidence.swapCount), ago: agoOfBlock(l.block) });
     case 'unknown': return t('verdict.meaning.unknown');
     default: return '';
