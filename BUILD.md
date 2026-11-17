@@ -881,3 +881,160 @@ and a ~5 KB/s first-visit scenario are now part of this
 product's release evidence (probe/repro-unstyled.mjs +
 probe/verify-unstyled-fix.mjs). Nothing was posted to X and
 nothing was submitted to Ammora in this run.
+
+## Visual bug hunt round 2: 3.1.2 (17 Nov 2026)
+
+Leira, after the 3.1.1 hotfix: "DI EVENFIELD MASIH BANYAK BUG
+VISUAL". The hunt standard was Gate 2/17 in full: every screen
+screenshotted in segments at 390/360 (dark), 390 (light), 1280
+(dark and light) and 1920, plus the GitHub 404, and every frame
+VIEWED (134 frames, probe/qa/hunt/). The four probe suites had
+passed 69/69 + 48/48 + 18/18 + 15/15 on 3.1.1 while every
+defect below was live: presence checks do not see design.
+
+### Catalogue: found in the hunt, fixed in 6e7a13d + 2dcfdc0
+
+1. Sticky bars translucent: header, tab bar and the filter
+   strip used a 92% background with backdrop blur; card text
+   ghosted through them mid-scroll. All bars now use the
+   solid surface colour, blur removed.
+2. Sort select wider than the filter strip: capped, the strip
+   carries a fade at its right edge, and the strip scroll
+   resets to the start when filters change.
+3. Quote preset chips overflowed the coin-page dock: presets
+   wrap; the dock got roomier padding and targets.
+4. Search suggestions: the verdict chip sat beside the name
+   and squeezed it into a ~90px column that shredded long
+   names. Final form (late fix): the name takes the full row
+   (wraps to two lines), the chip sits on its own line under
+   it, indented to the name's start. Verified live in
+   probe/qa/hunt2/v-search.png.
+5. Standalone pages (money, chain, method, dispute, more)
+   rendered their h1 with the browser default: the intro
+   paragraph struck through the heading's descenders. New
+   .page-title rule in the product type scale.
+6. Card header: the stage pill crushed the coin name and
+   symbol. Header went no-wrap with a two-line name clamp and
+   the name carries a title attribute with the full name.
+   (Completed in this run, item 21: the clamp alone still
+   truncated at 320px.)
+7. Tiny snapshot prices printed a dozen decimals and wrapped
+   the card price row over three rows: cards now use the
+   compact subscript form (0.0₉590); the exact decimal stays
+   on the coin page and in the dense table.
+8. Holder concentration scale was action-green at every
+   value, including the above-30% readings its own sentence
+   warns about: the fill turns caution-coloured above 30%.
+9. Bonding-curve chart axis labels were 12px inside a
+   640-wide viewBox (illegible at phone width): 17px, with
+   more bottom room in the viewBox.
+10. Stat grids: an odd final tile left a half-empty gap on
+    phones: two-column grids, the odd tile spans the row.
+11. Board extras (weekly recap, top creators) repeated under
+    filtered boards: they render only on the unfiltered
+    board.
+12. Creator sentence used the plural template for one-launch
+    creators ("1 coins"): singular form added, shared by the
+    verdict stage and the creator strip.
+13. The filter sheet's toggles group was labelled with the
+    generic filter title: it has its own "Include" label.
+14. Input placeholders truncated at 320px in both languages:
+    shortened (money: "Paste a 0x address"; chain: final form
+    names both IDs, "91342 or 9134").
+15. No branded 404 (the item 3.1.1 recorded and deliberately
+    left): public/404.html shipped in the product's own
+    colours with a way back to the board.
+16. Coin head: the "launched ... ago" fragment wrapped onto
+    its own line away from its sentence; kept on one nowrap
+    span. The explorer link no longer wraps mid-label.
+17. The too-new verdict glyph (a three-quarter circle)
+    rendered as a near-blank disc at chip size: replaced.
+18. Coin page footer slid under the floating quote dock at
+    maximum scroll (late fix): dock pages carry 96px of
+    footer clearance on mobile. Verified in
+    probe/qa/hunt2/v-coin-bottom.png.
+
+### Completion run (later session, same day)
+
+The hunt worker stopped without a final report (one exec
+failed with exit 1; its step is not recoverable from the
+logs). State found and resolved:
+
+19. Its deploy (gh-pages fc0b9ef, "final 2") was live and
+    correct, but built from a working tree whose last three
+    fixes were UNCOMMITTED: main did not match the live
+    build, and the next CI snapshot deploy would have
+    regressed them. The fixes are committed as 2dcfdc0, and
+    source==live was proven by rebuilding from the committed
+    tree: the local build reproduced the live entry chunk
+    index-CcKiTu_J.js and SW cache evenfield-bCcKiTu_J
+    exactly. Three 0-byte scratch files (probe-b.mjs,
+    probe-c.mjs, probe-local.mjs) were its only other
+    residue; removed.
+20. The four suites were then run on that build for the
+    first time: qa-matrix 69/69, qa-tasks 48/48,
+    qa-wallet-money 18/18, qa-readability 14/15.
+21. qa-readability failure, a real app defect: at 320px the
+    card-top row overflowed by 5px and the name "Giwamora"
+    was cut by 2px, because the no-wrap header let a long
+    stage pill ("Close to graduation") squeeze the names
+    column to 32px. Fix (6633bc0): the names column keeps a
+    96px floor and the header wraps, so the pill takes its
+    own row at 320px. Redeployed (gh-pages c0e232b); all
+    four suites green on that build.
+22. Screenshot review of the verification set caught one
+    more copy defect of the 3.1.0 singular class: the card
+    stats line read "1 buyers so far". Singular added in
+    both languages (049da25). Redeployed (gh-pages b03b929).
+23. The final full run then exposed a state-dependent
+    failure the earlier runs could not see: qa-tasks 46/48,
+    T1 variants at 360x740 (91px visible) and 344x740 (62px)
+    against a 100px budget. Cause, measured: the snapshot
+    had aged past the stale threshold (7 hours), so the
+    two-line stale banner (70px) joined the hero above the
+    fold; the earlier green runs had a fresh snapshot and no
+    banner. Fix (82a88a7): on small screens the three
+    spacings that exist only above the first card tighten
+    (lane top margin 48 to 16, search row margin, stale
+    banner padding). Re-measured in the stale state:
+    139px at 360, 110px at 344, 303px at 390. Redeployed
+    (gh-pages fe3484a).
+    (The same run was cut once by a dead proxy relay, which
+    also killed a suite loop mid-run; the relay was
+    restarted detached and the runs repeated in full.)
+
+FINAL VERIFICATION on the final deployed build (source main
+82a88a7, gh-pages fe3484a, live entry chunk
+index-CrqIwfNc.js verified equal to the local build):
+qa-matrix 69/69, qa-tasks 48/48, qa-wallet-money 18/18,
+qa-readability 15/15. Verification screenshots viewed, in
+probe/qa/hunt2/: w320-home + w320-home-scroll (card headers,
+pill on its own row, singular stats line), w390-sticky
+(solid bars over scrolled cards), w390-coin-dock (presets
+and quote button fully inside the dock), w390-money-title
+(page-title rule), w1280-board-sort (rail, presets, capped
+sort), w390-404 (branded 404), v-search (suggestion rows),
+v-chain (placeholder), v-coin-bottom (footer vs dock).
+
+### Deliberately not fixed, recorded
+
+- The capped sort select clips its own label mid-word
+  ("Closest to gradu...") inside the closed native control;
+  the full label shows in the opened list. The cap is what
+  keeps the strip inside the viewport; widening it reopens
+  defect 2. Accepted as the native-control tradeoff.
+- Snapshot freshness still depends on the 6h CI cadence and
+  its start delays (3.1.1 gap 3): the layout is now robust
+  to the stale state, but the pipeline item stays open.
+- Boot on ~5 KB/s links is still slow (3.1.1 gap 1) and the
+  prerendered static cards are still thinner than the app
+  cards (gap 4). Both stay on the improvement list.
+- G13 hallway remains PARTIAL (no 5-user test possible in
+  this environment). WalletConnect still awaits a Reown
+  project ID and the Telegram channel is still
+  prepared-not-live; both are Leira's decisions, unchanged.
+
+Rollback: redeploy gh-pages b03b929 (final 4) or fc0b9ef
+(final 2), or revert on main and redeploy. Nothing was
+posted to X and nothing was submitted to Ammora in this
+run; both still wait for Leira's review.

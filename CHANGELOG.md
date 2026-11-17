@@ -1,5 +1,54 @@
 # Evenfield changelog
 
+## 3.1.2, 17 Nov 2026: the visual bug hunt, round 2
+
+Leira reported "still many visual bugs" on 3.1.1. Every screen
+was screenshotted in segments at phone and desktop widths in
+both themes (134 frames in probe/qa/hunt/) and read by eye;
+23 defects were found and fixed, none of them caught by the
+probe suites, which had all passed on 3.1.1.
+
+- Sticky bars (header, tab bar, filter strip) are solid now;
+  the translucent blur let card text ghost through while
+  scrolling. The sort select is capped so it cannot push the
+  filter strip off-screen, the strip fades at its edge and
+  scrolls back to the start when filters change.
+- Coin cards: the stage pill no longer crushes the coin name
+  (two-line clamp, and at 320px the pill wraps to its own row
+  instead of squeezing the name to 32px); tiny snapshot prices
+  use the compact subscript form (0.0₉590) instead of wrapping
+  the price row over three lines; the card stats line has its
+  singular form ("1 buyer so far").
+- Coin page: quote presets wrap inside a roomier dock, the
+  page footer clears the floating dock at maximum scroll, the
+  bonding-curve axis labels are legible, and the holder
+  concentration bar turns caution-coloured above the 30%
+  line it warns about.
+- Standalone pages (money, chain, method, dispute, more) got
+  a real page-title rule; the browser-default heading let the
+  intro paragraph strike through its descenders. Input
+  placeholders fit at 320px in both languages. Search
+  suggestions give the name the full row and put the verdict
+  chip on its own line under it. The weekly recap and top
+  creators only appear on the unfiltered board. A branded
+  404.html replaces GitHub Pages' generic page (the item
+  3.1.1 deliberately left).
+- Completion run: the hunt worker stopped before its final
+  report; its last three fixes were still uncommitted in the
+  working tree it had deployed from. They are committed now,
+  the deployed build was proven byte-identical to a rebuild
+  from source, and the release was then finished properly:
+  qa-readability caught a 320px card truncation (14/15) and
+  qa-tasks caught the first card sinking below the fold in
+  the stale-data state at 360/344 widths (46/48); both were
+  fixed in the app, redeployed, and re-run.
+- Verified on the final deployed build (source main 82a88a7,
+  gh-pages fe3484a, entry chunk index-CrqIwfNc.js equal to
+  the local build): qa-matrix 69/69, qa-tasks 48/48,
+  qa-wallet-money 18/18, qa-readability 15/15, plus viewed
+  verification screenshots in probe/qa/hunt2/. Full record
+  in BUILD.md, "Visual bug hunt round 2".
+
 ## 3.1.1, 17 Nov 2026: the unstyled-page hotfix
 
 Leira opened the live site on her phone and got the page with
