@@ -1,5 +1,29 @@
 # Evenfield changelog
 
+## 3.1.0 completed, 17 Nov 2026: the recovery run
+
+The three fixes that sat uncommitted behind the sandbox write
+guard are deployed, and the readability QA probe (written for
+this release but never run) ran for the first time and found
+more, all fixed in the same run:
+
+- Money summary: claimable amounts under 0.001 now print their
+  real significant digits (0.000296 WETH, never "<0.001").
+- Clean-tier fact and the few-holders card line have correct
+  singular forms ("We checked 1 launch and 1 trade", "Only 1
+  holder read so far").
+- Verdict meanings are now per-coin all the way down: clean
+  meanings carry the coin's own buyers, trades and curve fill;
+  too-new and caution meanings carry the coin's launch ordinal
+  for its creator, so a serial creator's near-identical coins
+  no longer repeat one identical sentence (worst repeat on the
+  rendered board: 2, across 56 distinct meanings).
+- 320px layout: the card header wraps instead of crushing the
+  coin symbol next to the stage pill, and the snapshot price
+  line can break its long decimal instead of truncating.
+- Verified on the final deployed build: qa-matrix 69/69,
+  qa-tasks 48/48, qa-wallet-money 18/18, qa-readability 15/15.
+
 ## 3.1.0, 17 Nov 2026: the perfection pass
 
 Built from the self-audit (`redesign/perfection-audit.md`) after v3

@@ -478,3 +478,206 @@ probe/qa-wallet-money.mjs 18/18, contrast ALL PAIRS PASS.
   website: "https://leira-ai.github.io/evenfield/", url: "<X post URL
   after posting>" })`. Posting and submitting wait for Leira's review of
   the live artifact.
+
+## Perfection pass 3.1.0 (17 Nov 2026, from redesign/perfection-audit.md)
+
+Built under Gate 17 after v3 was rejected without feedback. Source
+commits: main b0db5f5 (the pass), 7908642 (sparkline label wrap fix);
+deploys: gh-pages 6b207f5, cb318cd. Live entry chunk verified equal
+to the local build (index-BeG3GmGw.js) before the final QA runs.
+
+### What shipped, per audit item
+
+- P-1/F-1 verdict calibration: the snapshot builder now records
+  `earlySellPct` per launch (creator early sells as a share of their
+  buys on that curve) and effective early-sell aggregates per
+  creator (only sells of 1% or more count). Bands: under 1% is a
+  recorded fact and never raises a caution (two band-A coins,
+  including one whose creator sold 0.2%, no longer carry any caution
+  wording); 1-25% names the fraction plainly; over 25% uses the
+  "cashed out" wording. Every meaning line is generated from the
+  coin's and creator's own measured values (percentage, counts,
+  ages, plus a clause about this coin itself), so identical meaning
+  prose cannot repeat across different situations. The positive
+  tier "No red flags found" ships with the published F-1 definition
+  and its boundary sentence ("a clean record so far, not a
+  guarantee"), on the methodology page and next to the verdict.
+- P-2/F-2 signal-first cards: snapshot price sampled at index build
+  time through the proven ALCClient quote path (0.01 WETH in,
+  block-stamped, labelled with its age; all 107 then-trading curves
+  answered, graduated curves honestly show no curve price), an
+  activity sparkline from 12-window swap aggregates (labelled
+  activity, never price), progress, one tabular stats line, verdict
+  chip + one fact, holder line, and the meaning behind a "Why"
+  expander.
+- F-3 holder concentration: the builder now excludes the curve AND
+  its canonical pool from holder shares (the old build counted the
+  pool itself: one coin's top holder read 89.1% and is 22.6% with
+  the pool excluded). Card line (top holder, top 10) plus a coin
+  page panel with the under/over-30% scale line printed next to the
+  number; 78 of 140 launches carry holder data, the rest say so.
+- P-3 empty doors: a preset whose live count is zero renders as
+  status text, never a button ("Watching: none yet"; the
+  graduating-soon status names the closest coin and its percentage
+  when it is zero). In the shipped snapshot Graduating soon is no
+  longer zero (REIKA at 99.3%).
+- P-5 money summary: plain words first ("N amounts are worth
+  claiming.", the biggest in words, per-token totals as rows);
+  dust counted and named as dust in its own sentence; the stray
+  "Read now." fragment is gone (the line now reads "This check was
+  read {time}."); the partial-read honesty line moved to the end of
+  the results with calmer wording, and each unread stream says so
+  in its own panel. One residual, fixed in code but not yet
+  deployed (see Environment note): a claimable sub-0.001 amount
+  (A1's 0.000296 WETH, worth claiming under the engine's gas rule)
+  displayed as "<0.001"; fmtAmountDisplay now renders real
+  significant digits for claimable amounts.
+- P-8 desktop: content width 1200px to 1760px, four-column card
+  grid at wide containers, and the list density is a true sortable
+  table (Coin, Price, Progress, Buyers, Raised, Last trade, Creator
+  verdict) with two new sorts (snapshot price, last trade).
+- D-1 QA foundations: new probe `probe/qa-readability.mjs`
+  (measured truncation assertions across widths/themes, H1-largest
+  check, boilerplate detector with a 3-card threshold for identical
+  meaning sentences, zero-preset status check, mid-scroll sticky
+  tap test, 1920 dense-table checks, Gate 17 screenshots).
+
+### New verdict distribution (snapshot built 2026-11-17T00:17Z, head 41,528,186; 140 launches, 46 creators)
+
+Builder verdicts: careful 68, test 39, too-new 21, clean 12.
+Display kinds: caution-early 44, caution-stopped 26, too-new 19,
+clean 12, test 39. The positive tier is reachable for the first
+time (12 coins: XTB, OXX, REIKA, CBRL, MIMO, YUZU, TRAI, AMMORA x2,
+GMORA, APGEN, VDRL). Worth a look now returns 6 coins, all clean.
+Prices: 107 sampled, 0 trading curves unanswered. Sparklines: 88
+coins with non-zero activity. Holders: 78 launches.
+
+### Gate results and acceptance tasks (live URL)
+
+- G0-G12, G14-G16: PASS as in the 3.0.0 record; tokens unchanged
+  (contrast ALL PAIRS PASS at 3.1.0), i18n parity 371 = 371 keys,
+  tsc clean, initial JS 38.6 KB gzip, CSS 6.5 KB gzip, SW cache
+  evenfield-v3.1.0.
+- qa-matrix run 1: 67/69. Two failures, both root-caused and fixed
+  in the same run: (a) ID 320 overflow: the Indonesian no-trades
+  sparkline label ("Belum ada perdagangan", nowrap) pushed the
+  price row 11px out at 320px; fixed by wrapping the label, and the
+  re-run scored 68/69. (b) stale-banner check: a probe race (it read
+  the prerender before the app render); the banner was confirmed
+  present in a manual reproduction, and the probe now waits for the
+  app render and polls. The confirming matrix re-run is pending
+  (Environment note).
+- qa-tasks run: 46/48. T1-T4, T6, T7 pass, including the new T3
+  shape (chip + fact at 0 taps, meaning behind Why in 1 tap, full
+  record in 2), T7's zero-preset status text, URL facet-combo zero
+  state and 1-tap loosening recovery. Two failures, both
+  root-caused: T8 compared the whole "Showing N of M" line while
+  the live delta sync grew the index 140 to 142 mid-run (filters
+  were intact; the probe now compares the filtered count), and T5
+  caught the "<0.001 WETH" summary display described under P-5
+  (real defect, fixed in code, deployment pending per the
+  Environment note). The confirming tasks re-run is pending.
+- G13/G17 self-critique: side-by-side against the audit's benchmark
+  set was performed on the fresh screenshots (home 390/1280/1920,
+  coin 390, money summary). Findings fixed in-run: the ID 320
+  sparkline overflow and the sub-0.001 display. The headline
+  promise test passes against the shipped snapshot (the board's
+  first card is a clean-tier coin; the trust answer is on the card
+  face). The readability probe run is pending (Environment note).
+- G13 hallway: PARTIAL as before (no 5-user test possible in this
+  environment; documented self-review instead).
+
+### Environment note (why three items are pending)
+
+Mid-run, the sandbox enabled a write guard: any exec process that
+reads project or node_modules files is then refused filesystem
+writes (EPERM), which blocks local vite builds, git object writes,
+cp, and Chromium profile writes (so the probes cannot launch).
+Verified independently by a second agent session: same result.
+What is deployed and verified live is everything except three
+small fixes that sit uncommitted in the working tree (src/main.ts,
+src/i18n.ts; tsc clean, i18n parity 374 = 374): (1) the
+fmtAmountDisplay significant-digits fix above; (2) clean-tier fact
+pluralization ("We checked 1 launches and 1 trades" on the APGEN
+card, caught in the Gate 17 screenshot review; singular variants
+added); (3) the card holder line for coins with at most 2 holders
+read now says "Only {n} holders read so far, too few to judge
+concentration" instead of the trivially-true "Top holder 100% ·
+Top 10 100%" that repeated across one-buyer cards (also caught in
+the Gate 17 review; the coin page keeps the full numbers). Remaining, in order, for the first session after
+the guard lifts: (1) npm run build, commit, deploy, verify the
+live chunk; (2) re-run qa-matrix (expect 69/69), qa-tasks (expect
+48/48), qa-readability, qa-wallet-money; (3) refresh the v31
+screenshots. A CI run (snapshot-and-deploy, workflow_dispatch
+43992271523) was triggered to keep the snapshot fresh meanwhile;
+it builds from main, so it does not carry the fmt fix either.
+Nothing was posted to X and nothing was submitted to Ammora;
+both still wait for Leira's review of v3.1.
+
+### Recovery run (17 Nov 2026, later session): the pending list is closed
+
+The write guard had lifted (verified by a touch/rm probe, then by
+a full vite build writing dist). All three queued steps are done.
+
+1. The three queued fixes are committed and deployed: main
+   09a141a (rebased over two CI snapshot commits; the build was
+   redone on the refreshed snapshot, 145 launches / 48 creators),
+   gh-pages 3494d83, live chunk index-CkYu1QCm.js verified equal
+   to the local build.
+2. The probe re-runs did not stop at green for the old suites:
+   qa-readability ran for the first time and failed 2 of 15,
+   both real app defects, fixed in the same run in three rounds:
+   - Round 1 (main 8dbda3d): the clean-tier meaning repeated 12x
+     (12 of 14 clean coins have exactly 1 buyer, so the per-coin
+     clause was identical). Clean meanings now carry the coin's
+     own buyers, trades and curve fill (measured max repeat 2).
+     Plus the 320px truncations it caught: the price row could
+     not break the long snapshot price token (overflow-wrap:
+     anywhere) and the "No trades yet" label was squeezed
+     (flex: none).
+   - Round 2 (main 345a227): the too-new meaning repeated 9x
+     (a same-creator burst of clone launches, byte-identical in
+     every measured value). Too-new meanings now carry the
+     coin's launch ordinal for its creator, the one honest fact
+     that tells burst clones apart. Plus card-top truncation at
+     320px: the nowrap stage pill crushed the names column to
+     32px and the symbol overflowed; card-top now wraps and the
+     symbol can break.
+   - Round 3 (main a1d0dd1): the creator-variant caution-early
+     meaning repeated 8x (creator-level fact + one coin stat
+     collides for every serial creator). Caution meanings
+     (early and stopped) now append the launch ordinal via a
+     shared wrapper; the coin clause's trades unit got its
+     singular/plural forms at the same time.
+   Readability then passed 15/15 (top meaning repeat 2x, 56
+   distinct meanings on the rendered board).
+3. Gate 17 screenshot review of the refreshed v31 set caught
+   one more defect, fixed in main 17eb995: the few-holders card
+   line read "Only 1 holders read so far"; it now has a
+   singular form. The same review verified the money summary
+   shows real significant digits (0.0000102 WETH, not "<0.001"),
+   the first card on mobile is a clean-tier coin with its trust
+   answer on the card face, and the 1920 dense table renders
+   with live preset counts (Clean creators 14, Graduating soon
+   1, Worth a look 8 on the current snapshot).
+4. FINAL VERIFICATION on the final deployed build (source main
+   17eb995, gh-pages 0b5eeee, live entry chunk
+   index--gyS03ka.js verified equal to the local build):
+   qa-matrix 69/69, qa-tasks 48/48, qa-wallet-money 18/18,
+   qa-readability 15/15. tsc clean, i18n parity 384 = 384,
+   contrast ALL PAIRS PASS, initial entry JS 38.4 KB gzip, SW
+   cache evenfield-v3.1.0. All v31 screenshots refreshed in
+   probe/qa/, including v31-home-1920-dense.png.
+5. Infra note: the Chromium probes need the local proxy relay
+   on 127.0.0.1:18080; its script now lives in the repo at
+   probe/relay-18080.mjs (force-added past the probe gitignore)
+   because /tmp does not survive VM restarts. Start it before
+   any probe run.
+
+Unchanged and still open, by design: G13 hallway stays PARTIAL
+(no 5-user test possible in this environment); WalletConnect is
+still not enabled (needs a Reown project ID, Leira's decision);
+the Telegram channel is still prepared-not-live (needs bot
+token + channel ID secrets, Leira's decision). Nothing was
+posted to X and nothing was submitted to Ammora; both still
+wait for Leira's review of v3.1.
