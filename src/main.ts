@@ -296,7 +296,13 @@ function verdictFact(l: Launch, kind: VerdictKind): string {
       if (l.stopped) return t('verdict.fact.stopped.this', { ago: agoOfBlock(l.evidence.lastSwapBlock ?? l.block) });
       return t('verdict.fact.stopped.creator', { s: c?.stopped ?? 0, n: Math.max(0, (c?.realLaunches ?? 0) - (c?.unreadable ?? 0)) });
     }
-    case 'clean': return t('verdict.fact.clean2', { n: c?.realLaunches ?? 0, m: fmtNum(creatorTradeCount(c)) });
+    case 'clean': {
+      const n = c?.realLaunches ?? 0;
+      const m = creatorTradeCount(c);
+      if (n === 1 && m === 1) return t('verdict.fact.clean2.oneone');
+      if (n === 1) return t('verdict.fact.clean2.one', { m: fmtNum(m) });
+      return t('verdict.fact.clean2', { n, m: fmtNum(m) });
+    }
     case 'toonew': return t('verdict.fact.new', { ago: agoOfBlock(l.block), n: fmtNum(l.evidence.swapCount) });
     case 'unknown': return t('verdict.reason.unreadable');
     default: return t('verdict.reason.test', { reason: l.testReason ?? '' });
@@ -446,7 +452,9 @@ function coinCard(l: Launch): string {
     ev.lastSwapBlock ? t('card.lasttrade', { ago: agoOfBlock(ev.lastSwapBlock) }) : t('card.coin.notrades'),
   ].filter(Boolean).join(' · ');
   const holdersLine = ev.holders
-    ? `<p class="card-holders">${esc(t('card.holders.line', { top1: fmtPct(ev.holders.top1Pct), top10: fmtPct(ev.holders.top10Pct) }))}</p>`
+    ? (ev.holders.count <= 2
+      ? `<p class="card-holders">${esc(t('card.holders.few', { n: fmtNum(ev.holders.count) }))}</p>`
+      : `<p class="card-holders">${esc(t('card.holders.line', { top1: fmtPct(ev.holders.top1Pct), top10: fmtPct(ev.holders.top10Pct) }))}</p>`)
     : '';
   const kind = verdictKind(l);
   const why = kind === 'test' ? '' : `<details class="why"><summary>${esc(t('verdict.why'))}</summary>
@@ -1698,14 +1706,20 @@ let moneyResult: LookupResult | null = null;
 let moneyAutoFor: string | null = null;
 let moneyDisplay = new Map<string, string>();
 
-/** Gate 7 amount formatting: >= 1 unit gets 2-4 decimals; below 0.001 the
- *  compact form shows, with the exact value one tap away. */
+/** Gate 7 amount formatting: >= 1 unit gets 2-4 decimals; below that
+ *  the value shows at 6 decimals, and below 0.001 it shows its real
+ *  significant digits (a claimable 0.000296 must never print as the
+ *  unusable "<0.001"; audit P-5) down to the magnitude where only
+ *  dust lives, where the compact form returns and the exact value
+ *  stays one tap away. */
 function fmtAmountDisplay(raw: bigint, decimals: number): { text: string; exact: string } {
   const human = Number(formatUnits(raw, decimals));
   const exact = formatUnits(raw, decimals); // exact decimal string, no rounding
   if (human >= 1) return { text: fmtNum(human, { maximumFractionDigits: human >= 100 ? 2 : 4 }), exact };
   if (human >= 0.001) return { text: fmtNum(human, { maximumFractionDigits: 6 }), exact };
-  return { text: '<0.001', exact };
+  const sig = fmtPrice(human);
+  const trimmed = sig.includes('.') ? sig.replace(/0+$/, '').replace(/\.$/, '') : sig;
+  return { text: trimmed.length <= 12 ? trimmed : '<0.001', exact };
 }
 
 function barcodeAvailable(): boolean {
