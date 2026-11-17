@@ -1,5 +1,46 @@
 # Evenfield changelog
 
+## 4.0.0, 17 Nov 2026: total frontend rebuild, "The Dial Room"
+
+Leira rejected the product a fourth time and ordered the theme,
+UI/UX and the whole frontend rebuilt from zero, with patching
+forbidden. The data pipeline, verdict engine, wallet stack and
+money-center logic are untouched; everything visual is new.
+Plan and study: redesign/design-plan-4.md, redesign/study-notes-4.md
+(Axiom Pulse stage lanes, pump.fun graduation centrality,
+DexScreener row density, Linear's constant rail).
+
+- New identity: "violet ink" theme (dark canvas #17142B, violet
+  action, gold reserved for graduation), porcelain-violet light
+  theme, Sora for display type and Inter for body and figures,
+  replacing "field at dusk" (green charcoal, Plus Jakarta Sans)
+  entirely. All computed contrast pairs pass in both themes
+  (redesign/contrast-table.md).
+- New frame: on desktop the header is now a constant left rail
+  (232px) with the five jobs in the same order as the mobile tab
+  bar; chain badge, wallet, theme and language live at its foot.
+- The Graduation Dial: every coin carries a 270-degree radial
+  gauge whose arc and needle track the measured curve fill, with
+  a gold zone at the top where graduation lives; graduated coins
+  read full gold. The dial is on board cards, in dense-table
+  rows, and large in the coin page head. The old meter bar is
+  gone.
+- New board view: Lanes (the Axiom Pulse pattern), the three life
+  stages plus still-trading as side-by-side columns on wide
+  screens, stacked on phones, alongside Cards and List. Filter
+  state for it lives in the URL and storage like the other views.
+- Gate 17 hunt on the new build found and fixed two defects in
+  the same cycle: a 17px top-bar overflow at 320px (the wordmark
+  text now yields to the dial mark under 400px), and lane cards
+  crushed at 1440px (four lanes only at 1750px and up, and the
+  activity sparkline no longer eats the price row in lane cards).
+- Verified on the final deployed build (source main 694c8c3,
+  gh-pages 8a780c2, entry chunk index-DSvG7tVB.js equal to the
+  local build): qa-matrix 69/69, qa-tasks 48/48,
+  qa-wallet-money 18/18, qa-readability 15/15, contrast ALL
+  PAIRS PASS, and viewed verification screenshots in probe/qa/
+  (v40-*). Full record in BUILD.md, "Total rebuild 4.0.0".
+
 ## 3.1.2, 17 Nov 2026: the visual bug hunt, round 2
 
 Leira reported "still many visual bugs" on 3.1.1. Every screen

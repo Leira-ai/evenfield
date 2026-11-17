@@ -1038,3 +1038,102 @@ Rollback: redeploy gh-pages b03b929 (final 4) or fc0b9ef
 (final 2), or revert on main and redeploy. Nothing was
 posted to X and nothing was submitted to Ammora in this
 run; both still wait for Leira's review.
+
+## Total rebuild 4.0.0: "The Dial Room" (17 Nov 2026)
+
+Leira's fourth rejection came with an explicit order: total
+rebuild of theme, UI/UX and the whole frontend, no patching.
+Kept, per the brief and verified untouched in behaviour: the
+snapshot/indexer pipeline and data contracts, the verdict engine
+and its calibrated bands, the wallet stack (D3/D11), the money
+center engine, the transport discipline, and the 3.1.1 delivery
+fixes (inlined CSS, per-build stamped service worker,
+previous-generation asset preservation in deploys).
+
+### Study and plan (Gates 0 and 17, before code)
+- redesign/study-notes-4.md: Axiom (Pulse three-stage columns,
+  row density, pinned action panel; terminal guide updated
+  13 Nov 2026), pump.fun (graduation progress as the emotional
+  centre), DexScreener (the row is the product; makers column),
+  Linear (constant left rail, one accent, keyboard-first).
+- redesign/design-plan-4.md: one-paragraph plan (subject,
+  audience, one job, one memorable element: the Graduation
+  Dial), the banned-catalogue check, and the full semantic
+  token set for both themes.
+
+### What is new
+- Theme "violet ink": dark canvas #17142B with stepped violet
+  surfaces, action #A78BFA, gold #F5C04E reserved for the
+  graduation zone; light "porcelain violet" (#F5F3FC canvas,
+  action #6D3FD4, gold #9A6B00). scripts/contrast-check.mjs
+  carries the new tokens plus gold pairs: ALL PAIRS PASS.
+- Type: Sora (display) + Inter (body, tabular figures),
+  self-hosted variable woff2 (25 KB + 48 KB), replacing Plus
+  Jakarta Sans everywhere including share pages, OG images,
+  the 404 page and the manifest colours.
+- Frame: desktop header becomes a fixed 232px left rail (nav
+  with icons, chain badge, wallet, theme, language at the
+  foot); mobile keeps the slim top bar and bottom tab bar with
+  the same five jobs in the same order.
+- The Graduation Dial (dialSvg in src/main.ts): a 270-degree
+  gauge, arc + needle from the measured progressPct, gold zone
+  from 86%, full gold when graduated, one 600ms settle
+  animation on first render, disabled under reduced motion.
+  It replaces the meter bar on cards, appears at 36px in
+  dense-table rows and at 92px in the coin page head.
+- Lanes view (FilterState.view 'lanes', URL ?v=lanes, storage,
+  third toggle in the rail): stage columns in the Axiom Pulse
+  pattern. Cards and List are unchanged in behaviour.
+- style.css was rewritten from zero (all ~150 component
+  classes re-expressed in the new system); radius scale is now
+  8/14/22/pill by hierarchy; content width 1760px.
+
+### Gate results on the final build
+- G0 plan first: PASS (design-plan-4.md preceded code).
+- G1 tokens + computed contrast: PASS, ALL PAIRS PASS both
+  themes (table regenerated in redesign/contrast-table.md).
+- G2/G3/G4 matrix: qa-matrix 69/69 on the live final build
+  (widths 320-1920, foldables, both themes, axe zero
+  critical/serious, throttled cards at 4,114 ms).
+- G5 budget: entry JS 40.4 KB gzip, CSS inlined as before;
+  fonts add 73 KB total, self-hosted, swap.
+- G6 sinks: unchanged discipline; the only new template code
+  (dialSvg, lanes) interpolates computed numbers and esc()
+  strings.
+- G13 tasks: qa-tasks 48/48 (run on the pre-lanes-fix build of
+  this release; the lanes fix touched only >=1024px lane rules,
+  re-verified by qa-matrix and qa-readability on the final
+  build). G14: lanes join the same filter pipeline; counts and
+  zero states behave identically in all three views.
+- G17 hunt, findings fixed in-cycle: (1) 320px top-bar
+  overflow of 17px in both languages (qa-matrix), fixed by
+  yielding the wordmark text to the dial mark under 400px;
+  (2) 1920 grid at 3 columns (qa-readability) after the
+  content width was narrowed, fixed by restoring 1760px;
+  (3) lane cards crushed at 1440px with the price text
+  wrapping one character per line (screenshot review), fixed
+  by gating four lanes to >=1750px and dropping the sparkline
+  from lane cards. Side-by-side notes against the references
+  are in study-notes-4.md; the empty-product and five-second
+  checks pass on the viewed v40 screenshots (first card is a
+  clean-tier coin with its dial and verdict on its face).
+- G13 hallway: PARTIAL, as in every prior release (no 5-user
+  test possible in this environment).
+
+### Release record
+- Version 4.0.0 (package.json, CHANGELOG.md). Service worker
+  cache evenfield-bDSvG7tVB, stamped per build as before.
+- Source main 694c8c3; gh-pages 8a780c2; live entry chunk
+  index-DSvG7tVB.js verified equal to the local build.
+- Verification screenshots: probe/qa/v40-*.png (320, 390,
+  1280, 1920, both themes, lanes at 1440 and 1920, coin at
+  390 and 1280), all viewed by the builder.
+- Rollback: redeploy the 3.1.2 gh-pages tree (fe3484a) or
+  revert main to 82a88a7 and redeploy.
+- Deliberately left, unchanged from 3.1.2 and recorded there:
+  the sort select's closed label clips inside its native
+  control (full label on open); snapshot freshness rides the
+  6-hour CI; WalletConnect inactive without a Reown project
+  ID (Leira's decision); Telegram channel prepared, not live
+  (Leira's decision). Nothing was posted to X and nothing was
+  submitted to Ammora; both wait for Leira's review of 4.0.0.
