@@ -681,3 +681,203 @@ the Telegram channel is still prepared-not-live (needs bot
 token + channel ID secrets, Leira's decision). Nothing was
 posted to X and nothing was submitted to Ammora; both still
 wait for Leira's review of v3.1.
+
+## Hotfix 3.1.1 (17 Nov 2026): the unstyled-page incident
+
+Leira opened the live site on her phone at 13:31 WIB and got a
+page with NO styles at all: white background, default serif
+font, blue underlined links, the prerendered text frozen in
+place. Her connection at the time was ~4 KB/s. Every internal
+QA run had passed on fast connections with fresh profiles, so
+the defect had cleared all gates. She ordered the cause found,
+other bugs hunted, and improvement gaps listed. All three were
+done in this run; the fix is deployed (source main e2243d7,
+gh-pages 58906fa).
+
+### Root cause (proven, not inferred)
+
+Three mechanisms combined:
+
+1. EVERY deploy deletes the previous build's assets. The CI
+   workflow (and the manual deploys mirroring it) publishes by
+   initialising a brand-new git repo inside dist/ and
+   force-pushing it as gh-pages, every 6 hours for CI. Hashed
+   asset filenames from previous builds are not carried over.
+   Verified live: the entry chunks of 2.0.0 (index-Be0AcyGj.js),
+   3.0.0 (index-BJ6JnFIc.js), the first 3.1.0 deploy
+   (index-BeG3GmGw.js) and the recovery deploy
+   (index-CkYu1QCm.js) ALL return HTTP 404.
+2. The service worker pinned returning visitors to a stale
+   index.html forever. public/sw.js (cache evenfield-v3.1.0)
+   precached ./index.html and answered every same-origin GET,
+   navigations included, cache-first with no revalidation and
+   no runtime refresh. Its cache name changed only when a human
+   shipped a release, NOT on CI snapshot deploys (sw.js is a
+   static file; CI builds copied it verbatim). So a phone that
+   had visited during one build kept receiving that build's
+   HTML on every later visit, pointing at asset hashes the next
+   deploy had already deleted.
+3. The CSS 404 is what made it VISIBLE as total style loss.
+   The prerendered home carries real content in the HTML, so
+   with the stylesheet gone the browser simply painted that
+   content with default styles: serif, blue underlined links,
+   no dark theme, no cards. The JS 404 meant the app never
+   booted, so the frozen static page never updated either. The
+   state could never heal, because the worker kept serving the
+   same cached HTML. Leira's timeline fits exactly: her worker
+   held an earlier recovery deploy's HTML (145 coins, 48
+   creators, matching her screenshot), the next deploy replaced
+   the tree (the final recovery build was live by 13:07 WIB),
+   and her 13:31 visit hit deleted assets.
+
+Reproduction (probe/repro-unstyled.mjs, fresh headless
+Chromium against the live URL):
+- Fresh profile at ~5 KB/s with 4x CPU throttle: the page
+  painted UNSTYLED content at t=3s and t=5s (computed body
+  background transparent, font "Times New Roman", link colour
+  rgb(0, 0, 238) underlined, 0 stylesheets); styles only
+  landed between 5s and 10s, and the app had not booted by
+  35s. So even without the worker, a slow connection produced
+  a long unstyled window, because the stylesheet is a separate
+  file that must arrive before the design exists.
+- Worker scenario: visit 1 (fast) installed the worker with
+  the HTML cached; visit 2 with /assets/ answered 404 (the
+  wipe) reproduced Leira's screenshot pixel for pixel
+  (probe/qa/repro-sw-wipe.png), with the network log showing
+  exactly index--gyS03ka.js -> 404 and index-ClaOTa7e.css ->
+  404. Visit 2 without the wipe stayed styled: the bomb was
+  the combination, not either half alone.
+- Why the gates missed it: Gate 2/3 QA always ran fresh
+  profiles (no worker, no stale cache) and its "throttled" run
+  was Fast 3G at 400 kbps (~50 KB/s, ten times Leira's link),
+  and no run ever simulated a deploy landing between two
+  visits. A repeat-visit, post-deploy, slow-link scenario did
+  not exist in the matrix. It does now (see Verification).
+
+### The fix (deployed)
+
+1. The stylesheet is INLINED into dist/index.html.
+   scripts/prerender.mjs (new "finalize" step) replaces the
+   <link rel="stylesheet"> to the hashed CSS file with a
+   <style> block containing the whole sheet (34,283 chars;
+   index.html grows 17,035 -> 51,283 bytes raw, comparable
+   gzipped). First paint is now styled the moment the HTML
+   itself arrives, independent of any asset file. CSP already
+   allowed inline styles (style-src 'self' 'unsafe-inline').
+   The CSS file is still emitted by Vite but no longer
+   referenced by the home page.
+2. The service worker is rewritten and STAMPED PER BUILD.
+   public/sw.js is now a template; prerender stamps
+   dist/sw.js with a cache name derived from the entry chunk
+   hash (evenfield-b<hash>) and a shell list naming the real
+   entry chunk, so CI snapshot deploys roll the worker too.
+   Strategies: navigations NETWORK-FIRST (cached shell is an
+   offline fallback only, refreshed on every successful
+   navigation); /assets/ cache-first with runtime fill (hashes
+   are immutable per build, and a fresh navigation always
+   brings HTML matching the assets on the server);
+   snapshot.json network-first with cache fallback and NO
+   LONGER PRECACHED (its 307 KB was a hostile install payload
+   on slow links, and the old worker's atomic addAll meant one
+   failed snapshot fetch failed the whole worker install);
+   everything else same-origin is stale-while-revalidate. On
+   activation, old caches are deleted; if a LEGACY pre-fix
+   cache (evenfield-v*) was among them, open windows are
+   navigated once to their own URL, which is the self-heal for
+   users stuck on the broken shell (their browser fetches the
+   new worker on the next visit; the reload lands on
+   network-first navigation and the inline-CSS HTML). Routine
+   build-to-build upgrades do not force a reload.
+3. The CI deploy now preserves the previous generation's
+   assets: the workflow checks out the existing gh-pages tree
+   and copies into dist/assets/ only the files the new build
+   lacks, before force-pushing. One generation of overlap
+   means a not-yet-updated worker's HTML still finds its CSS
+   and JS alive. This manual deploy did the same copy (a no-op
+   this time: the live tree was built from identical source,
+   so every filename matched).
+
+### Verification (live, after deploy)
+
+probe/verify-unstyled-fix.mjs, ALL CHECKS PASSED:
+- A, fresh profile at ~5 KB/s: NO unstyled-content phase at
+  any poll (1-10s); the first content, at t=5s, arrived
+  already styled (dark background, product font). Before, the
+  same profile showed unstyled content at 3-5s and styles at
+  ~10s. Screenshot probe/qa/fix-slow-t5.png.
+- B, new worker installed, then /assets/ forced to 404 and
+  reloaded: page stayed styled (network-first HTML carries
+  its CSS inline); in the event the app even booted from the
+  worker's runtime asset cache. Screenshot
+  probe/qa/fix-sw-wipe.png.
+- C, legacy heal on a local mirror of the pre-fix site (old
+  worker fixture probe/legacy-sw-v3.1.0.js + the pre-fix live
+  HTML): deleting the CSS reproduced the unstyled state; after
+  the fixed build was deployed to the mirror, the next load
+  healed itself (styled again, legacy cache purged).
+  Screenshots probe/qa/fix-legacy-broken.png and
+  fix-legacy-healed.png.
+- Full regression on the final live build: qa-matrix 69/69,
+  qa-tasks 48/48, qa-wallet-money 18/18, qa-readability
+  15/15. tsc clean (build), contrast unchanged (CSS content
+  identical, only its delivery changed).
+
+Residual honesty: a phone still holding the legacy worker
+shows the broken page until its browser runs a worker update
+check (normally on the next navigation) and the new worker
+activates; the heal was verified end-to-end on the mirror,
+and asset preservation narrows the window further, but the
+very first reopened tab can still flash the old shell before
+the update lands.
+
+### Bug hunt (same run, live site)
+
+Checked beyond the incident and NOT bugs: unknown or
+malformed coin/creator hash routes land on a designed state
+("Nothing matches that yet. Back to the board") with header
+and tab bar intact and zero page errors
+(probe/hunt-bad-routes.mjs); share pages carry correct title,
+meta and redirect; feed.json and feed.txt are served; the
+manifest is valid; the four QA suites above cover the rest of
+the surface (both themes, 320-1920, money flows, axe).
+
+Found, recorded, deliberately not fixed in a hotfix run:
+- No custom 404.html: an unknown path under /evenfield/
+  returns GitHub Pages' generic 404 page, unstyled and
+  off-brand. Fix: ship a small styled 404.html that routes
+  back into the app. (Improve list #2.)
+
+### Improvement gaps (from live evidence, impact order)
+
+1. Boot on slow links is still slow even though first paint
+   is fixed: at ~5 KB/s the app shell (header, tab bar) had
+   not appeared after 35s in the repro, because boot waits on
+   the entry JS (39 KB gzip) plus the snapshot fetch (307 KB
+   raw) plus live RPC checks, while the readable static page
+   just sits there. Next step: render the app shell and the
+   snapshot board as soon as the JS arrives, without waiting
+   for live checks, and consider a slimmer first-paint
+   snapshot (the board's visible fields only).
+2. No custom 404.html (see bug hunt).
+3. Snapshot freshness can lag far beyond the 6h cadence: CI
+   runs take ~40 minutes end to end (the snapshot scan is the
+   bulk) and GitHub's cron started the 00:21 UTC run at
+   01:53 UTC; the board's "refreshed" line can therefore be
+   many hours old even when everything works. The snapshot
+   builder needs the same delta treatment the app already
+   has, or a smaller rescan window.
+4. The prerendered static home is a thinner card than the app
+   card (no snapshot price, sparkline or holder line). On a
+   slow link that static page is the product for tens of
+   seconds. Enriching the prerender cards to match the app
+   card would close the visible gap between the two states.
+5. Footer paragraphs render tightly together on the
+   not-found state (three <p> lines read as one block).
+   Cosmetic; a margin pass on .site-footer p would fix it.
+
+Process change recorded for the skill: a repeat-visit,
+post-deploy scenario (worker installed, then assets wiped)
+and a ~5 KB/s first-visit scenario are now part of this
+product's release evidence (probe/repro-unstyled.mjs +
+probe/verify-unstyled-fix.mjs). Nothing was posted to X and
+nothing was submitted to Ammora in this run.

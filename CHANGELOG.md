@@ -1,5 +1,38 @@
 # Evenfield changelog
 
+## 3.1.1, 17 Nov 2026: the unstyled-page hotfix
+
+Leira opened the live site on her phone and got the page with
+no styles at all (serif font, blue underlined links, frozen
+prerender). Root cause, proven by reproduction: every deploy
+force-pushes a fresh gh-pages tree and deletes the previous
+build's hashed assets (all earlier entry chunks return 404),
+while the service worker served its cached index.html
+cache-first forever, so returning visitors were pinned to an
+HTML whose CSS and JS no longer existed on the server. On a
+~5 KB/s connection the same page also sat unstyled for
+seconds, because the stylesheet was a separate file.
+
+- The app stylesheet is now inlined into index.html at build
+  time (prerender "finalize" step): first paint is styled as
+  soon as the HTML arrives, whatever happens to asset files.
+- Service worker rewritten and stamped per build (cache name
+  derived from the entry chunk hash, so CI deploys roll it
+  too): navigations are network-first, hashed assets are
+  cache-first with runtime fill, snapshot.json is no longer
+  precached, and activation purges legacy caches and
+  navigates open windows once when a pre-fix cache is found,
+  which heals users stuck on the broken shell.
+- The CI deploy now preserves the previous generation's
+  /assets/ files instead of deleting them all.
+- Verified live: no unstyled phase at ~5 KB/s (first content
+  arrives styled), page stays styled through a simulated
+  asset wipe, the legacy broken state heals itself on a local
+  mirror, and the full suites pass on the final build
+  (qa-matrix 69/69, qa-tasks 48/48, qa-wallet-money 18/18,
+  qa-readability 15/15). Full record in BUILD.md, "Hotfix
+  3.1.1".
+
 ## 3.1.0 completed, 17 Nov 2026: the recovery run
 
 The three fixes that sat uncommitted behind the sandbox write
