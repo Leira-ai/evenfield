@@ -313,14 +313,35 @@ function verdictFact(l: Launch, kind: VerdictKind): string {
  *  ages are interpolated, so the wording can never claim more than
  *  its own fact line and identical prose cannot repeat across cards
  *  whose numbers differ. */
+/** This launch's ordinal among its creator's real launches, by block.
+ *  A measured per-coin fact: serial creators produce clusters of coins
+ *  whose other values are identical, and the ordinal is what honestly
+ *  tells those coins apart in prose (Gate 17 boilerplate rule). */
+function launchOrdinal(l: Launch): number {
+  if (!snap) return 1;
+  return Math.max(1, snap.launches.filter((x) =>
+    x.creator.toLowerCase() === l.creator.toLowerCase() && !x.testLaunch && x.block <= l.block).length);
+}
+
 function verdictMeaning(l: Launch, kind: VerdictKind): string {
+  const base = verdictMeaningBase(l, kind);
+  const c = creatorOf(l);
+  if ((kind === 'caution-early' || kind === 'caution-stopped') && (c?.realLaunches ?? 1) > 1) {
+    return `${base} ${t('verdict.meaning.ordinal', { k: fmtNum(launchOrdinal(l)), n: fmtNum(c?.realLaunches ?? 1) })}`;
+  }
+  return base;
+}
+
+function verdictMeaningBase(l: Launch, kind: VerdictKind): string {
   const c = creatorOf(l);
   switch (kind) {
     case 'caution-early': {
       const cp = cautionPct(l);
       if (!cp) return t('verdict.meaning.early');
       if (!cp.own) {
-        return `${t('verdict.meaning.early.creator', { pct: fmtPct(cp.pct) })} ${t('verdict.meaning.creator.coin', { n: fmtNum(l.evidence.swapCount) })}`;
+        const s = l.evidence.swapCount;
+        const trades = s === 1 ? t('verdict.trades.one') : t('verdict.trades.many', { n: fmtNum(s) });
+        return `${t('verdict.meaning.early.creator', { pct: fmtPct(cp.pct) })} ${t('verdict.meaning.creator.coin', { trades })}`;
       }
       return cp.pct > 25
         ? t('verdict.meaning.early.c', { pct: fmtPct(cp.pct) })
@@ -356,10 +377,7 @@ function verdictMeaning(l: Launch, kind: VerdictKind): string {
       const base = t('verdict.meaning.new2', { n: fmtNum(l.evidence.swapCount), ago: agoOfBlock(l.block) });
       const total = c?.realLaunches ?? 1;
       if (!c || total <= 1) return `${base} ${t('verdict.meaning.new.first')}`;
-      const k = snap
-        ? snap.launches.filter((x) => x.creator.toLowerCase() === l.creator.toLowerCase() && !x.testLaunch && x.block <= l.block).length
-        : 1;
-      return `${base} ${t('verdict.meaning.new.ordinal', { k: fmtNum(Math.max(1, k)), n: fmtNum(total) })}`;
+      return `${base} ${t('verdict.meaning.new.ordinal', { k: fmtNum(launchOrdinal(l)), n: fmtNum(total) })}`;
     }
     case 'unknown': return t('verdict.meaning.unknown');
     default: return '';
