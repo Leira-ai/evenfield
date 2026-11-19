@@ -1,119 +1,31 @@
 {
- "generatedAt": "2026-11-18T16:33:24.685Z",
- "headBlock": 41671709,
+ "generatedAt": "2026-11-19T01:16:03.913Z",
+ "headBlock": 41703001,
  "newLaunches": [
   {
-   "name": "RedDragon Browser QA (RDBQA)",
-   "curve": "0x3827642444b662Ef1Cb87E35304Ce9fbaE59c6Eb",
-   "block": 41671041
-  },
-  {
-   "name": "RedDragon QA (RDQA)",
-   "curve": "0xCD1E26E49D92C6956F586C197d8D3b13c6Ed41C5",
-   "block": 41666005
-  },
-  {
-   "name": "linh (LINH)",
-   "curve": "0x04817A1d1C17DDd8d7207248511E6ADCf0b2d633",
-   "block": 41664002
-  },
-  {
-   "name": "ammora test 1 (AMM)",
-   "curve": "0x701100761560c16A7FeF869a22897B2B68D77f1c",
-   "block": 41653985
-  },
-  {
-   "name": "Ammora (AMO)",
-   "curve": "0xA6808AFA280AB7AE47FA10851B0aF2d925dC294b",
-   "block": 41648577
-  },
-  {
-   "name": "Ammora Test Token (ATT)",
-   "curve": "0xD9ea635D7b80666A475FBCABd45A258637a3B180",
-   "block": 41647562
-  },
-  {
-   "name": "GiwaPad Test Token (GPTEST)",
-   "curve": "0x74b114a001dDe7926d81991Ae7e2369551B60FAd",
-   "block": 41644343
-  },
-  {
-   "name": "ilmeaalim (ILME)",
-   "curve": "0x1CA46504265d6566Fe5f1ce5fcdB3FE461881395",
-   "block": 41637161
-  },
-  {
-   "name": "Calmlet (CALM)",
-   "curve": "0x8893E033A71829a7Fc6Fe2349caCe336125Cc1A7",
-   "block": 41635462
-  },
-  {
-   "name": "Calmlet (CALM)",
-   "curve": "0x1344b85fE250757f83a6198A6fbB6b6A877410C1",
-   "block": 41633107
-  },
-  {
-   "name": "Tester Nova (TNOVA)",
-   "curve": "0xDbf264C6240f74e0049529e58381f22eC8177d7f",
-   "block": 41628802
-  },
-  {
-   "name": "Katie (KT)",
-   "curve": "0x5A050420Be96C00C7013D7b7F453C71B6b70Ad7A",
-   "block": 41628619
-  },
-  {
-   "name": "Nova Star (NSTAR)",
-   "curve": "0x820003bF82A42abee0Cd3D39C66CFd5f0b85b225",
-   "block": 41628390
-  },
-  {
-   "name": "ConkFun (CFUN)",
-   "curve": "0xd7F3833F04acc8398FBC142bcC3069E75F542006",
-   "block": 41628269
-  },
-  {
-   "name": "morrales coin (MRL)",
-   "curve": "0x57bEF2513c4EB121024d64cA7eE61F0337A46eA7",
-   "block": 41627530
-  },
-  {
-   "name": "Giwa MR1 (GMR1)",
-   "curve": "0x84CbbCabb9DbFb6c9DBe3373A658849B9aC913f5",
-   "block": 41623504
-  },
-  {
-   "name": "HANIF (CORE)",
-   "curve": "0x593C8B1E0c6025823419b90864bcE5152fFB0044",
-   "block": 41621658
-  },
-  {
-   "name": "OnicPad Demo Token (ONIC)",
-   "curve": "0x52eA8d567dF8396F4DBD52d3e234948b88307D1b",
-   "block": 41620605
+   "name": "GOKU (GO)",
+   "curve": "0xcFacE0a5Ee2269730f11DA6081DF404Db64395A1",
+   "block": 41700390
   },
   {
    "name": "POP (POP)",
-   "curve": "0x9a73E3589CA21C24B0Dda0aDEA39735192E8903C",
-   "block": 41619593
+   "curve": "0x87aC5261f726B86D2bB8898A280D0Ed675378D40",
+   "block": 41698934
+  },
+  {
+   "name": "LODOs (LODOS)",
+   "curve": "0x43020953b73f75c58B5aeFd534391d1Eb3D53440",
+   "block": 41677417
   }
  ],
  "newGraduations": [
   {
-   "name": "Ammora (AMO)",
-   "curve": "0xA6808AFA280AB7AE47FA10851B0aF2d925dC294b"
-  },
-  {
-   "name": "ConkFun (CFUN)",
-   "curve": "0xd7F3833F04acc8398FBC142bcC3069E75F542006"
-  },
-  {
-   "name": "Kiln (KILN)",
-   "curve": "0x5DBf2731BF5F62Db48fF01f71c1cec87A6D49384"
+   "name": "LODOs (LODOS)",
+   "curve": "0x43020953b73f75c58B5aeFd534391d1Eb3D53440"
   }
  ],
  "weekly": {
-  "newLaunches": 83,
+  "newLaunches": 86,
   "closestToGraduation": [
    {
     "name": "Aiai Rocket (AIAI)",

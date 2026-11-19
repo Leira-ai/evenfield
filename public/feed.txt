@@ -1,24 +1,15 @@
 Evenfield digest
-Data as of block 41671709.
+Data as of block 41703001.
 
 New launches:
-- RedDragon Browser QA (RDBQA)
-- RedDragon QA (RDQA)
-- linh (LINH)
-- ammora test 1 (AMM)
-- Ammora (AMO)
-- Ammora Test Token (ATT)
-- GiwaPad Test Token (GPTEST)
-- ilmeaalim (ILME)
-- Calmlet (CALM)
-- Calmlet (CALM)
+- GOKU (GO)
+- POP (POP)
+- LODOs (LODOS)
 
 New graduations:
-- Ammora (AMO)
-- ConkFun (CFUN)
-- Kiln (KILN)
+- LODOs (LODOS)
 
-This week: 83 new launches.
+This week: 86 new launches.
 Closest to graduation:
 - Aiai Rocket (AIAI): 99.99%
 - Bindery (BND): 99%
