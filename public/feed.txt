@@ -1,15 +1,16 @@
 Evenfield digest
-Data as of block 41703001.
+Data as of block 41758392.
 
 New launches:
-- GOKU (GO)
-- POP (POP)
-- LODOs (LODOS)
+- keyvank (KYK)
+- pepe (PEPEE)
+- sdfgsdfsd (FSDFSD)
+- THRIEW (THRW)
+- JonTes (JTES)
+- ROBOT_UNIT_01 (RBT01)
+- ROBOT_UNIT_01 (RBT01)
 
-New graduations:
-- LODOs (LODOS)
-
-This week: 86 new launches.
+This week: 93 new launches.
 Closest to graduation:
 - Aiai Rocket (AIAI): 99.99%
 - Bindery (BND): 99%

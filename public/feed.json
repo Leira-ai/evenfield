@@ -1,31 +1,46 @@
 {
- "generatedAt": "2026-11-19T01:16:03.913Z",
- "headBlock": 41703001,
+ "generatedAt": "2026-11-19T16:40:53.135Z",
+ "headBlock": 41758392,
  "newLaunches": [
   {
-   "name": "GOKU (GO)",
-   "curve": "0xcFacE0a5Ee2269730f11DA6081DF404Db64395A1",
-   "block": 41700390
+   "name": "keyvank (KYK)",
+   "curve": "0x6803e530c67c796e92De7F4db07D41222d4d984E",
+   "block": 41739979
   },
   {
-   "name": "POP (POP)",
-   "curve": "0x87aC5261f726B86D2bB8898A280D0Ed675378D40",
-   "block": 41698934
+   "name": "pepe (PEPEE)",
+   "curve": "0xa174f07c7777dd1cdf9399E8fa541d060D763971",
+   "block": 41739511
   },
   {
-   "name": "LODOs (LODOS)",
-   "curve": "0x43020953b73f75c58B5aeFd534391d1Eb3D53440",
-   "block": 41677417
-  }
- ],
- "newGraduations": [
+   "name": "sdfgsdfsd (FSDFSD)",
+   "curve": "0xEFd81EFdF33Ed78417018Ca7d078682eeF8D751E",
+   "block": 41738871
+  },
   {
-   "name": "LODOs (LODOS)",
-   "curve": "0x43020953b73f75c58B5aeFd534391d1Eb3D53440"
+   "name": "THRIEW (THRW)",
+   "curve": "0xDF5B287DD2C5C06f73fC50CE757C1Aa5F9e9A3c1",
+   "block": 41737057
+  },
+  {
+   "name": "JonTes (JTES)",
+   "curve": "0xdaa9edB6a432F947adb7d4bbAF30B3C114EFCd76",
+   "block": 41722585
+  },
+  {
+   "name": "ROBOT_UNIT_01 (RBT01)",
+   "curve": "0xaF4037AA743832Bb0CF95B97bB069aeE25dF2600",
+   "block": 41709192
+  },
+  {
+   "name": "ROBOT_UNIT_01 (RBT01)",
+   "curve": "0x259d6A0A1333Df2f6d68720F524fA5D3C8f2E3d5",
+   "block": 41708791
   }
  ],
+ "newGraduations": [],
  "weekly": {
-  "newLaunches": 86,
+  "newLaunches": 93,
   "closestToGraduation": [
    {
     "name": "Aiai Rocket (AIAI)",
