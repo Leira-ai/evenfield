@@ -1,12 +1,23 @@
 Evenfield digest
-Data as of block 41790174.
+Data as of block 41843754.
 
 New launches:
-- TERI (TERI)
-- LEBARAN (LBR)
-- THR (THR)
+- ijhbvgyua (OKJHGFC)
+- Deneme Token (DNM)
+- cokkk (COK)
+- cobaaaa (CBCB)
+- Bornite2 (BRN2)
+- Bornite (BRN)
+- FairLaunch Test (FLTEST)
+- GiwaPad (GPAD)
+- coba (CB)
+- JUNE (JUNE)
 
-This week: 96 new launches.
+New graduations:
+- Deneme Token (DNM)
+- coba (CB)
+
+This week: 105 new launches.
 Closest to graduation:
 - Aiai Rocket (AIAI): 99.99%
 - Bindery (BND): 99%
