@@ -1,16 +1,12 @@
 Evenfield digest
-Data as of block 41758392.
+Data as of block 41790174.
 
 New launches:
-- keyvank (KYK)
-- pepe (PEPEE)
-- sdfgsdfsd (FSDFSD)
-- THRIEW (THRW)
-- JonTes (JTES)
-- ROBOT_UNIT_01 (RBT01)
-- ROBOT_UNIT_01 (RBT01)
+- TERI (TERI)
+- LEBARAN (LBR)
+- THR (THR)
 
-This week: 93 new launches.
+This week: 96 new launches.
 Closest to graduation:
 - Aiai Rocket (AIAI): 99.99%
 - Bindery (BND): 99%

@@ -1,46 +1,26 @@
 {
- "generatedAt": "2026-11-19T16:40:53.135Z",
- "headBlock": 41758392,
+ "generatedAt": "2026-11-20T01:31:13.616Z",
+ "headBlock": 41790174,
  "newLaunches": [
   {
-   "name": "keyvank (KYK)",
-   "curve": "0x6803e530c67c796e92De7F4db07D41222d4d984E",
-   "block": 41739979
+   "name": "TERI (TERI)",
+   "curve": "0xD8C94cDC5a3B132153754A23Ed909272f32854dd",
+   "block": 41762844
   },
   {
-   "name": "pepe (PEPEE)",
-   "curve": "0xa174f07c7777dd1cdf9399E8fa541d060D763971",
-   "block": 41739511
+   "name": "LEBARAN (LBR)",
+   "curve": "0x00dC10eE7D053075322e0a5363e4DcF0D00599ba",
+   "block": 41762586
   },
   {
-   "name": "sdfgsdfsd (FSDFSD)",
-   "curve": "0xEFd81EFdF33Ed78417018Ca7d078682eeF8D751E",
-   "block": 41738871
-  },
-  {
-   "name": "THRIEW (THRW)",
-   "curve": "0xDF5B287DD2C5C06f73fC50CE757C1Aa5F9e9A3c1",
-   "block": 41737057
-  },
-  {
-   "name": "JonTes (JTES)",
-   "curve": "0xdaa9edB6a432F947adb7d4bbAF30B3C114EFCd76",
-   "block": 41722585
-  },
-  {
-   "name": "ROBOT_UNIT_01 (RBT01)",
-   "curve": "0xaF4037AA743832Bb0CF95B97bB069aeE25dF2600",
-   "block": 41709192
-  },
-  {
-   "name": "ROBOT_UNIT_01 (RBT01)",
-   "curve": "0x259d6A0A1333Df2f6d68720F524fA5D3C8f2E3d5",
-   "block": 41708791
+   "name": "THR (THR)",
+   "curve": "0x26a5726EE4d4cF2bFD8b23932D397349b664165b",
+   "block": 41762188
   }
  ],
  "newGraduations": [],
  "weekly": {
-  "newLaunches": 93,
+  "newLaunches": 96,
   "closestToGraduation": [
    {
     "name": "Aiai Rocket (AIAI)",
