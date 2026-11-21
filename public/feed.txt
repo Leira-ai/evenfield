@@ -1,10 +1,24 @@
 Evenfield digest
-Data as of block 41900465.
+Data as of block 41943929.
+
+New launches:
+- GiwaPad Test (GPTEST)
+- PiPiN (PPN)
+- giwawa (GIWAWA)
+- test (TESTD)
+- Ding Dong (2D)
+- icardi (ICD)
+- AGENT (AGENT)
+- Manutao (MANUTAO)
+- Fan of Ammora (FAAN)
+- Tandem Test (TNDM)
 
 New graduations:
-- Giwa MR1 (GMR1)
+- GiwaPad Test (GPTEST)
+- Tandem Test (TNDM)
+- BaekhoGiwa (BAEKHO)
 
-This week: 106 new launches.
+This week: 115 new launches.
 Closest to graduation:
 - Aiai Rocket (AIAI): 99.99%
 - Bindery (BND): 99%

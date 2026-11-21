@@ -1,15 +1,84 @@
 {
- "generatedAt": "2026-11-21T08:11:43.680Z",
- "headBlock": 41900465,
- "newLaunches": [],
+ "generatedAt": "2026-11-21T20:17:30.579Z",
+ "headBlock": 41943929,
+ "newLaunches": [
+  {
+   "name": "GiwaPad Test (GPTEST)",
+   "curve": "0x28bdbB216520bd08256D17565731793b5396CB50",
+   "block": 41940124
+  },
+  {
+   "name": "PiPiN (PPN)",
+   "curve": "0xcB5A45C6CD6e1df6aeD017F93dd5DDc349Ed2EB3",
+   "block": 41939858
+  },
+  {
+   "name": "giwawa (GIWAWA)",
+   "curve": "0xF1975Aa8B8d400750c1a174A0f55D5b6833d7464",
+   "block": 41939512
+  },
+  {
+   "name": "test (TESTD)",
+   "curve": "0x054062aaA25219Dd6B9038C4EE7c6117a1ed4201",
+   "block": 41934299
+  },
+  {
+   "name": "Ding Dong (2D)",
+   "curve": "0x44f3a328db4968cCEE9050565A71bD22efb1c67A",
+   "block": 41933186
+  },
+  {
+   "name": "icardi (ICD)",
+   "curve": "0x2dE703bD4E81d05A7654191b2d30A267d8D096bF",
+   "block": 41932119
+  },
+  {
+   "name": "AGENT (AGENT)",
+   "curve": "0x9955fdfFE3215731946b1858d085D3c1AEE8B2Ef",
+   "block": 41931963
+  },
+  {
+   "name": "Manutao (MANUTAO)",
+   "curve": "0xFd8256450EC929D1A094A8B388860D81573993B1",
+   "block": 41930013
+  },
+  {
+   "name": "Fan of Ammora (FAAN)",
+   "curve": "0x61904658BC770a020a0E540FDC89A25AE3D195DD",
+   "block": 41928398
+  },
+  {
+   "name": "Tandem Test (TNDM)",
+   "curve": "0x0b614c237bc2FAa6E5bE9E8204ad4aE906535496",
+   "block": 41922268
+  },
+  {
+   "name": "BaekhoGiwa (BAEKHO)",
+   "curve": "0xad339b60303501a632eCdc91Ba8b2154bf4e6801",
+   "block": 41913522
+  },
+  {
+   "name": "Dog Kangal (DKNG)",
+   "curve": "0xb1c4C6bE055163483E344461ba2559CB886AF07d",
+   "block": 41910726
+  }
+ ],
  "newGraduations": [
   {
-   "name": "Giwa MR1 (GMR1)",
-   "curve": "0x84CbbCabb9DbFb6c9DBe3373A658849B9aC913f5"
+   "name": "GiwaPad Test (GPTEST)",
+   "curve": "0x28bdbB216520bd08256D17565731793b5396CB50"
+  },
+  {
+   "name": "Tandem Test (TNDM)",
+   "curve": "0x0b614c237bc2FAa6E5bE9E8204ad4aE906535496"
+  },
+  {
+   "name": "BaekhoGiwa (BAEKHO)",
+   "curve": "0xad339b60303501a632eCdc91Ba8b2154bf4e6801"
   }
  ],
  "weekly": {
-  "newLaunches": 106,
+  "newLaunches": 115,
   "closestToGraduation": [
    {
     "name": "Aiai Rocket (AIAI)",
