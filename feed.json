@@ -1,0 +1,28 @@
+{
+ "generatedAt": "2026-11-21T08:11:43.680Z",
+ "headBlock": 41900465,
+ "newLaunches": [],
+ "newGraduations": [
+  {
+   "name": "Giwa MR1 (GMR1)",
+   "curve": "0x84CbbCabb9DbFb6c9DBe3373A658849B9aC913f5"
+  }
+ ],
+ "weekly": {
+  "newLaunches": 106,
+  "closestToGraduation": [
+   {
+    "name": "Aiai Rocket (AIAI)",
+    "progressPct": 99.99
+   },
+   {
+    "name": "Bindery (BND)",
+    "progressPct": 99
+   },
+   {
+    "name": "Quick Launch Test (QLT)",
+    "progressPct": 99
+   }
+  ]
+ }
+}

@@ -1,0 +1,11 @@
+# Evenfield security headers for hosts that honour a _headers file
+# (Cloudflare Pages, Netlify). GitHub Pages ignores this file and cannot
+# send custom response headers; the same CSP ships as a <meta> in
+# index.html, minus the directives meta cannot express (frame-ancestors,
+# HSTS, X-Content-Type-Options below). See BUILD.md, Gate 6 notes.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-Z0sE+Ii+ymqVKjfCPvFxItTHHmHFrexD4fjJwuaeZUY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://sepolia-rpc.giwa.io https://sepolia-explorer.giwa.io https://*.walletconnect.com wss://*.walletconnect.com https://*.walletconnect.org wss://*.walletconnect.org https://*.reown.com wss://*.reown.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=()

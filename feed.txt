@@ -1,0 +1,11 @@
+Evenfield digest
+Data as of block 41900465.
+
+New graduations:
+- Giwa MR1 (GMR1)
+
+This week: 106 new launches.
+Closest to graduation:
+- Aiai Rocket (AIAI): 99.99%
+- Bindery (BND): 99%
+- Quick Launch Test (QLT): 99%
