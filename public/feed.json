@@ -1,70 +1,26 @@
 {
- "generatedAt": "2026-11-20T16:25:43.774Z",
- "headBlock": 41843754,
+ "generatedAt": "2026-11-21T00:53:02.239Z",
+ "headBlock": 41874139,
  "newLaunches": [
   {
-   "name": "ijhbvgyua (OKJHGFC)",
-   "curve": "0xD7E0247f856a0C67F3c67477d8892a85C2c03533",
-   "block": 41834105
+   "name": "test (TEST)",
+   "curve": "0xdB2c5074a4c1501Be5F860020360D7B187C7Ab21",
+   "block": 41872940
   },
   {
-   "name": "Deneme Token (DNM)",
-   "curve": "0xf0ecb42a37b4615336a59FEe5be40dbbeB28a045",
-   "block": 41830302
-  },
-  {
-   "name": "cokkk (COK)",
-   "curve": "0x0eB765Da8B61A83705FCD14c0083b9c202419A30",
-   "block": 41811059
-  },
-  {
-   "name": "cobaaaa (CBCB)",
-   "curve": "0xAca086A8eB73786b353bdE4F044dF1f7aC38Bba3",
-   "block": 41810802
-  },
-  {
-   "name": "Bornite2 (BRN2)",
-   "curve": "0x4620BF33c896E01aE052c85230f54c8cC7d51139",
-   "block": 41810263
-  },
-  {
-   "name": "Bornite (BRN)",
-   "curve": "0x10d7814F384677F7abEaF43D66ABa916875a14eC",
-   "block": 41810117
-  },
-  {
-   "name": "FairLaunch Test (FLTEST)",
-   "curve": "0xc89805Bd3E5DaF5e0a007Ae5c99474958B32dA8B",
-   "block": 41808502
-  },
-  {
-   "name": "GiwaPad (GPAD)",
-   "curve": "0x6e30716bD9546039182F624c3A177d8C33078E52",
-   "block": 41806217
-  },
-  {
-   "name": "coba (CB)",
-   "curve": "0x559abD99014654b683A752FB320eDA0C4599Fb88",
-   "block": 41801785
-  },
-  {
-   "name": "JUNE (JUNE)",
-   "curve": "0x27d9c72199274A192Bb16E931AcB6b555D0798DF",
-   "block": 41792128
+   "name": "Mc Cat (MCAT)",
+   "curve": "0x646f0AF22c0503F8260a1F6FDbC6744A6b1Eb783",
+   "block": 41871193
   }
  ],
  "newGraduations": [
   {
-   "name": "Deneme Token (DNM)",
-   "curve": "0xf0ecb42a37b4615336a59FEe5be40dbbeB28a045"
-  },
-  {
-   "name": "coba (CB)",
-   "curve": "0x559abD99014654b683A752FB320eDA0C4599Fb88"
+   "name": "cokkk (COK)",
+   "curve": "0x0eB765Da8B61A83705FCD14c0083b9c202419A30"
   }
  ],
  "weekly": {
-  "newLaunches": 105,
+  "newLaunches": 106,
   "closestToGraduation": [
    {
     "name": "Aiai Rocket (AIAI)",

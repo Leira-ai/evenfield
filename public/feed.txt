@@ -1,23 +1,14 @@
 Evenfield digest
-Data as of block 41843754.
+Data as of block 41874139.
 
 New launches:
-- ijhbvgyua (OKJHGFC)
-- Deneme Token (DNM)
-- cokkk (COK)
-- cobaaaa (CBCB)
-- Bornite2 (BRN2)
-- Bornite (BRN)
-- FairLaunch Test (FLTEST)
-- GiwaPad (GPAD)
-- coba (CB)
-- JUNE (JUNE)
+- test (TEST)
+- Mc Cat (MCAT)
 
 New graduations:
-- Deneme Token (DNM)
-- coba (CB)
+- cokkk (COK)
 
-This week: 105 new launches.
+This week: 106 new launches.
 Closest to graduation:
 - Aiai Rocket (AIAI): 99.99%
 - Bindery (BND): 99%
