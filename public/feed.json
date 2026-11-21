@@ -1,22 +1,11 @@
 {
- "generatedAt": "2026-11-21T00:53:02.239Z",
- "headBlock": 41874139,
- "newLaunches": [
-  {
-   "name": "test (TEST)",
-   "curve": "0xdB2c5074a4c1501Be5F860020360D7B187C7Ab21",
-   "block": 41872940
-  },
-  {
-   "name": "Mc Cat (MCAT)",
-   "curve": "0x646f0AF22c0503F8260a1F6FDbC6744A6b1Eb783",
-   "block": 41871193
-  }
- ],
+ "generatedAt": "2026-11-21T08:11:43.680Z",
+ "headBlock": 41900465,
+ "newLaunches": [],
  "newGraduations": [
   {
-   "name": "cokkk (COK)",
-   "curve": "0x0eB765Da8B61A83705FCD14c0083b9c202419A30"
+   "name": "Giwa MR1 (GMR1)",
+   "curve": "0x84CbbCabb9DbFb6c9DBe3373A658849B9aC913f5"
   }
  ],
  "weekly": {

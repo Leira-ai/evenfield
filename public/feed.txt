@@ -1,12 +1,8 @@
 Evenfield digest
-Data as of block 41874139.
-
-New launches:
-- test (TEST)
-- Mc Cat (MCAT)
+Data as of block 41900465.
 
 New graduations:
-- cokkk (COK)
+- Giwa MR1 (GMR1)
 
 This week: 106 new launches.
 Closest to graduation:
