@@ -1,28 +1,23 @@
 Evenfield digest
-Data as of block 41985723.
+Data as of block 42031738.
 
 New launches:
-- GiwaPad45 (GPAD45)
-- GiwaPad Token (GPAD)
-- Cooper Test Token (CTT)
-- Kevamar (KEVAM)
-- Demo Token (DEMO)
-- Galatasaray (GS)
-- Fenerbahce (FBB)
-- MGTA6 (MGTA)
-- GiwaLaunch Token (GLT)
+- India (INDIA)
+- GIWA (GIWA)
+- Elon Musk (ELON)
+- MrAnurodh (MRA)
+- Modi (MODI)
+- ANURODHHITMAN (ANURODH)
+- GIWORA Test Token (GWR)
+- SWAT (SWT)
+- StarpadX (STARX)
 
 New graduations:
-- GiwaPad Token (GPAD)
-- Demo Token (DEMO)
-- Galatasaray (GS)
-- GiwaLaunch Token (GLT)
-- Dog Kangal (DKNG)
-- Mc Cat (MCAT)
-- Bindery (BND)
+- India (INDIA)
+- ANURODHHITMAN (ANURODH)
 
-This week: 122 new launches.
+This week: 130 new launches.
 Closest to graduation:
 - Aiai Rocket (AIAI): 99.99%
+- GIWA (GIWA): 99%
 - Quick Launch Test (QLT): 99%
-- MGTA6 (MGTA): 97.21%

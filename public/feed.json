@@ -1,97 +1,77 @@
 {
- "generatedAt": "2026-11-22T08:00:51.635Z",
- "headBlock": 41985723,
+ "generatedAt": "2026-11-22T20:50:53.481Z",
+ "headBlock": 42031738,
  "newLaunches": [
   {
-   "name": "GiwaPad45 (GPAD45)",
-   "curve": "0x06029e76D95762A90924C782405146aa1145b822",
-   "block": 41983216
+   "name": "India (INDIA)",
+   "curve": "0xAe572164c13BA1b46F413E48475fFdA8823b0A95",
+   "block": 42029728
   },
   {
-   "name": "GiwaPad Token (GPAD)",
-   "curve": "0xEDd5464BC48E2900f1054bC262d6a080eEe8D515",
-   "block": 41979793
+   "name": "GIWA (GIWA)",
+   "curve": "0x6B9C77E553b348b193eF3eC15797DD7f1E3EC74e",
+   "block": 42028971
   },
   {
-   "name": "Cooper Test Token (CTT)",
-   "curve": "0x370124353030c8372307357aA2441e112446330F",
-   "block": 41977943
+   "name": "Elon Musk (ELON)",
+   "curve": "0x6C6870170C601D48CF3Ee581C02DE5262E38e9e7",
+   "block": 42028734
   },
   {
-   "name": "Kevamar (KEVAM)",
-   "curve": "0x38709F7B160c7Fbe4140A68759B44eDb4e4B3086",
-   "block": 41965971
+   "name": "MrAnurodh (MRA)",
+   "curve": "0x41bFB09eA2657148185159d0905D6CC43B18beD1",
+   "block": 42028613
   },
   {
-   "name": "Demo Token (DEMO)",
-   "curve": "0xEAbFe4aeEb887F5a76B5BA288a2EeAAdBf272677",
-   "block": 41962835
+   "name": "Modi (MODI)",
+   "curve": "0x080320Bb70f7fFC66fC289aA02FE6f46c595B528",
+   "block": 42028308
   },
   {
-   "name": "Galatasaray (GS)",
-   "curve": "0xd93f9DA255c03C125662243fab4a69E8B23417A4",
-   "block": 41951451
+   "name": "ANURODHHITMAN (ANURODH)",
+   "curve": "0xD4aB6c5Cf8fF58E129c2e5d7401017964aa1f02f",
+   "block": 42027331
   },
   {
-   "name": "Fenerbahce (FBB)",
-   "curve": "0x81445101D019a3df134A674A524c406CC73089D6",
-   "block": 41947254
+   "name": "GIWORA Test Token (GWR)",
+   "curve": "0x041dea7997cF40B2C48A7f6b51A83F8755f5b0EF",
+   "block": 42020534
   },
   {
-   "name": "MGTA6 (MGTA)",
-   "curve": "0x792A05d1d3Dc2208881f5E059D5F631180Ff6e1e",
-   "block": 41947037
+   "name": "SWAT (SWT)",
+   "curve": "0x7f6F5AB3Ea08dD77fA89ceF4d63aEB649EcCeD15",
+   "block": 42015894
   },
   {
-   "name": "GiwaLaunch Token (GLT)",
-   "curve": "0x4f7dEa26e055B9138dFd599DDe9FDc0cDC293993",
-   "block": 41944365
+   "name": "StarpadX (STARX)",
+   "curve": "0xdabaf2D4Ae83e32C90aE0B92C72a7eD16EA3A78F",
+   "block": 42007231
   }
  ],
  "newGraduations": [
   {
-   "name": "GiwaPad Token (GPAD)",
-   "curve": "0xEDd5464BC48E2900f1054bC262d6a080eEe8D515"
+   "name": "India (INDIA)",
+   "curve": "0xAe572164c13BA1b46F413E48475fFdA8823b0A95"
   },
   {
-   "name": "Demo Token (DEMO)",
-   "curve": "0xEAbFe4aeEb887F5a76B5BA288a2EeAAdBf272677"
-  },
-  {
-   "name": "Galatasaray (GS)",
-   "curve": "0xd93f9DA255c03C125662243fab4a69E8B23417A4"
-  },
-  {
-   "name": "GiwaLaunch Token (GLT)",
-   "curve": "0x4f7dEa26e055B9138dFd599DDe9FDc0cDC293993"
-  },
-  {
-   "name": "Dog Kangal (DKNG)",
-   "curve": "0xb1c4C6bE055163483E344461ba2559CB886AF07d"
-  },
-  {
-   "name": "Mc Cat (MCAT)",
-   "curve": "0x646f0AF22c0503F8260a1F6FDbC6744A6b1Eb783"
-  },
-  {
-   "name": "Bindery (BND)",
-   "curve": "0x3835588D4811Ef86dDf4575989e76930C7A46410"
+   "name": "ANURODHHITMAN (ANURODH)",
+   "curve": "0xD4aB6c5Cf8fF58E129c2e5d7401017964aa1f02f"
   }
  ],
  "weekly": {
-  "newLaunches": 122,
+  "newLaunches": 130,
   "closestToGraduation": [
    {
     "name": "Aiai Rocket (AIAI)",
     "progressPct": 99.99
    },
    {
-    "name": "Quick Launch Test (QLT)",
+    "name": "GIWA (GIWA)",
     "progressPct": 99
    },
    {
-    "name": "MGTA6 (MGTA)",
-    "progressPct": 97.21
+    "name": "Quick Launch Test (QLT)",
+    "progressPct": 99
    }
   ]
  }
