@@ -1,96 +1,97 @@
 {
- "generatedAt": "2026-11-21T20:17:30.579Z",
- "headBlock": 41943929,
+ "generatedAt": "2026-11-22T08:00:51.635Z",
+ "headBlock": 41985723,
  "newLaunches": [
   {
-   "name": "GiwaPad Test (GPTEST)",
-   "curve": "0x28bdbB216520bd08256D17565731793b5396CB50",
-   "block": 41940124
+   "name": "GiwaPad45 (GPAD45)",
+   "curve": "0x06029e76D95762A90924C782405146aa1145b822",
+   "block": 41983216
   },
   {
-   "name": "PiPiN (PPN)",
-   "curve": "0xcB5A45C6CD6e1df6aeD017F93dd5DDc349Ed2EB3",
-   "block": 41939858
+   "name": "GiwaPad Token (GPAD)",
+   "curve": "0xEDd5464BC48E2900f1054bC262d6a080eEe8D515",
+   "block": 41979793
   },
   {
-   "name": "giwawa (GIWAWA)",
-   "curve": "0xF1975Aa8B8d400750c1a174A0f55D5b6833d7464",
-   "block": 41939512
+   "name": "Cooper Test Token (CTT)",
+   "curve": "0x370124353030c8372307357aA2441e112446330F",
+   "block": 41977943
   },
   {
-   "name": "test (TESTD)",
-   "curve": "0x054062aaA25219Dd6B9038C4EE7c6117a1ed4201",
-   "block": 41934299
+   "name": "Kevamar (KEVAM)",
+   "curve": "0x38709F7B160c7Fbe4140A68759B44eDb4e4B3086",
+   "block": 41965971
   },
   {
-   "name": "Ding Dong (2D)",
-   "curve": "0x44f3a328db4968cCEE9050565A71bD22efb1c67A",
-   "block": 41933186
+   "name": "Demo Token (DEMO)",
+   "curve": "0xEAbFe4aeEb887F5a76B5BA288a2EeAAdBf272677",
+   "block": 41962835
   },
   {
-   "name": "icardi (ICD)",
-   "curve": "0x2dE703bD4E81d05A7654191b2d30A267d8D096bF",
-   "block": 41932119
+   "name": "Galatasaray (GS)",
+   "curve": "0xd93f9DA255c03C125662243fab4a69E8B23417A4",
+   "block": 41951451
   },
   {
-   "name": "AGENT (AGENT)",
-   "curve": "0x9955fdfFE3215731946b1858d085D3c1AEE8B2Ef",
-   "block": 41931963
+   "name": "Fenerbahce (FBB)",
+   "curve": "0x81445101D019a3df134A674A524c406CC73089D6",
+   "block": 41947254
   },
   {
-   "name": "Manutao (MANUTAO)",
-   "curve": "0xFd8256450EC929D1A094A8B388860D81573993B1",
-   "block": 41930013
+   "name": "MGTA6 (MGTA)",
+   "curve": "0x792A05d1d3Dc2208881f5E059D5F631180Ff6e1e",
+   "block": 41947037
   },
   {
-   "name": "Fan of Ammora (FAAN)",
-   "curve": "0x61904658BC770a020a0E540FDC89A25AE3D195DD",
-   "block": 41928398
-  },
-  {
-   "name": "Tandem Test (TNDM)",
-   "curve": "0x0b614c237bc2FAa6E5bE9E8204ad4aE906535496",
-   "block": 41922268
-  },
-  {
-   "name": "BaekhoGiwa (BAEKHO)",
-   "curve": "0xad339b60303501a632eCdc91Ba8b2154bf4e6801",
-   "block": 41913522
-  },
-  {
-   "name": "Dog Kangal (DKNG)",
-   "curve": "0xb1c4C6bE055163483E344461ba2559CB886AF07d",
-   "block": 41910726
+   "name": "GiwaLaunch Token (GLT)",
+   "curve": "0x4f7dEa26e055B9138dFd599DDe9FDc0cDC293993",
+   "block": 41944365
   }
  ],
  "newGraduations": [
   {
-   "name": "GiwaPad Test (GPTEST)",
-   "curve": "0x28bdbB216520bd08256D17565731793b5396CB50"
+   "name": "GiwaPad Token (GPAD)",
+   "curve": "0xEDd5464BC48E2900f1054bC262d6a080eEe8D515"
   },
   {
-   "name": "Tandem Test (TNDM)",
-   "curve": "0x0b614c237bc2FAa6E5bE9E8204ad4aE906535496"
+   "name": "Demo Token (DEMO)",
+   "curve": "0xEAbFe4aeEb887F5a76B5BA288a2EeAAdBf272677"
   },
   {
-   "name": "BaekhoGiwa (BAEKHO)",
-   "curve": "0xad339b60303501a632eCdc91Ba8b2154bf4e6801"
+   "name": "Galatasaray (GS)",
+   "curve": "0xd93f9DA255c03C125662243fab4a69E8B23417A4"
+  },
+  {
+   "name": "GiwaLaunch Token (GLT)",
+   "curve": "0x4f7dEa26e055B9138dFd599DDe9FDc0cDC293993"
+  },
+  {
+   "name": "Dog Kangal (DKNG)",
+   "curve": "0xb1c4C6bE055163483E344461ba2559CB886AF07d"
+  },
+  {
+   "name": "Mc Cat (MCAT)",
+   "curve": "0x646f0AF22c0503F8260a1F6FDbC6744A6b1Eb783"
+  },
+  {
+   "name": "Bindery (BND)",
+   "curve": "0x3835588D4811Ef86dDf4575989e76930C7A46410"
   }
  ],
  "weekly": {
-  "newLaunches": 115,
+  "newLaunches": 122,
   "closestToGraduation": [
    {
     "name": "Aiai Rocket (AIAI)",
     "progressPct": 99.99
    },
    {
-    "name": "Bindery (BND)",
+    "name": "Quick Launch Test (QLT)",
     "progressPct": 99
    },
    {
-    "name": "Quick Launch Test (QLT)",
-    "progressPct": 99
+    "name": "MGTA6 (MGTA)",
+    "progressPct": 97.21
    }
   ]
  }
