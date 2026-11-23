@@ -1,65 +1,31 @@
 {
- "generatedAt": "2026-11-22T20:50:53.481Z",
- "headBlock": 42031738,
+ "generatedAt": "2026-11-23T08:56:44.004Z",
+ "headBlock": 42075090,
  "newLaunches": [
   {
-   "name": "India (INDIA)",
-   "curve": "0xAe572164c13BA1b46F413E48475fFdA8823b0A95",
-   "block": 42029728
+   "name": "Zenity (ZENT)",
+   "curve": "0xB00bAABd05Fc794b833e76B2E733ABd38Cb7C985",
+   "block": 42069114
   },
   {
-   "name": "GIWA (GIWA)",
-   "curve": "0x6B9C77E553b348b193eF3eC15797DD7f1E3EC74e",
-   "block": 42028971
+   "name": "GIWA GHOST (GHOST)",
+   "curve": "0xbd70914D6DEdCb3AA4bA6C69B04c2e6CB4a7Aa31",
+   "block": 42036049
   },
   {
-   "name": "Elon Musk (ELON)",
-   "curve": "0x6C6870170C601D48CF3Ee581C02DE5262E38e9e7",
-   "block": 42028734
-  },
-  {
-   "name": "MrAnurodh (MRA)",
-   "curve": "0x41bFB09eA2657148185159d0905D6CC43B18beD1",
-   "block": 42028613
-  },
-  {
-   "name": "Modi (MODI)",
-   "curve": "0x080320Bb70f7fFC66fC289aA02FE6f46c595B528",
-   "block": 42028308
-  },
-  {
-   "name": "ANURODHHITMAN (ANURODH)",
-   "curve": "0xD4aB6c5Cf8fF58E129c2e5d7401017964aa1f02f",
-   "block": 42027331
-  },
-  {
-   "name": "GIWORA Test Token (GWR)",
-   "curve": "0x041dea7997cF40B2C48A7f6b51A83F8755f5b0EF",
-   "block": 42020534
-  },
-  {
-   "name": "SWAT (SWT)",
-   "curve": "0x7f6F5AB3Ea08dD77fA89ceF4d63aEB649EcCeD15",
-   "block": 42015894
-  },
-  {
-   "name": "StarpadX (STARX)",
-   "curve": "0xdabaf2D4Ae83e32C90aE0B92C72a7eD16EA3A78F",
-   "block": 42007231
+   "name": "Test Alpha (TALPHA)",
+   "curve": "0x40Fc9a397594aE4BDdD1fA89005927C2340d2407",
+   "block": 42032797
   }
  ],
  "newGraduations": [
   {
-   "name": "India (INDIA)",
-   "curve": "0xAe572164c13BA1b46F413E48475fFdA8823b0A95"
-  },
-  {
-   "name": "ANURODHHITMAN (ANURODH)",
-   "curve": "0xD4aB6c5Cf8fF58E129c2e5d7401017964aa1f02f"
+   "name": "cobaaaa (CBCB)",
+   "curve": "0xAca086A8eB73786b353bdE4F044dF1f7aC38Bba3"
   }
  ],
  "weekly": {
-  "newLaunches": 130,
+  "newLaunches": 132,
   "closestToGraduation": [
    {
     "name": "Aiai Rocket (AIAI)",

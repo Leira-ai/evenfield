@@ -1,22 +1,15 @@
 Evenfield digest
-Data as of block 42031738.
+Data as of block 42075090.
 
 New launches:
-- India (INDIA)
-- GIWA (GIWA)
-- Elon Musk (ELON)
-- MrAnurodh (MRA)
-- Modi (MODI)
-- ANURODHHITMAN (ANURODH)
-- GIWORA Test Token (GWR)
-- SWAT (SWT)
-- StarpadX (STARX)
+- Zenity (ZENT)
+- GIWA GHOST (GHOST)
+- Test Alpha (TALPHA)
 
 New graduations:
-- India (INDIA)
-- ANURODHHITMAN (ANURODH)
+- cobaaaa (CBCB)
 
-This week: 130 new launches.
+This week: 132 new launches.
 Closest to graduation:
 - Aiai Rocket (AIAI): 99.99%
 - GIWA (GIWA): 99%
