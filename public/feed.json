@@ -1,16 +1,41 @@
 {
- "generatedAt": "2026-11-24T11:14:31.976Z",
- "headBlock": 42169401,
+ "generatedAt": "2026-11-24T23:47:13.402Z",
+ "headBlock": 42214461,
  "newLaunches": [
   {
-   "name": "KongPad Test (KPTEST)",
-   "curve": "0x5625Bf27176C0c75995A6976e49CdC75F09B30CA",
-   "block": 42158421
+   "name": "Moraforge Test (MFTEST)",
+   "curve": "0x94E293136b3a97aBFE7f7C917a449868E3ACe230",
+   "block": 42203641
+  },
+  {
+   "name": "OrbitPad (ORPA)",
+   "curve": "0x4a211b42E0cadcE2D9c851273DF64B5Df67b2E13",
+   "block": 42195058
+  },
+  {
+   "name": "Galina Test (GLNN)",
+   "curve": "0x1fE487Dd2a5EC21CeDD6Ebb941506B4ED85236aF",
+   "block": 42181143
+  },
+  {
+   "name": "jaesimin (JASS)",
+   "curve": "0xEB5bF16be66d266EcF6B325be5886eC2c99BA37A",
+   "block": 42173325
+  },
+  {
+   "name": "OOIOIO (O4I2)",
+   "curve": "0x34b6C6E5B7c51Ca370c912145fB33fb74c2b5013",
+   "block": 42172531
   }
  ],
- "newGraduations": [],
+ "newGraduations": [
+  {
+   "name": "OrbitPad (ORPA)",
+   "curve": "0x4a211b42E0cadcE2D9c851273DF64B5Df67b2E13"
+  }
+ ],
  "weekly": {
-  "newLaunches": 102,
+  "newLaunches": 84,
   "closestToGraduation": [
    {
     "name": "Aiai Rocket (AIAI)",

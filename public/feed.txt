@@ -1,10 +1,17 @@
 Evenfield digest
-Data as of block 42169401.
+Data as of block 42214461.
 
 New launches:
-- KongPad Test (KPTEST)
+- Moraforge Test (MFTEST)
+- OrbitPad (ORPA)
+- Galina Test (GLNN)
+- jaesimin (JASS)
+- OOIOIO (O4I2)
 
-This week: 102 new launches.
+New graduations:
+- OrbitPad (ORPA)
+
+This week: 84 new launches.
 Closest to graduation:
 - Aiai Rocket (AIAI): 99.99%
 - KongPad Test (KPTEST): 99.04%
