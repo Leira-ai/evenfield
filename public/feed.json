@@ -1,31 +1,68 @@
 {
- "generatedAt": "2026-11-23T08:56:44.004Z",
- "headBlock": 42075090,
+ "generatedAt": "2026-11-24T01:10:40.606Z",
+ "headBlock": 42133257,
  "newLaunches": [
   {
-   "name": "Zenity (ZENT)",
-   "curve": "0xB00bAABd05Fc794b833e76B2E733ABd38Cb7C985",
-   "block": 42069114
+   "name": "Türkiye (TURK)",
+   "curve": "0xF635AA3DCcdBEE0160BD447f10C6DF92E74c1f9e",
+   "block": 42121596
   },
   {
-   "name": "GIWA GHOST (GHOST)",
-   "curve": "0xbd70914D6DEdCb3AA4bA6C69B04c2e6CB4a7Aa31",
-   "block": 42036049
+   "name": "Bonstok Token (BSTK)",
+   "curve": "0x72B8c21115522A76b5794f47E375CfE8d94E2D8e",
+   "block": 42104196
   },
   {
-   "name": "Test Alpha (TALPHA)",
-   "curve": "0x40Fc9a397594aE4BDdD1fA89005927C2340d2407",
-   "block": 42032797
+   "name": "Hanjuang Token (HJNG)",
+   "curve": "0x189dfCb3ebc7Ea965c25A5c43420EBd89e076eb5",
+   "block": 42104114
+  },
+  {
+   "name": "Nawijikk (NAWI)",
+   "curve": "0x99A9A5543BC18a23A1350064643Cd688C4b5ac82",
+   "block": 42089108
+  },
+  {
+   "name": "mtk (MTK)",
+   "curve": "0x6D484952407F4211F18008643Ecb1df999392f89",
+   "block": 42079902
+  },
+  {
+   "name": "Pado Grad Test (PADOGRAD)",
+   "curve": "0xd466A7BdCC9A4B2F8798154c5daF779eA4A7e871",
+   "block": 42078063
+  },
+  {
+   "name": "Pado Test (PADOTEST)",
+   "curve": "0xCeBF8c2cB0D6F5c5b78F1988Cc3271e017ce591b",
+   "block": 42077876
+  },
+  {
+   "name": "try (TRY)",
+   "curve": "0x98968c4f21D79DAB0DB52799F2Fb16C4DDeAB0Fc",
+   "block": 42076576
   }
  ],
  "newGraduations": [
   {
-   "name": "cobaaaa (CBCB)",
-   "curve": "0xAca086A8eB73786b353bdE4F044dF1f7aC38Bba3"
+   "name": "Nawijikk (NAWI)",
+   "curve": "0x99A9A5543BC18a23A1350064643Cd688C4b5ac82"
+  },
+  {
+   "name": "mtk (MTK)",
+   "curve": "0x6D484952407F4211F18008643Ecb1df999392f89"
+  },
+  {
+   "name": "Pado Grad Test (PADOGRAD)",
+   "curve": "0xd466A7BdCC9A4B2F8798154c5daF779eA4A7e871"
+  },
+  {
+   "name": "try (TRY)",
+   "curve": "0x98968c4f21D79DAB0DB52799F2Fb16C4DDeAB0Fc"
   }
  ],
  "weekly": {
-  "newLaunches": 132,
+  "newLaunches": 110,
   "closestToGraduation": [
    {
     "name": "Aiai Rocket (AIAI)",

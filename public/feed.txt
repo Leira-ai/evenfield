@@ -1,15 +1,23 @@
 Evenfield digest
-Data as of block 42075090.
+Data as of block 42133257.
 
 New launches:
-- Zenity (ZENT)
-- GIWA GHOST (GHOST)
-- Test Alpha (TALPHA)
+- Türkiye (TURK)
+- Bonstok Token (BSTK)
+- Hanjuang Token (HJNG)
+- Nawijikk (NAWI)
+- mtk (MTK)
+- Pado Grad Test (PADOGRAD)
+- Pado Test (PADOTEST)
+- try (TRY)
 
 New graduations:
-- cobaaaa (CBCB)
+- Nawijikk (NAWI)
+- mtk (MTK)
+- Pado Grad Test (PADOGRAD)
+- try (TRY)
 
-This week: 132 new launches.
+This week: 110 new launches.
 Closest to graduation:
 - Aiai Rocket (AIAI): 99.99%
 - GIWA (GIWA): 99%
