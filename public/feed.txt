@@ -1,24 +1,11 @@
 Evenfield digest
-Data as of block 42133257.
+Data as of block 42169401.
 
 New launches:
-- Türkiye (TURK)
-- Bonstok Token (BSTK)
-- Hanjuang Token (HJNG)
-- Nawijikk (NAWI)
-- mtk (MTK)
-- Pado Grad Test (PADOGRAD)
-- Pado Test (PADOTEST)
-- try (TRY)
+- KongPad Test (KPTEST)
 
-New graduations:
-- Nawijikk (NAWI)
-- mtk (MTK)
-- Pado Grad Test (PADOGRAD)
-- try (TRY)
-
-This week: 110 new launches.
+This week: 102 new launches.
 Closest to graduation:
 - Aiai Rocket (AIAI): 99.99%
+- KongPad Test (KPTEST): 99.04%
 - GIWA (GIWA): 99%
-- Quick Launch Test (QLT): 99%
