@@ -1,25 +1,22 @@
 Evenfield digest
-Data as of block 42251221.
+Data as of block 42298154.
 
 New launches:
-- Bay (BAY)
-- Dog Kong (KONG)
-- GTAVI (GTAVI)
-- GiwaPad (GPAD)
-- Awaken Mind (AWAKE)
-- Despell E2E (DSPE)
-- 11314123 (ADS1234)
-- Jingz Ammora Test (JAT)
-- hoopermor (HOOPER)
-- OIQPQ2 (O2IO)
+- Anvora (ANVORA)
+- Ramilashrf (SHR)
+- Ramil Ashrafli (SHRF)
+- fauShit (FST)
+- Stellacot (SSC)
+- ramilashrf (SHRF)
+- ramilashrf (SHRF)
+- ashrf (SHRF)
+- LauchAI Protocol Token (LAUCH)
+- Deneme (DNM)
 
 New graduations:
-- GTAVI (GTAVI)
-- GiwaPad (GPAD)
-- Awaken Mind (AWAKE)
-- ANVORA (ANVORA)
+- fauShit (FST)
 
-This week: 88 new launches.
+This week: 87 new launches.
 Closest to graduation:
 - Aiai Rocket (AIAI): 99.99%
 - KongPad Test (KPTEST): 99.04%
