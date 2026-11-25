@@ -1,41 +1,103 @@
 {
- "generatedAt": "2026-11-24T23:47:13.402Z",
- "headBlock": 42214461,
+ "generatedAt": "2026-11-25T10:01:55.217Z",
+ "headBlock": 42251221,
  "newLaunches": [
   {
-   "name": "Moraforge Test (MFTEST)",
-   "curve": "0x94E293136b3a97aBFE7f7C917a449868E3ACe230",
-   "block": 42203641
+   "name": "Bay (BAY)",
+   "curve": "0xD0a0b338b5516Be588D5B2A0644C831090Db1439",
+   "block": 42250593
   },
   {
-   "name": "OrbitPad (ORPA)",
-   "curve": "0x4a211b42E0cadcE2D9c851273DF64B5Df67b2E13",
-   "block": 42195058
+   "name": "Dog Kong (KONG)",
+   "curve": "0x31E47B76f0e8dF852fc3F0FF1aF467b5252E9391",
+   "block": 42249363
   },
   {
-   "name": "Galina Test (GLNN)",
-   "curve": "0x1fE487Dd2a5EC21CeDD6Ebb941506B4ED85236aF",
-   "block": 42181143
+   "name": "GTAVI (GTAVI)",
+   "curve": "0x65a60604040d26D1469F9E9A0cDa0005ec1bADdB",
+   "block": 42245826
   },
   {
-   "name": "jaesimin (JASS)",
-   "curve": "0xEB5bF16be66d266EcF6B325be5886eC2c99BA37A",
-   "block": 42173325
+   "name": "GiwaPad (GPAD)",
+   "curve": "0xFe0f5ae0beD24C926f94447758838c61c9BA3503",
+   "block": 42244954
   },
   {
-   "name": "OOIOIO (O4I2)",
-   "curve": "0x34b6C6E5B7c51Ca370c912145fB33fb74c2b5013",
-   "block": 42172531
+   "name": "Awaken Mind (AWAKE)",
+   "curve": "0xD55e505FA0F3777bF368eE001B36c1A764C753C8",
+   "block": 42244532
+  },
+  {
+   "name": "Despell E2E (DSPE)",
+   "curve": "0xd86F0302e5F85927e7FFC6DB01BbCEf84Df7856d",
+   "block": 42239625
+  },
+  {
+   "name": "11314123 (ADS1234)",
+   "curve": "0xC38A1ECa5F44f79cB80FCE3563A9e60950a9A110",
+   "block": 42232067
+  },
+  {
+   "name": "Jingz Ammora Test (JAT)",
+   "curve": "0x06fa22B6ee29570232fCBd72f4aC002e3aFc5305",
+   "block": 42231898
+  },
+  {
+   "name": "hoopermor (HOOPER)",
+   "curve": "0xA77dC8cba177e0D7F2D4A827803FdD108BE60759",
+   "block": 42230317
+  },
+  {
+   "name": "OIQPQ2 (O2IO)",
+   "curve": "0x28f92BE7ca57Db6e8BF0DefE4Ac20992442966cF",
+   "block": 42222951
+  },
+  {
+   "name": "ANVORA (ANVORA)",
+   "curve": "0x39F9819744EE83f337aab7269e14B06a1922E5D5",
+   "block": 42218154
+  },
+  {
+   "name": "aleo (ALEO)",
+   "curve": "0xE29B698bf1A62abec021779d68C97C0aE333207b",
+   "block": 42217105
+  },
+  {
+   "name": "Anvora Test (ANVTEST)",
+   "curve": "0xe41b668173Bb967152956Dc92D1AB95feB79263e",
+   "block": 42217004
+  },
+  {
+   "name": "selfie cat (SCAT)",
+   "curve": "0x4042cb1B7C61bF62464fb57B8f3F2EA02366819f",
+   "block": 42216776
+  },
+  {
+   "name": "ssnack (SSNACK)",
+   "curve": "0x278C9C9B599DD8C7C0b1F5efC0496498Acc8f33b",
+   "block": 42215529
   }
  ],
  "newGraduations": [
   {
-   "name": "OrbitPad (ORPA)",
-   "curve": "0x4a211b42E0cadcE2D9c851273DF64B5Df67b2E13"
+   "name": "GTAVI (GTAVI)",
+   "curve": "0x65a60604040d26D1469F9E9A0cDa0005ec1bADdB"
+  },
+  {
+   "name": "GiwaPad (GPAD)",
+   "curve": "0xFe0f5ae0beD24C926f94447758838c61c9BA3503"
+  },
+  {
+   "name": "Awaken Mind (AWAKE)",
+   "curve": "0xD55e505FA0F3777bF368eE001B36c1A764C753C8"
+  },
+  {
+   "name": "ANVORA (ANVORA)",
+   "curve": "0x39F9819744EE83f337aab7269e14B06a1922E5D5"
   }
  ],
  "weekly": {
-  "newLaunches": 84,
+  "newLaunches": 88,
   "closestToGraduation": [
    {
     "name": "Aiai Rocket (AIAI)",
