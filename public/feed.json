@@ -1,59 +1,39 @@
 {
- "generatedAt": "2026-11-26T09:51:33.165Z",
- "headBlock": 42336753,
+ "generatedAt": "2026-11-26T23:02:42.078Z",
+ "headBlock": 42384121,
  "newLaunches": [
   {
-   "name": "TEST Mighty Panda (CIUV)",
-   "curve": "0x3d7406D29E648468Cd6d182AE3a31B38a08c8BB2",
-   "block": 42333642
+   "name": "SisterCat (SIC)",
+   "curve": "0x7281b3b72959319BB752D389e91E74e8ae5e131c",
+   "block": 42371903
   },
   {
-   "name": "TEST Turbo Raven (QSDR)",
-   "curve": "0xf9bbe2C25FD0E3c3528174770C4d431D840E539b",
-   "block": 42333639
+   "name": "NoShit (NOS)",
+   "curve": "0x1D1d6605445BD395d3bFF2FA2d5baCDB832C19d9",
+   "block": 42371523
   },
   {
-   "name": "TEST Lazy Panda (IKTB)",
-   "curve": "0xb7A9c67aeE0C76bAaf3070A2CCB92F239BAD117D",
-   "block": 42333639
+   "name": "Kosmos (KSM)",
+   "curve": "0xae8f1c4723c06e1B15C3F2f37466FaDaF814B1d0",
+   "block": 42369800
   },
   {
-   "name": "TEST Golden Gecko (QPGS)",
-   "curve": "0x9875AE70EA6b699645785a37fd34D9b5e13D68dF",
-   "block": 42333629
+   "name": "t1231j (1POPI)",
+   "curve": "0x48C88FB1ED99c557F30139Fd0ceB67739Fc31997",
+   "block": 42357495
   },
   {
-   "name": "TEST Sneaky Koala (HYKJ)",
-   "curve": "0x325ebF94DEA24bd1dEB9EC218FF5587D103E1a43",
-   "block": 42333618
-  },
-  {
-   "name": "123123teset (12312398932)",
-   "curve": "0x552e36D5BAa8080d4B6deD18B79a65b0d5aC1A5e",
-   "block": 42329995
-  },
-  {
-   "name": "JENSEN (JENS)",
-   "curve": "0x1351B5D66BcC6E69294A5E24490D7e6cE5E340C2",
-   "block": 42328262
-  },
-  {
-   "name": "hideandseek (HHSEEK)",
-   "curve": "0x5Fbc1Cf5c2e1f42fea1dc4D1b953B2C03AC21f89",
-   "block": 42321686
-  },
-  {
-   "name": "Thuthanh (THANH)",
-   "curve": "0x538afcbaAaEb7FC85290F2341D83B7529BE4dd51",
-   "block": 42320863
-  },
-  {
-   "name": "Kong my dog (KONG)",
-   "curve": "0x7E0F7AadD0A369E2702169E9bB8987eF7606246B",
-   "block": 42313050
+   "name": "Koock Piu (PIU)",
+   "curve": "0x30d4bfFDcFfad4869a65669ccC73eB8D923C1884",
+   "block": 42354156
   }
  ],
- "newGraduations": [],
+ "newGraduations": [
+  {
+   "name": "Manutao (MANUTAO)",
+   "curve": "0xFd8256450EC929D1A094A8B388860D81573993B1"
+  }
+ ],
  "weekly": {
   "newLaunches": 87,
   "closestToGraduation": [

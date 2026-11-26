@@ -1,17 +1,15 @@
 Evenfield digest
-Data as of block 42336753.
+Data as of block 42384121.
 
 New launches:
-- TEST Mighty Panda (CIUV)
-- TEST Turbo Raven (QSDR)
-- TEST Lazy Panda (IKTB)
-- TEST Golden Gecko (QPGS)
-- TEST Sneaky Koala (HYKJ)
-- 123123teset (12312398932)
-- JENSEN (JENS)
-- hideandseek (HHSEEK)
-- Thuthanh (THANH)
-- Kong my dog (KONG)
+- SisterCat (SIC)
+- NoShit (NOS)
+- Kosmos (KSM)
+- t1231j (1POPI)
+- Koock Piu (PIU)
+
+New graduations:
+- Manutao (MANUTAO)
 
 This week: 87 new launches.
 Closest to graduation:
