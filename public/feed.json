@@ -1,74 +1,59 @@
 {
- "generatedAt": "2026-11-25T23:06:04.262Z",
- "headBlock": 42298154,
+ "generatedAt": "2026-11-26T09:51:33.165Z",
+ "headBlock": 42336753,
  "newLaunches": [
   {
-   "name": "Anvora (ANVORA)",
-   "curve": "0xe2a84193088b5061A793601739e0899A31f8Ecb6",
-   "block": 42290142
+   "name": "TEST Mighty Panda (CIUV)",
+   "curve": "0x3d7406D29E648468Cd6d182AE3a31B38a08c8BB2",
+   "block": 42333642
   },
   {
-   "name": "Ramilashrf (SHR)",
-   "curve": "0xD1BA9C4cf1eF8CAE693167a1f8639C5Efc429D08",
-   "block": 42285521
+   "name": "TEST Turbo Raven (QSDR)",
+   "curve": "0xf9bbe2C25FD0E3c3528174770C4d431D840E539b",
+   "block": 42333639
   },
   {
-   "name": "Ramil Ashrafli (SHRF)",
-   "curve": "0x9176dfC7FB3d5A8f549da9286C9Ad7c1E3257A91",
-   "block": 42276025
+   "name": "TEST Lazy Panda (IKTB)",
+   "curve": "0xb7A9c67aeE0C76bAaf3070A2CCB92F239BAD117D",
+   "block": 42333639
   },
   {
-   "name": "fauShit (FST)",
-   "curve": "0xa0C1FDFFC274eAab7Ba739a4dDb9245f77c49EEF",
-   "block": 42273461
+   "name": "TEST Golden Gecko (QPGS)",
+   "curve": "0x9875AE70EA6b699645785a37fd34D9b5e13D68dF",
+   "block": 42333629
   },
   {
-   "name": "Stellacot (SSC)",
-   "curve": "0x56D85954c7C4f591eb9A6924a045E0D54E618695",
-   "block": 42268928
+   "name": "TEST Sneaky Koala (HYKJ)",
+   "curve": "0x325ebF94DEA24bd1dEB9EC218FF5587D103E1a43",
+   "block": 42333618
   },
   {
-   "name": "ramilashrf (SHRF)",
-   "curve": "0x70619119f1567C8c1f463e80F7141269E5cbA39c",
-   "block": 42265410
+   "name": "123123teset (12312398932)",
+   "curve": "0x552e36D5BAa8080d4B6deD18B79a65b0d5aC1A5e",
+   "block": 42329995
   },
   {
-   "name": "ramilashrf (SHRF)",
-   "curve": "0x63664b550B3F1184C50D5973A964b8D55734eF9f",
-   "block": 42265000
+   "name": "JENSEN (JENS)",
+   "curve": "0x1351B5D66BcC6E69294A5E24490D7e6cE5E340C2",
+   "block": 42328262
   },
   {
-   "name": "ashrf (SHRF)",
-   "curve": "0x4dF0D8e3F7b4B15d5FD62efc0122075605A3BD63",
-   "block": 42263901
+   "name": "hideandseek (HHSEEK)",
+   "curve": "0x5Fbc1Cf5c2e1f42fea1dc4D1b953B2C03AC21f89",
+   "block": 42321686
   },
   {
-   "name": "LauchAI Protocol Token (LAUCH)",
-   "curve": "0xbee697EE0C2FC28cE17b7c3a16e454AaAA792b51",
-   "block": 42259842
+   "name": "Thuthanh (THANH)",
+   "curve": "0x538afcbaAaEb7FC85290F2341D83B7529BE4dd51",
+   "block": 42320863
   },
   {
-   "name": "Deneme (DNM)",
-   "curve": "0x98E915cC7b60D18eC28CB015D915F02E57fbe925",
-   "block": 42257178
-  },
-  {
-   "name": "LauchAI Protocol Token (LAUCH)",
-   "curve": "0xa4c46C32e87F2A98037fE0aaA7dAc7D8A49DeA81",
-   "block": 42256643
-  },
-  {
-   "name": "LauchAI Protocol Token (LAUCH)",
-   "curve": "0x0B53b018eF95890706173424735adfBd49790576",
-   "block": 42255487
+   "name": "Kong my dog (KONG)",
+   "curve": "0x7E0F7AadD0A369E2702169E9bB8987eF7606246B",
+   "block": 42313050
   }
  ],
- "newGraduations": [
-  {
-   "name": "fauShit (FST)",
-   "curve": "0xa0C1FDFFC274eAab7Ba739a4dDb9245f77c49EEF"
-  }
- ],
+ "newGraduations": [],
  "weekly": {
   "newLaunches": 87,
   "closestToGraduation": [
