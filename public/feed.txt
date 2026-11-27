@@ -1,15 +1,21 @@
 Evenfield digest
-Data as of block 42423994.
+Data as of block 42469599.
 
 New launches:
-- Ammo (AMMO)
-- AmmPad (APAD)
-- Car (CAR)
+- Nova Moon (MOON)
+- Nova Test Token (NOVA)
+- DexGate (DXGT)
+- testtttt (TESTTTTT)
+- Glucosa (GLCA)
+- ShitCoin (SHIT)
+- Moralume (MORA)
 
 New graduations:
-- Ammo (AMMO)
+- Nova Test Token (NOVA)
+- Moralume (MORA)
+- SisterCat (SIC)
 
-This week: 83 new launches.
+This week: 82 new launches.
 Closest to graduation:
 - Aiai Rocket (AIAI): 99.99%
 - KongPad Test (KPTEST): 99.04%
