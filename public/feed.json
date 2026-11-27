@@ -1,41 +1,31 @@
 {
- "generatedAt": "2026-11-26T23:02:42.078Z",
- "headBlock": 42384121,
+ "generatedAt": "2026-11-27T10:08:42.946Z",
+ "headBlock": 42423994,
  "newLaunches": [
   {
-   "name": "SisterCat (SIC)",
-   "curve": "0x7281b3b72959319BB752D389e91E74e8ae5e131c",
-   "block": 42371903
+   "name": "Ammo (AMMO)",
+   "curve": "0x5699fFeB6523e97F60A5D2b3A36a0Aa65Aa2f3E2",
+   "block": 42423681
   },
   {
-   "name": "NoShit (NOS)",
-   "curve": "0x1D1d6605445BD395d3bFF2FA2d5baCDB832C19d9",
-   "block": 42371523
+   "name": "AmmPad (APAD)",
+   "curve": "0x61489166b07FfcfaDc6905582F51a608EDb75761",
+   "block": 42416740
   },
   {
-   "name": "Kosmos (KSM)",
-   "curve": "0xae8f1c4723c06e1B15C3F2f37466FaDaF814B1d0",
-   "block": 42369800
-  },
-  {
-   "name": "t1231j (1POPI)",
-   "curve": "0x48C88FB1ED99c557F30139Fd0ceB67739Fc31997",
-   "block": 42357495
-  },
-  {
-   "name": "Koock Piu (PIU)",
-   "curve": "0x30d4bfFDcFfad4869a65669ccC73eB8D923C1884",
-   "block": 42354156
+   "name": "Car (CAR)",
+   "curve": "0xF1A77d01922CdC71617c5D925438D0F648954E54",
+   "block": 42386646
   }
  ],
  "newGraduations": [
   {
-   "name": "Manutao (MANUTAO)",
-   "curve": "0xFd8256450EC929D1A094A8B388860D81573993B1"
+   "name": "Ammo (AMMO)",
+   "curve": "0x5699fFeB6523e97F60A5D2b3A36a0Aa65Aa2f3E2"
   }
  ],
  "weekly": {
-  "newLaunches": 87,
+  "newLaunches": 83,
   "closestToGraduation": [
    {
     "name": "Aiai Rocket (AIAI)",

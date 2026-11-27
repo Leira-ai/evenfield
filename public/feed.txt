@@ -1,17 +1,15 @@
 Evenfield digest
-Data as of block 42384121.
+Data as of block 42423994.
 
 New launches:
-- SisterCat (SIC)
-- NoShit (NOS)
-- Kosmos (KSM)
-- t1231j (1POPI)
-- Koock Piu (PIU)
+- Ammo (AMMO)
+- AmmPad (APAD)
+- Car (CAR)
 
 New graduations:
-- Manutao (MANUTAO)
+- Ammo (AMMO)
 
-This week: 87 new launches.
+This week: 83 new launches.
 Closest to graduation:
 - Aiai Rocket (AIAI): 99.99%
 - KongPad Test (KPTEST): 99.04%
