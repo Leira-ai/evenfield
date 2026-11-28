@@ -1,22 +1,17 @@
 Evenfield digest
-Data as of block 42469599.
+Data as of block 42507563.
 
 New launches:
-- Nova Moon (MOON)
-- Nova Test Token (NOVA)
-- DexGate (DXGT)
-- testtttt (TESTTTTT)
-- Glucosa (GLCA)
-- ShitCoin (SHIT)
-- Moralume (MORA)
+- G (G)
+- AURA (AURA)
+- GIWORA Test Token (GWR)
+- Airdrop Finder (AF)
 
 New graduations:
-- Nova Test Token (NOVA)
-- Moralume (MORA)
-- SisterCat (SIC)
+- Aiai Rocket (AIAI)
 
-This week: 82 new launches.
+This week: 83 new launches.
 Closest to graduation:
-- Aiai Rocket (AIAI): 99.99%
 - KongPad Test (KPTEST): 99.04%
 - GIWA (GIWA): 99%
+- Quick Launch Test (QLT): 99%

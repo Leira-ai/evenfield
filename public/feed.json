@@ -1,70 +1,47 @@
 {
- "generatedAt": "2026-11-27T22:52:13.428Z",
- "headBlock": 42469599,
+ "generatedAt": "2026-11-28T09:26:11.658Z",
+ "headBlock": 42507563,
  "newLaunches": [
   {
-   "name": "Nova Moon (MOON)",
-   "curve": "0xDb70cf97bfd06890704cc337aFEA6426F5BfE401",
-   "block": 42467280
+   "name": "G (G)",
+   "curve": "0xd303b4413661F07c56f253F44509D1664eB2F790",
+   "block": 42496987
   },
   {
-   "name": "Nova Test Token (NOVA)",
-   "curve": "0x2EC2FA37e1Db1127aF17D3C7e0571b46880aaCbc",
-   "block": 42464962
+   "name": "AURA (AURA)",
+   "curve": "0xB37a958A9909bD3187f8f38848b3AB9d4B998226",
+   "block": 42494205
   },
   {
-   "name": "DexGate (DXGT)",
-   "curve": "0x28ba204D436bEd962c97a14688137DA04d5451dE",
-   "block": 42464091
+   "name": "GIWORA Test Token (GWR)",
+   "curve": "0x63E1EE5604bc0a95f1fE5AA551Ef622D27159Eea",
+   "block": 42492813
   },
   {
-   "name": "testtttt (TESTTTTT)",
-   "curve": "0xd659A379Af970d5644024b967D82a506BafAf261",
-   "block": 42454038
-  },
-  {
-   "name": "Glucosa (GLCA)",
-   "curve": "0xEE59A63a231F35555382501e5D7CEd68aD25a2d9",
-   "block": 42446366
-  },
-  {
-   "name": "ShitCoin (SHIT)",
-   "curve": "0x8c96022064005f4ABa8FCEfb8Fc1A87f4a542Bd4",
-   "block": 42437344
-  },
-  {
-   "name": "Moralume (MORA)",
-   "curve": "0xFDA0268213f2413874333140BFDF52Ef4961C723",
-   "block": 42429664
+   "name": "Airdrop Finder (AF)",
+   "curve": "0x02701a8148e50095bCf8706913788e086e0210AD",
+   "block": 42477697
   }
  ],
  "newGraduations": [
   {
-   "name": "Nova Test Token (NOVA)",
-   "curve": "0x2EC2FA37e1Db1127aF17D3C7e0571b46880aaCbc"
-  },
-  {
-   "name": "Moralume (MORA)",
-   "curve": "0xFDA0268213f2413874333140BFDF52Ef4961C723"
-  },
-  {
-   "name": "SisterCat (SIC)",
-   "curve": "0x7281b3b72959319BB752D389e91E74e8ae5e131c"
+   "name": "Aiai Rocket (AIAI)",
+   "curve": "0x7Bec0BF8298C74E63e46Fc5B9c629F44b9F0CB22"
   }
  ],
  "weekly": {
-  "newLaunches": 82,
+  "newLaunches": 83,
   "closestToGraduation": [
-   {
-    "name": "Aiai Rocket (AIAI)",
-    "progressPct": 99.99
-   },
    {
     "name": "KongPad Test (KPTEST)",
     "progressPct": 99.04
    },
    {
     "name": "GIWA (GIWA)",
+    "progressPct": 99
+   },
+   {
+    "name": "Quick Launch Test (QLT)",
     "progressPct": 99
    }
   ]
