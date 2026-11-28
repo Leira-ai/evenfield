@@ -1,0 +1,49 @@
+{
+ "generatedAt": "2026-11-28T09:26:11.658Z",
+ "headBlock": 42507563,
+ "newLaunches": [
+  {
+   "name": "G (G)",
+   "curve": "0xd303b4413661F07c56f253F44509D1664eB2F790",
+   "block": 42496987
+  },
+  {
+   "name": "AURA (AURA)",
+   "curve": "0xB37a958A9909bD3187f8f38848b3AB9d4B998226",
+   "block": 42494205
+  },
+  {
+   "name": "GIWORA Test Token (GWR)",
+   "curve": "0x63E1EE5604bc0a95f1fE5AA551Ef622D27159Eea",
+   "block": 42492813
+  },
+  {
+   "name": "Airdrop Finder (AF)",
+   "curve": "0x02701a8148e50095bCf8706913788e086e0210AD",
+   "block": 42477697
+  }
+ ],
+ "newGraduations": [
+  {
+   "name": "Aiai Rocket (AIAI)",
+   "curve": "0x7Bec0BF8298C74E63e46Fc5B9c629F44b9F0CB22"
+  }
+ ],
+ "weekly": {
+  "newLaunches": 83,
+  "closestToGraduation": [
+   {
+    "name": "KongPad Test (KPTEST)",
+    "progressPct": 99.04
+   },
+   {
+    "name": "GIWA (GIWA)",
+    "progressPct": 99
+   },
+   {
+    "name": "Quick Launch Test (QLT)",
+    "progressPct": 99
+   }
+  ]
+ }
+}
